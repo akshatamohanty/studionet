@@ -1,128 +1,105 @@
-var app = angular.module('studionet', ['ui.router', 'ngTagsInput', 'ngFileUpload'])
-									.run(['profile', function(profile){
-										/*
-										profile.getUser();
-										profile.getModules();
-										*/
-									}]);
+var app = angular.module('studionet', ['ngAnimate', 'ngSanitize','ui.router','ui.bootstrap', 
+										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree', 
+										'angular-ranger','textAngular',
+										'contributionEditorDirective'])
 
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
 
 	// user 'routes'
 	$stateProvider
 		.state('home', {
-			url: '/',
-			templateUrl: '/user/templates/home.html',
-			controller: 'HomeCtrl',
-			resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getModules();
-				}],
-				userModels: ['modelsFactory', 'userProfile', 'profile', function(modelsFactory, userProfile, profile){
-					return modelsFactory.getUserModels(profile.user.nusOpenId);
-				}]
-
-			}
+			abstract: true,
+			url: '/'
 		})
-		.state('home.graphView', {
-			url: 'graph',
-			templateUrl: '/user/templates/home.graphView.html',
-			controller: 'HomeCtrl',
+		.state('contributions', {
+			url: '/contributions',
+			templateUrl: '/user/templates/contributions.html',
+			controller: 'ContributionsCtrl',
 			resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getModules();
+				supernodePromise: ['supernode', function(supernode){
+					return supernode.getSupernodes();
 				}],
-				userModels: ['modelsFactory', 'userProfile', 'profile', function(modelsFactory, userProfile, profile){
-					return modelsFactory.getUserModels(profile.user.nusOpenId);
-				}]
-
-			}
-		})
-		.state('home.userDetails', {
-			url: 'me',
-			templateUrl: '/user/templates/home.userDetails.html',
-			controller: 'HomeCtrl',
-			resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getModules();
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
 				}],
-				userModels: ['modelsFactory', 'userProfile', 'profile', function(modelsFactory, userProfile, profile){
-					return modelsFactory.getUserModels(profile.user.nusOpenId);
-				}]
-
-			}
-		})
-		.state('admin', {
-			// admin front
-			url: '/admin',
-			templateUrl: '/user/templates/admin.html',
-			controller: 'AdminCtrl',
-			resolve: {
-				// ensure that profile is loaded before admin rights are decided
-				userProfile: ['profile', function(profile){
-					//if (angular.equals({},profile.user) || angular.equals([], profile.modules)){
-						// Need to get the data (probably refreshed browser)
-						return profile.getUser() && profile.getModules();
-					//}
-					// else already have the data, don't need to do anything
+				groupsPromise: ['groups', function(groups){
+					return groups.getAll() && groups.getGraph();
 				}],
-				adminRights: ['$q', 'profile', 'userProfile', function($q, profile, userProfile){
-					var isAdmin = profile.modules.reduce((res, curr)=> res || curr.role==='Admin', false);
-					if (!isAdmin)
-						return $q.reject('Not authorized!');
-					else
-						return $q.resolve('Welcome admin!');
+				contributionsPromise: ['contributions', function(contributions){
+					return contributions.getAll();
+				}],
+				usersPromise: ['users', function(users){ 
+					return users.getAll();
+				}],
+				relationshipsPromise: ['relationships', function(relationships){ 
+					return relationships.getAll();
+				}],
+				userProfile: ['profile', function(profile){
+					return profile.getUser();
 				}]
 			}
 		})
-		.state('moduleAdmin', {
-			url: '/admin/:moduleCode',
-			templateUrl: '/user/templates/moduleAdmin.html',
-			controller: 'ModuleAdminCtrl',
+		.state('contribution', {
+			url: '/contributions/:contributionId',
+			templateUrl: '/user/templates/contributions.html',
+			controller: 'ContributionsCtrl',
 			resolve: {
+				supernodePromise: ['supernode', function(supernode){
+					return supernode.getSupernodes();
+				}],
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
+				}],
+				groupsPromise: ['groups', function(groups){
+					return groups.getAll() && groups.getGraph();
+				}],
+				contributionsPromise: ['contributions', function(contributions){
+					return contributions.getAll();
+				}],
+				usersPromise: ['users', function(users){ 
+					return users.getAll();
+				}],
 				userProfile: ['profile', function(profile){
-					// if (angular.equals({},profile.user) || angular.equals([], profile.modules)){
-						// Need to get the data (probably refreshed browser)
-						return profile.getUser() && profile.getModules();
-					// }
-				}],
-				adminRights: ['$q', 'profile', 'userProfile', '$stateParams', function($q, profile, userProfile, $stateParams){
-					// must be admin of THIS module
-					var isAdmin = profile.modules.find((mod) => mod.code===$stateParams.moduleCode && mod.role === 'Admin');
-					if (!isAdmin)
-						return $q.reject('Not authorized!');
-					else
-						return $q.resolve('Welcome admin!');
-				}],
-				moduleInfo: ['userProfile', 'module', 'profile', '$stateParams', function(userProfile, module, profile, $stateParams){
-					var myMod = profile.modules.find((mod) => mod.code === $stateParams.moduleCode);
-					angular.copy(myMod, module.module);
-					return module.getModuleUsers(module.module.id);
-				}]			
-			}
-		})
-		.state('moduleAdmin.addUser', {
-			url: '/add',
-			templateUrl: '/user/templates/moduleAdmin.addUser.html',
-			controller: 'ModuleAdminCtrl',
-			resolve: {
-				allUsers: ['users', function(users){
-					return users.getAllUsers();
+					return profile.getUser();
 				}]
 			}
 		})
-		.state('moduleAdmin.restrictUser', {
-			url: '/restrict', 
-			templateUrl: '/user/templates/moduleAdmin.restrictUser.html'
-		})
-		.state('moduleAdmin.editTypes', {
-			url: '/types', 
-			templateUrl: '/user/templates/moduleAdmin.editTypes.html'
-		})
-		.state('moduleAdmin.editRoles', {
-			url:'/roles',
-			templateUrl: '/user/templates/moduleAdmin.editRoles.html'
+		.state('groups', {
+			url: '/groups',
+			templateUrl: '/user/templates/groups.html',
+			controller: 'GroupsCtrl',
+			resolve: {
+				supernodePromise: ['supernode', function(supernode){
+					return supernode.getSupernodes();
+				}],
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
+				}],
+				groupsPromise: ['groups', function(groups){
+					return groups.getAll() && groups.getGraph();
+				}],
+				contributionsPromise: ['contributions', function(contributions){
+					return contributions.getAll();
+				}],
+				usersPromise: ['users', function(users){ 
+					return users.getAll();
+				}],
+				userProfile: ['profile', function(profile){
+					return profile.getUser();
+				}]
+			}
 		})
 
-	$urlRouterProvider.otherwise('/');
+	$urlRouterProvider.otherwise('/contributions');
+
 }]);
+
+//textAngular toolbar customisation
+app.config(function($provide) {
+    $provide.decorator('taOptions', ['$delegate', function(taOptions) {
+    	taOptions.toolbar = [
+      	['clear', 'h1', 'h2', 'h3', 'p', 'ul', 'ol',
+      	'justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html','insertLink', 'insertVideo']];
+  		return taOptions;
+    }]);
+});
