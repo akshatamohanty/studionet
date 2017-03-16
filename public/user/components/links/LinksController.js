@@ -95,9 +95,9 @@ angular.module('studionet')
         $scope.manualLink = false;
 
 
-        if(links.linksHash[$scope.edge.id] != undefined){
+        if(links.linksHash[$scope.edge._id] != undefined){
             $scope.manualLink = true;
-            $scope.linkNode = links.linksHash[$scope.edge.id];
+            $scope.linkNode = links.linksHash[$scope.edge._id];
             $scope.author = {id: $scope.linkNode.createdBy, name: getName( $scope.linkNode.createdBy )};
         }
 
@@ -107,6 +107,8 @@ angular.module('studionet')
         if($scope.author.id == profile.user.id){
             $scope.linkOwner = true;
         }
+        else
+            $scope.linkOwner = false;
 
         $scope.createMode = false;
     	
@@ -117,7 +119,7 @@ angular.module('studionet')
     });
 
     $scope.deleteLink = function(){
-    	links.deleteLink($scope.edge.id);
+    	links.deleteLink($scope.edge._id);
     };
 
 

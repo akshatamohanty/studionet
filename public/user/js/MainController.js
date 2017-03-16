@@ -20,6 +20,10 @@ angular.module('studionet')
 
   socket.on('edge_created', function (edge) {
     showMessage("A new link was created");
+
+    edge._id = edge.id;
+    delete edge.id;
+
     GraphService.addNewEdge(edge);
   });
 
@@ -113,7 +117,7 @@ angular.module('studionet')
   $scope.graphInit = function(){  
 
       var graphObject = {
-        threshold : 40, 
+        threshold : 5, 
         onMouseOver: function(evt){
 
                     if(evt.cyTarget.id() =='ghost')

@@ -173,6 +173,7 @@ angular.module('studionet')
 						onSpiral: -1, 
 						createdBy: node.data('createdBy'),
 						dateCreated: node.data('dateCreated'),
+						ref: node.data('ref'),
 						incomers: node.incomers().nodes().map(function(n){
 							return n.id();
 						}),
@@ -193,13 +194,15 @@ angular.module('studionet')
 	}
 
 	o.draw_graph = function(node, opt){
+
+		o.spinner.stop();
 		console.log("opt", opt);
 		if (window.Worker) {
 
-  			console.log("Worker exists");
+  			//console.log("Worker exists");
 			var myWorker = new Worker('/user/components/graphs/graph-worker.js');
 			myWorker.postMessage([ flattenGraph(o.graph), o.threshold, supernode.contribution, window.innerWidth, window.innerHeight, opt]);
-	  		console.log('Message posted to worker');
+	  		//console.log('Message posted to worker');
 
 	  		myWorker.onmessage = function(e) {
 			  console.log("graph positions received");
@@ -474,8 +477,10 @@ angular.module('studionet')
 
 	o.removeEdge = function(edge_id){
 
-		if( o.graph.getElementById(edge_id).length ){
-			o.graph.getElementById(edge_id).remove(); 
+		var search = "[_id=" + edge_id +"]"
+
+		if( o.graph.edges(search).length ){
+			o.graph.edges(search).remove(); 
 			repositionNodes();
 		} 
 	
