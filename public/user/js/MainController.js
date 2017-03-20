@@ -311,7 +311,11 @@ angular.module('studionet')
     $rootScope.$broadcast(BROADCAST_CLEAR_FILTER, { 'code': code, 'value': optional_value });
   }
 
-
+  $scope.searchNode = function(){
+    // search node for search term
+    console.log($scope.searchTerm);
+    $scope.searchTermActive = true;
+  }
 
   // ------- Modals
   // View Modal
@@ -321,6 +325,7 @@ angular.module('studionet')
   });
 
   var showDetailsModal = function(data) {
+      $scope.track("view-node");
       $('#contributionViewModal').modal({backdrop: 'static', keyboard: false});
       $rootScope.$broadcast("VIEWMODE_ACTIVE", {data: data});
       $scope.viewMode = true;

@@ -16,7 +16,7 @@
 
 
     <!-- Profile -->
-    <img class="graph-nav-control icon" ng-if='!me.isGuest' src={{me.avatar}} uib-tooltip='{{me.nickname ? me.nickname : me.name}}' tooltip-placement='left' ng-click='showProfile()'></i>
+    <img class="graph-nav-control icon" ng-if='!me.isGuest' src={{me.avatar}} uib-tooltip='{{me.nickname ? me.nickname : me.name}}' tooltip-placement='left' ng-click='track("own-profile");showProfile()'></i>
     <a href='/guest'><img class="graph-nav-control icon" ng-if='me.isGuest' src="../assets/images/avatar.png" uib-tooltip='Guest' tooltip-placement='left'></i></a>
 
     <br>
@@ -45,10 +45,10 @@
     <i class="graph-nav-control icon fa fa-star" data-toggle="modal" data-target="#contributionsActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Node Activity' tooltip-placement='left' ng-click='track("board-node")'></i>
     <i class="graph-nav-control icon fa fa-comment" data-toggle="modal" data-target="#commentActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Comment Activity' tooltip-placement='left' ng-click='track("board-comment")'></i>
     <i class="graph-nav-control icon fa fa-filter" data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" uib-tooltip='Filter Nodes' tooltip-placement='left' ng-click='track("filter")'></i>
-    <i class="graph-nav-control icon fa fa-plus" ng-if='!me.isGuest' data-toggle="modal" data-target="#newNode" data-backdrop="static" data-keyboard="false" uib-tooltip='New Node' tooltip-placement='left'></i> 
+    <i class="graph-nav-control icon fa fa-plus" ng-if='!me.isGuest' data-toggle="modal" data-target="#newNode" data-backdrop="static" data-keyboard="false" uib-tooltip='New Node' tooltip-placement='left' ng-click='track("new-node");'></i> 
     <i class="graph-nav-control icon fa fa-arrows-alt" ng-click='resetGraph(); zoomLevel=100.00' uib-tooltip='Fit Graph' tooltip-placement='left'></i>
     <i class="graph-nav-control icon fa fa-plus" ng-if='me.isGuest' uib-tooltip='New Node (only open to NUS users)' tooltip-placement='left'></i> 
-    <i class="graph-nav-control icon fa fa-question" uib-tooltip='Help' tooltip-placement='left' ng-click='track("help");showHelp()'></i> 
+    <i class="graph-nav-control icon fa fa-question" uib-tooltip='Help' tooltip-placement='left' ng-click='track("help");showHelp();'></i> 
     <i class="graph-nav-control icon fa fa-question" uib-tooltip='Dock' tooltip-placement='left' ng-hide=true></i> 
 
   </div>
@@ -72,6 +72,19 @@
           <li role="menuitem"><a href="https://goo.gl/bo7OtP" target="_blank">Suggest New</a></li>
         </ul>
       </div>
+
+      <!-- <br><br>
+      <div>
+
+        <div class="row">
+          <input style="border: 1px solid grey;background: #050b27; height: 30px;" placeholder="Search for a node..." ng-model='searchTerm'>
+          <span class='pointer fa fa-search' ng-click="searchNode()" ng-if='searchTerm != undefined'></span>
+          <span class='pointer fa fa-close' ng-if='searchTerm != undefined && searchTermActive' ng-click='searchTermActive=false;searchTerm=undefined;'></span>
+        </div>
+
+        <a class='pointer' href='' style='float:right; color: grey;font-size: 9px;' data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" >Advanced Search</a>
+
+      </div> -->
 
 
       <div id="message" style='width: 350px'>{{message}}&nbsp;&nbsp;&nbsp;&nbsp;</div>

@@ -58,7 +58,16 @@ angular.module('studionet')
 
 	var setUser = function(user_id){
 
+	    if(window["ga"] == undefined){
+	      console.log("ga is not defined");
+	    }
+	    else{
+	      ga("send", "event", "pop up", "profile-view", "/user");
+	    }
+
 		if(user_id == profile.user.id || user_id == undefined){
+
+
 			
 			$scope.user = profile.user;
 			$scope.own = true;

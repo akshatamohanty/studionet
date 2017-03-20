@@ -50,6 +50,13 @@ angular.module('studionet')
 
     	$('#linksModal').modal({backdrop: 'static', keyboard: false});
 
+        if(window["ga"] == undefined){
+          console.log("ga is not defined");
+        }
+        else{
+          ga("send", "event", "pop up", "create-link", "/user");
+        }
+
     })
 
     $scope.addLink = function(){
@@ -83,6 +90,14 @@ angular.module('studionet')
     // --------------  For Link Viewing
 
     $rootScope.$on("VIEW_EDGE_MODAL", function(event, args){
+
+
+        if(window["ga"] == undefined){
+          console.log("ga is not defined");
+        }
+        else{
+          ga("send", "event", "pop up", "view-link", "/user");
+        }
 
         $scope.author = undefined;
 

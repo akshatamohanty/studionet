@@ -37,6 +37,7 @@ angular.module('studionet')
             
             // will be used internally by the reply feature
             if( !(node instanceof Object )){
+              track("navigate-node");
               node = GraphService.comments.getElementById(node).length ? GraphService.comments.getElementById(node) : GraphService.graph.getElementById(node);
             }
 
@@ -121,6 +122,9 @@ angular.module('studionet')
         };
         
         $scope.rateContribution = function(rating, id){
+
+          track("rate-node");
+
           GraphService.rateNode(id, rating).success(function(data){
 
               // check if user had already rated this contribution
@@ -140,6 +144,8 @@ angular.module('studionet')
         }
 
         $scope.toggleBookmark = function(contribution_id){
+
+            track("bookmark-node");
             
             if($scope.bookmarked){
               GraphService.removeBookmark(contribution_id).success(function(data){
@@ -238,6 +244,7 @@ angular.module('studionet')
         $scope.commentMode = false;
         $scope.showCommentModal = function(){
           $scope.commentMode = true;
+          track("comment-node");
         }
 
         $scope.postComment = function(comment){
@@ -280,6 +287,8 @@ angular.module('studionet')
         }
 
         $scope.replyToContribution = function(contributionData, parentId){
+
+              track("reply-node");
 
               if(!contributionData) return;
 
@@ -340,6 +349,7 @@ angular.module('studionet')
         }
 
         $scope.updateContribution = function(updateContribution){
+          track("update-node");
 
           if(!updateContribution.title || !updateContribution.body){
             alert("Please input the title or content of the node!");
@@ -375,7 +385,7 @@ angular.module('studionet')
 
         // ------------------Function: - Delete
         $scope.deleteContribution = function(contributionId){
-
+            track("delete-node");
             GraphService.deleteNode(contributionId).then(function(){
                 sendMessage({status: 200, message: "Successfully deleted node." });
                 $scope.close();
@@ -391,11 +401,21 @@ angular.module('studionet')
 
         // -----------------Function - Author Profile
         $scope.showAuthorModal = function(){
+          track("view-author");
           //$scope.authorMode = true;
           $rootScope.$broadcast( "PROFILE_MODE",  {id: $scope.contribution.createdBy, standalone: false});
           $('#profileModal').modal({backdrop: 'static', keyboard: false});
         }
 
+
+        var track = function(activity){
+          if(window["ga"] == undefined){
+            console.log("ga is not defined");
+          }
+          else{
+            ga("send", "event", "action", activity, "/node");
+          }
+        }
 
 
 
