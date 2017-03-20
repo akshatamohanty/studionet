@@ -37,7 +37,6 @@ angular.module('studionet')
             
             // will be used internally by the reply feature
             if( !(node instanceof Object )){
-              track("navigate-node");
               node = GraphService.comments.getElementById(node).length ? GraphService.comments.getElementById(node) : GraphService.graph.getElementById(node);
             }
 
@@ -282,13 +281,13 @@ angular.module('studionet')
         //----------------- Function: - Reply 
         $scope.replyMode = false;
         $scope.showReplyModal = function(id, type){
+          track("reply-node");
           $scope.replyMode = true;
           $scope.contributionData = { attachments: [], tags: []}; //store the data of replying information
         }
 
         $scope.replyToContribution = function(contributionData, parentId){
 
-              track("reply-node");
 
               if(!contributionData) return;
 
@@ -332,6 +331,7 @@ angular.module('studionet')
         $scope.updateMode = false;
         $scope.showUpdateModal = function(id){
 
+              track("update-node");
               $scope.updateMode = true;
               $scope.contributionData = jQuery.extend({}, $scope.contribution);
               $scope.contributionData.contentType = $scope.contribution.type; 
@@ -349,7 +349,6 @@ angular.module('studionet')
         }
 
         $scope.updateContribution = function(updateContribution){
-          track("update-node");
 
           if(!updateContribution.title || !updateContribution.body){
             alert("Please input the title or content of the node!");
@@ -408,7 +407,7 @@ angular.module('studionet')
         }
 
 
-        var track = function(activity){
+        $scope.track = function(activity){
           if(window["ga"] == undefined){
             console.log("ga is not defined");
           }
