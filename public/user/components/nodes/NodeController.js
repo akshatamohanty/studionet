@@ -416,6 +416,8 @@ angular.module('studionet')
           }
         }
 
+        var track = $scope.track;
+
 
 
 }]);
