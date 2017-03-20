@@ -107,6 +107,15 @@ angular.module('studionet')
   
   }
 
+  $scope.track = function(activity){
+    if(window["ga"] == undefined){
+      console.log("ga is not defined");
+    }
+    else{
+      ga("send", "event", "pop up", activity, "/user");
+    }
+  }
+
   // ----------------- Graphs
   var graph_container = angular.element('#cy')[0];
   $scope.linkMode = undefined;

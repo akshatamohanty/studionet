@@ -126,7 +126,6 @@ angular.module('studionet')
 		});
 	};
 
-
 	var repositionNodes = function(node){
 
 		// remove the supernode
