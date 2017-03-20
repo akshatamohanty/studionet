@@ -33,6 +33,7 @@ angular.module('studionet')
 		graph : undefined,
 		threshold: 0,
 		comments: undefined,
+		flattenedGraph : undefined,
 		spinner : new Spinner(opts) // refactor
 	};
 
@@ -195,38 +196,36 @@ angular.module('studionet')
 
 	o.draw_graph = function(node, opt){
 
-		o.spinner.stop();
-		console.log("opt", opt);
 		if (window.Worker) {
 
-  			//console.log("Worker exists");
 			var myWorker = new Worker('/user/components/graphs/graph-worker.js');
+
 			myWorker.postMessage([ flattenGraph(o.graph), o.threshold, supernode.contribution, window.innerWidth, window.innerHeight, opt]);
-	  		//console.log('Message posted to worker');
 
 	  		myWorker.onmessage = function(e) {
-			  console.log("graph positions received");
-			  
-			  var graphPos = JSON.parse(e.data);
-			  o.spinner.stop();
-			  graphPos.nodes.map(function(n){
+				console.log("graph positions received");
+				o.spinner.stop();
 
-			  	var node = o.graph.getElementById(n.id);
 
-			  	if(node.position().x == n.position.x && node.position().y == n.position.y){
-			  		// do nothing
-			  	}
-			  	else{
-			  		var time = 400;
-			  		if(n.onSpiral == n.id){
-			  			time = 800;
-			  		}
-			        setTimeout( function(){
-			        	node.animate({ 	position : { x: n.position.x, y: n.position.y } }, { duration: time } );
-			        }, 4000);
-			  	}
+				var graphPos = JSON.parse(e.data);
+				o.spinner.stop();
+				graphPos.nodes.map(function(n){
 
-			  });
+					var node = o.graph.getElementById(n.id);
+
+					if(node.position().x == n.position.x && node.position().y == n.position.y){
+					}
+					else{
+						var time = 400;
+						if(n.onSpiral == n.id){
+							time = 100;
+						}
+					    setTimeout( function(){
+					    	node.animate({ 	position : { x: n.position.x, y: n.position.y } }, { duration: time } );
+					    }, 0);
+					}
+
+				});
 
 
 			}
@@ -653,12 +652,6 @@ angular.module('studionet')
 		});
 
 		o.removeAdditionalStyles();
-	};
-
-	o.runLayout = function(){
-	  o.graph.layout().stop(); 
-	  layout = o.graph.elements().makeLayout({ 'name': 'cola'}); 
-	  layout.start();  	
 	};
 
 	return o;
