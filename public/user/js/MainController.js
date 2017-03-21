@@ -88,6 +88,12 @@ angular.module('studionet')
   $scope.switchLayout = function(id){
     $scope.currentLayout = id;
     GraphService.draw_graph(null,  $scope.currentLayout );
+    if(window["ga"] == undefined){
+      console.log("ga is not defined");
+    }
+    else{
+      ga("send", "event", "action", "change-layout" + $scope.layouts[id].name, "/graph");
+    }
   }
 
   // ---- Displays message in the message-container
