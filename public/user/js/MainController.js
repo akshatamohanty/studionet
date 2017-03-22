@@ -126,18 +126,72 @@ angular.module('studionet')
   var graph_container = angular.element('#cy')[0];
   $scope.linkMode = undefined;
   // First Initialization of the graph on page-refresh
-  
+  var nodeClearTimeout;
+  var t;
+  $scope.selectMode = false;
   $scope.graphInit = function(){  
-
       var graphObject = {
         threshold : 5, 
         onMouseOver: function(evt){
 
-                    if(evt.cyTarget.id() =='ghost')
-                      console.log(evt.cyTarget.id());
-                    else
-                      showQTip(evt);
 
+                      if(evt.cyTarget.isNode && evt.cyTarget.isNode()){
+                          if(evt.cyTarget.id() =='ghost'){
+                            //console.log(evt.cyTarget.id());
+                          }
+                          if($scope.selectMode == true && evt.cyTarget.hasClass('faded'))
+                            return;
+                          else{
+
+                              if(nodeClearTimeout != undefined){
+                                clearTimeout(nodeClearTimeout);   
+                                nodeClearTimeout = undefined;
+                              }
+
+                              if($scope.nodeInfo != undefined){
+                                GraphService.graph.nodes().removeClass('hover');
+                                evt.cyTarget.addClass('hover');
+
+                                $scope.nodeInfo = evt.cyTarget.data();
+                                $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
+                                $scope.$apply();
+                              }
+                              else{
+                                
+                                if(t != undefined)
+                                  return;
+
+                                t = setTimeout(function(){
+                                  GraphService.graph.nodes().removeClass('hover');
+                                  evt.cyTarget.addClass('hover');
+
+                                  $scope.nodeInfo = evt.cyTarget.data();
+                                  $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                  $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
+                                  $scope.$apply();
+                                }, 300);
+                              }
+                          }
+
+
+                      }
+                      else{
+                            if(t !== undefined ){
+                              clearTimeout(t);
+                              t = undefined;
+                            }
+
+                            if($scope.nodeInfo != undefined && nodeClearTimeout == undefined && $scope.selectMode == false){
+                              GraphService.graph.nodes().removeClass('hover');
+
+                              nodeClearTimeout = setTimeout( function(){
+                                      $scope.nodeInfo = undefined;
+                                      $scope.$apply();
+                                      console.log("cleared!");
+                                    }, 300);
+                            }
+                      }
                   },
         onEdgeSingleClick: function(evt){
               //console.log("Edge clicked", evt.cyTarget.data());
@@ -147,6 +201,7 @@ angular.module('studionet')
         }, 
         onCanvasClick: function(){ 
                   GraphService.removeAdditionalStyles();
+                  $scope.selectMode = false;
         },
         onTapHold : function(evt){ 
 
@@ -210,8 +265,14 @@ angular.module('studionet')
                                   graphObject.onCanvasClick();
                                   return;
                                 }
-                                showQTip(evt); 
-                                GraphService.selectNode(evt.cyTarget); 
+
+                                $scope.nodeInfo = evt.cyTarget.data();
+                                $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
+                                $scope.$apply();
+
+                                GraphService.selectNode(evt.cyTarget.id());
+                                $scope.selectMode = true;
                           },
         onNodeDoubleClick : function(evt){
                                   var node = evt.cyTarget;
@@ -274,7 +335,8 @@ angular.module('studionet')
       qtipFormat.id = "qTip-" +  node.id();
       qtipFormat.content.text =  node.data('title') + "<br>- " + ( (auth.nickname !=null && auth.nickname.length) ? auth.nickname : auth.name)
 
-      node.qtip(qtipFormat, evt);  
+      $scope.nodeInfo = true;
+      //node.qtip(qtipFormat, evt);  
 
   }
 

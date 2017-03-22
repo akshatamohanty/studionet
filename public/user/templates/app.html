@@ -73,7 +73,7 @@
         </ul>
       </div>
 
-      <!-- <br><br>
+<!--       <br><br>
       <div>
 
         <div class="row">
@@ -88,29 +88,54 @@
 
 
       <div id="message" style='width: 350px'>{{message}}&nbsp;&nbsp;&nbsp;&nbsp;</div>
-      
-      <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
 
-      <div ng-show='filters.length==0'>{{graph.nodes().length || 0}} matching nodes found.</div> 
+      <div id='node-info' ng-show='nodeInfo' style='background-color: #000623; max-width: 350px; word-wrap: break-word; height: 100%;'>
+          <br>
+          <h3> {{ nodeInfo.title }} </h3>
+          <hr>
+          <br>
+          <h6>
+            <img class="graph-nav-control icon" src={{usersHash[nodeInfo.createdBy].avatar}} style='display: inline-block;'> 
+            {{nodeInfo.auth}} 
+          </h6>
 
-      <div id='filter-shortcuts' ng-show='filters.length>0'>
-        
-        <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
-        
-        <div class='filter-shortcut-container' ng-repeat="filter in filters">
-            
-            <!-- if filter is an array of values -->
-            <div ng-if='filter.type == "Array"'>
-                <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
-                <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
-            </div>
-            
-            <!-- if filter is a range -->
-            <div ng-if='filter.type == "Range"'>
-                <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
-                <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
-            </div>
-            
+          <br>
+          <h6>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
+
+          <br>
+
+          <p>
+              <i class='fa fa-eye'>&nbsp;&nbsp;{{nodeInfo.views}} views </i><br>
+              <i class='fa fa-star-o'>&nbsp;&nbsp;{{ nodeInfo.rating.toFixed(1) }} rated</i><br>
+              <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} replies</i><br>
+          </p>
+
+      </div>
+
+      <div ng-hide='nodeInfo' style='background-color: #000623;'>
+        <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
+
+        <div ng-show='filters.length==0'>{{graph.nodes().length || 0}} matching nodes found.</div> 
+
+        <div id='filter-shortcuts' ng-show='filters.length>0'>
+          
+          <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
+          
+          <div class='filter-shortcut-container' ng-repeat="filter in filters">
+              
+              <!-- if filter is an array of values -->
+              <div ng-if='filter.type == "Array"'>
+                  <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
+                  <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
+              </div>
+              
+              <!-- if filter is a range -->
+              <div ng-if='filter.type == "Range"'>
+                  <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
+                  <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
+              </div>
+              
+          </div>
         </div>
       </div>
 

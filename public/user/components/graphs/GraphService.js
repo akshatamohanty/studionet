@@ -78,7 +78,7 @@ angular.module('studionet')
       		o.graph.off("mouseover");
 
 			// Add graph interactions
-			o.graph.on('mouseover', 'node', function(evt){
+			o.graph.on('mouseover', function(evt){
 			  	graphObject.onMouseOver(evt);
 			});
 

@@ -46,6 +46,8 @@ var computeBgColorFn = function(node){
     if(node.data('type') == "comment")
       return "red";
 
+    return final;
+
     switch(rating){
 
         case (1):
@@ -283,6 +285,12 @@ var graph_style = {
             .css({
               'width': 16,
               'height': 16,
+            })
+
+          .selector('node.hover')
+            .css({
+              'width': 20,
+              'height': 20,
             })
 
           .selector('edge.faded')
