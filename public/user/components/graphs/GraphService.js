@@ -264,7 +264,15 @@ angular.module('studionet')
 				res.body = res.body.replace(inlineImagePattern, 'src="../api/contributions/' + node.id() + '/attachments?name=studionet-inline-img-');
 
 				// ------------- compute the reading time
-	            var t =  parseInt((res.body.length / 300).toFixed(0));
+				function strip(html)
+				{
+				   var tmp = document.createElement("DIV");
+				   tmp.innerHTML = html;
+				   return tmp.textContent || tmp.innerText || "";
+				}
+				var t = ((res.body).split(" ").length / 200).toFixed(0); // number of words
+
+	            //var t =  parseInt((res.body.length / 300).toFixed(0)); 
 	            if(t == 0)
 	            	res.readingTime = "Very short read!";
 	            else if(t == 1)
