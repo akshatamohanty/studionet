@@ -59,15 +59,17 @@
   top: 15px; !important  // standard
 
   width: 200px;
-  max-width: 200px;
+  max-width: 260px;
   height: auto !important;
   min-height: 10px;
-  margin-left: 30px !important;
-  margin-right: 30px !important;
+  padding-left: 30px !important;
+  padding-right: 30px !important;
 
   z-index: 3;
   color: #969696;
   line-height: 25px;
+
+  background: rgba(0, 6, 35, 0.2)
 }
 
 #filter-shortcuts{

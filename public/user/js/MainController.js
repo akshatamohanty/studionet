@@ -154,6 +154,8 @@ angular.module('studionet')
 
                                 $scope.nodeInfo = evt.cyTarget.data();
                                 $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
+                                $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                 $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
                                 $scope.$apply();
                               }
@@ -168,6 +170,8 @@ angular.module('studionet')
 
                                   $scope.nodeInfo = evt.cyTarget.data();
                                   $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                  $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
+                                  $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                   $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
                                   $scope.$apply();
                                 }, 300);
@@ -268,6 +272,8 @@ angular.module('studionet')
 
                                 $scope.nodeInfo = evt.cyTarget.data();
                                 $scope.nodeInfo.incomers = evt.cyTarget.incomers().length;
+                                $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
+                                $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                 $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
                                 $scope.$apply();
 

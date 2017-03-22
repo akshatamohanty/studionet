@@ -235,6 +235,12 @@ angular.module('studionet')
 
 	}
 
+	// -- comments
+	o.getCommentCount = function(node_id){
+		return o.comments.nodes("[ref=" + node_id + "]").length;
+	}
+
+
 	//------ Graph Manipulations
 	o.getNode = function(node, force){
 
