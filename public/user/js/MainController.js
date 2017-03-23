@@ -81,6 +81,65 @@ angular.module('studionet')
     showDetailsModal( GraphService.graph.getElementById("560") ); // fix later
   }
 
+  // ----- quick finds
+  $scope.qfs = [    
+                    { 'name': "--", 'id': 0},
+                    { 'name': "My Nodes", 'id': 1},
+                    { 'name': "My Comments", 'id': 2},
+                    { 'name': "Mention Me", 'id': 3},
+                    { 'name': "Questions", 'id': 4}, 
+                    { 'name': "Latest", 'id': 5},
+                    { 'name': "Since last login", 'id': 6}
+                ];
+  $scope.quickfind = $scope.qfs[0];
+  $scope.highlight = function(id){
+    $scope.quickfind = $scope.qfs[id];
+    GraphService.graph.nodes().removeClass('marked');
+    switch(id){
+      case 0: 
+        break;
+      case 1: 
+        $scope.quickFindMatches = GraphService.graph.nodes("[createdBy="+$scope.me.id +"]").addClass('marked');
+        //GraphService.comments("[createdBy="+$scope.me.id +"]").map(function(c){ GraphService.graph.getElementById(c.data('ref')).addClass('marked') });
+        break;
+      case 3: 
+        GraphService.markMentions().success(function(data){
+          $scope.quickFindMatches = data;
+        });
+        break;
+      case 4: 
+        GraphService.markQuestions().success(function(data){
+          $scope.quickFindMatches = data;
+        });
+        break; 
+      case 5: 
+        // highlight last 5 hours
+        var now = new Date();
+        now = now.getTime();
+        before = now - 5*60*60*1000;
+        $scope.quickFindMatches = GraphService.graph.nodes("[dateCreated>" + before +"]").addClass('marked');
+        break; 
+      case 6: 
+        $scope.quickFindMatches = GraphService.graph.nodes("[dateCreated>" + $scope.me.lastLoggedIn +"]").addClass('marked');
+        break; 
+      case 2: 
+        $scope.quickFindMatches = GraphService.markComments($scope.me.id);
+        break;
+    }
+
+    if(window["ga"] == undefined){
+      console.log("ga is not defined");
+    }
+    else{
+      ga("send", "event", "action", "quick-find" + $scope.qfs[id].name, "/graph");
+    }
+
+  };
+
+
+
+  // ---- layouts
+
   $scope.layouts = [{ 'name': "Spiral", 'id': 0}, 
                     { 'name': "By Date", 'id': 1}, 
                     { 'name': "By Author", 'id': 2}]
@@ -373,6 +432,7 @@ angular.module('studionet')
   $scope.$on( BROADCAST_FILTER_ACTIVE, function(event, args) {
       $scope.matchingNodes = args.nodes;
       $scope.filters = args.data;
+      $scope.quickfind = $scope.qfs[0];
   });
 
   // when filter is cleared

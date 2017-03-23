@@ -106,6 +106,58 @@ router.route('/')
 
 	}, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
 
+router.route('/questions')
+  .get(auth.ensureAuthenticated, function(req, res){
+    var query = [
+      'MATCH (c:contribution)',
+      'WHERE toLower(c.body) CONTAINS "question" OR toLower(c.body) CONTAINS "?"',
+      'RETURN COLLECT(ID(c))'
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+    };
+
+    db.query(query, params, function(error, result){
+
+      if (error)
+        console.log('[ERROR] Error fetching questions ');
+      else{
+        console.log('[SUCCESS] Success in getting the questions: ');
+        res.send(result[0]);
+      }
+    });
+  });
+
+router.route('/mentions')
+  .get(auth.ensureAuthenticated, function(req, res){
+
+    var query = [
+      'MATCH (u:user) WHERE ID(u)={userIdParam}',
+      'WITH u',
+      'MATCH (c:contribution)',
+      'WHERE toLower(c.body) CONTAINS toLower(u.name) OR toLower(c.body) CONTAINS toLower(u.nickname)',
+      'WITH u, collect(ID(c)) as mentions',
+      'RETURN mentions'
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+    };
+
+    db.query(query, params, function(error, result){
+
+      if (error)
+        console.log('[ERROR] Error fetching mentions ');
+      else{
+        console.log('[SUCCESS] Success in getting the mentions: ');
+        res.send(result[0]);
+      }
+    });
+
+  });
+
+
 router.route('/filters')
   .post(contributionUtil.ensureGetContributionsCorrectParams, function(req, res){
 

@@ -43,10 +43,10 @@ var computeBgColorFn = function(node){
     var rating = Math.ceil(node.data().rating);
     var final = "#000623"; 
 
+    return final;
+
     if(node.data('type') == "comment")
       return "red";
-
-    return final;
 
     switch(rating){
 
@@ -241,10 +241,10 @@ var graph_style = {
 
           .selector('.marked')
             .css({
-              'border-color': '#00FF00',//'#AFAFAF',
+              'background-color': '#00FF00',//'#AFAFAF',
               'border-width': 2,
-              'width': 15, 
-              'height': 15             
+              'width': 18, 
+              'height': 18             
             })
 
           .selector('.unmarked')

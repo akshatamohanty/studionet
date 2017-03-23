@@ -241,6 +241,40 @@ angular.module('studionet')
 	}
 
 
+	// --- mark comments
+	o.markComments = function(user_id){
+		var cmt = [];
+		o.comments.map(function(c){
+			if (c.data('createdBy') == user_id)
+				cmt.push(c.id());
+		})
+
+		o.markNode(cmt);
+
+		return cmt;
+	}
+
+	// --- mark mentions
+	o.markMentions = function(user_id){
+		return $http.get('/api/contributions/mentions').success(function(res){
+			o.markNode(res);
+		});		
+	}
+
+	// --- mark questions
+	o.markQuestions = function(user_id){
+		return $http.get('/api/contributions/questions').success(function(res){
+			o.markNode(res);
+		});		
+	}
+
+	o.markUnread = function(user_id){
+		$http.get('/api/contributions/unread').success(function(res){
+
+		});				
+	}
+
+
 	//------ Graph Manipulations
 	o.getNode = function(node, force){
 
@@ -624,8 +658,10 @@ angular.module('studionet')
 		if(node instanceof Array && node.length > 0){
 
 			var selector = [];
-			node.map(function(id){
-				selector.push('node[id="' + id + '"]')
+			node.map(function(id, index){
+				if(o.comments.getElementById(id).length != 0)
+					id = o.comments.getElementById(id)[0].data('ref');
+				selector.push('node[id="' + id + '"]');
 			})
 
 			var selectorQuery = selector.join(", ");

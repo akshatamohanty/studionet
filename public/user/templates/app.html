@@ -61,12 +61,27 @@
       <br>
 
       <div class="btn-group" uib-dropdown is-open="status.isopen">
-        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled" style="width: auto !important; background-color: #000623;color:#969696; border-radius: 0px;">
-          Layout: {{layouts[currentLayout].name}} <span class="caret"></span>
+        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle style="width: auto !important; background-color: #000623;color:#969696; border-radius: 0px; padding: 5px;">
+          Layout: <b>{{layouts[currentLayout].name}}</b> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu pointer" uib-dropdown-menu role="menu" aria-labelledby="single-button">
           <li role="menuitem" ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
               <a>{{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i></a>
+          </li>
+          <li class="divider"></li>
+          <li role="menuitem"><a href="https://goo.gl/bo7OtP" target="_blank">Suggest New</a></li>
+        </ul>
+      </div>
+
+      <br><br>
+
+      <div class="btn-group" uib-dropdown is-open="statusFind.isopen">
+        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle style="width: auto !important; background-color: #000623;color:#969696; border-radius: 0px; padding: 5px;" ng-disabled="filters.length > 0">
+          <i class='fa fa-lightbulb-o'></i> : <b>{{quickfind.name}}</b> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pointer" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+          <li role="menuitem" ng-repeat='qf in qfs' ng-click='highlight(qf.id)'>
+              <a>{{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i></a>
           </li>
           <li class="divider"></li>
           <li role="menuitem"><a href="https://goo.gl/bo7OtP" target="_blank">Suggest New</a></li>
@@ -89,9 +104,35 @@
 
       <div id="message" style='width: 350px'>{{message}}&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
-      <div id='node-info' ng-show='nodeInfo' style='background-color: #000623; max-width: 370px; word-wrap: break-word; height: 100%; padding-right: 10px;'>
+      <div style='background-color: rgba(0, 6, 35, 0.9); max-height: 300px;'>
+        <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
+
+        <div ng-show='filters.length==0'>{{quickFindMatches.length || graph.nodes().length || 0}} matching nodes found.</div> 
+
+        <div id='filter-shortcuts' ng-show='filters.length>0'>
+          
+          <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
+          
           <br>
-          <h3> {{ nodeInfo.title }} </h3>
+          <div class='filter-shortcut-container' ng-repeat="filter in filters" ng-hide='nodeInfo' style='background-color: rgba(0, 6, 35, 0.9); max-width: 370px; word-wrap: break-word; height: 100%;'>
+              
+              <!-- if filter is an array of values -->
+              <div ng-if='filter.type == "Array"'>
+                  <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
+                  <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
+              </div>
+              
+              <!-- if filter is a range -->
+              <div ng-if='filter.type == "Range"'>
+                  <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
+                  <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
+              </div>
+          </div>
+        </div>
+
+        <div id='node-info' ng-show='nodeInfo' style='background-color: rgba(0, 6, 35, 0.9); word-wrap: break-word; height: 100%;'>
+          <br>
+          <h5> {{ nodeInfo.title }} </h5>
           <hr>
           <br>
           <h6>
@@ -111,39 +152,17 @@
               <i class='fa fa-comment'>&nbsp;&nbsp;{{ nodeInfo.comments }} comment(s)</i><br>
               <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
           </p>
-
-      </div>
-
-      <div ng-hide='nodeInfo' style='background-color: #000623;'>
-        <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
-
-        <div ng-show='filters.length==0'>{{graph.nodes().length || 0}} matching nodes found.</div> 
-
-        <div id='filter-shortcuts' ng-show='filters.length>0'>
-          
-          <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
-          
-          <div class='filter-shortcut-container' ng-repeat="filter in filters">
-              
-              <!-- if filter is an array of values -->
-              <div ng-if='filter.type == "Array"'>
-                  <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
-                  <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
-              </div>
-              
-              <!-- if filter is a range -->
-              <div ng-if='filter.type == "Range"'>
-                  <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
-                  <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
-              </div>
-              
-          </div>
         </div>
       </div>
+
 
       <div id='feedback-form' class='pointer'><a href='https://goo.gl/forms/XRWfltHR1MYym4bv2' target='_blank' style="position: fixed; bottom: 30px;color: #969696;">
             Do you have feedback?</a>
       </div>
+
+
+
+
 
   </div>
   
