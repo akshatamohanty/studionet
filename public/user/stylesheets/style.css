@@ -354,6 +354,7 @@ tr:hover{
 	font-size: 14px;
 	color: #ACAAAA;
 	font-weight: 300;
+	word-wrap: break-word;
 }
 
 .panel-default>.panel-heading+.panel-collapse>.panel-body{

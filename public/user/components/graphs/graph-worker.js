@@ -13,7 +13,7 @@ onmessage = function(e) {
 var draw_author =  function(graph, threshold, supernodeId, max_width, max_height){
 
   var sortFn = function (ele1, ele2) {
-    return ( ele1.dateCreated < ele2.dateCreated ? -1 : 1)
+    return ( ele1.dateCreated > ele2.dateCreated ? -1 : 1)
   }
 
   // Sort the nodes first
@@ -21,21 +21,21 @@ var draw_author =  function(graph, threshold, supernodeId, max_width, max_height
 
   var radii = [];
   var count = 0;
-  var angleInc = 2*Math.PI/120; 
+  var angleInc = 2*Math.PI/140; 
   sortedNodes.map(function(node, index){
 
     var author = node.createdBy; 
-    var size =  15//10 + (node.incomers.length + node.successors/5 + node.predecessors.length/2);
+    var size =  20//10 + (node.incomers.length + node.successors/5 + node.predecessors.length/2);
 
     if(radii[author] == undefined){
       var angle = count*(angleInc);
-      radii[author] = [ angle, 2*size ];
+      radii[author] = [ angle, 1.2*size ];
       count ++;
       node.position = { x: max_width/2 + (200+radii[author][1])*Math.cos(radii[author][0]), y: max_height/2 + (200+radii[author][1])*Math.sin(radii[author][0]) }; 
       node.radius = size;
     }
     else{
-      radii[author][1] += 2*size;
+      radii[author][1] += 1.2*size;
       node.radius = size;  
       node.position = { x: max_width/2 + (200+radii[author][1])*Math.cos(radii[author][0]), y: max_height/2  + (200+radii[author][1])*Math.sin(radii[author][0]) }; 
     }
