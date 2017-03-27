@@ -67,7 +67,7 @@
             <div id='message'>{{message}}</div>
         </div>
 
-        <div uib-accordion-group class="panel-default side-bar" heading="Layouts: {{layouts[currentLayout].name}}" is-open="false">
+        <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="false">
               <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
                   {{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
               </div>
@@ -102,6 +102,7 @@
             </div>
 
             <div ng-if='filters.length == 0'>
+              <h6 id='filter-nodes-count'>{{quickFindMatches.length}} matching node(s) found.</h6>
               <div ng-repeat='qf in qfs' ng-click='highlight(qf.id)' class='pointer'>
                   {{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
               </div>

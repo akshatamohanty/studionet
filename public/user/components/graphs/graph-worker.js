@@ -49,6 +49,13 @@ var draw_author =  function(graph, threshold, supernodeId, max_width, max_height
 
 var draw_linear = function(graph, threshold, supernodeId, max_width, max_height){
 
+  function getDateStart(date){
+      var date2 = new Date(date); 
+      date2.setHours(0); date2.setMinutes(0); date2.setSeconds(0);
+      return (new Date(date2)).getTime();
+  }
+
+
   var sortFn = function (ele1, ele2) {
     return ( ele1.dateCreated < ele2.dateCreated ? -1 : 1)
   }
@@ -57,14 +64,15 @@ var draw_linear = function(graph, threshold, supernodeId, max_width, max_height)
   var sortedNodes = graph.nodes.sort( sortFn );
 
   var init = sortedNodes[0].dateCreated;
+  init = getDateStart(init); 
 
   var dateMap = [];
   sortedNodes.map(function(node, index){
 
-    var x = Math.round( ( (node.dateCreated - init) / 86400 ) / 1000 ); 
+    var x = Math.round( ( ( getDateStart(node.dateCreated) - init) / 86400 ) / 1000 ); 
     var y = node.dateCreated % 86400000 ;
 
-    var size =  10 + (node.incomers.length + node.successors/5 + node.predecessors.length/2);
+    var size =  20; //+ (node.incomers.length + node.successors/5 + node.predecessors.length/2);
 
     if(dateMap[x] !== undefined){
       dateMap[x]+=size;

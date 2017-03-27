@@ -89,8 +89,7 @@ angular.module('studionet')
                     { 'name': "My Comments", 'id': 2},
                     { 'name': "Mention Me", 'id': 3},
                     { 'name': "Questions", 'id': 4}, 
-                    { 'name': "Latest", 'id': 5},
-                    { 'name': "Since last login", 'id': 6}
+                    { 'name': "Latest", 'id': 5}
                 ];
   $scope.quickfind = $scope.qfs[0];
   $scope.highlight = function(id){
@@ -117,16 +116,15 @@ angular.module('studionet')
         // highlight last 5 hours
         var now = new Date();
         now = now.getTime();
-        before = now - 5*60*60*1000;
+        before = now - 12*60*60*1000;
         $scope.quickFindMatches = GraphService.graph.nodes("[dateCreated>" + before +"]").addClass('marked');
-        break; 
-      case 6: 
-        $scope.quickFindMatches = GraphService.graph.nodes("[dateCreated>" + $scope.me.lastLoggedIn +"]").addClass('marked');
         break; 
       case 2: 
         $scope.quickFindMatches = GraphService.markComments($scope.me.id);
         break;
     }
+
+    GraphService.graph.fit($scope.quickFindMatches);
 
     if(window["ga"] == undefined){
       console.log("ga is not defined");

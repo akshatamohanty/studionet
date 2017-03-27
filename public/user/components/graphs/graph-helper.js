@@ -214,6 +214,14 @@ var graph_style = {
               'border-color': '#A3BC05',
             })
 
+          .selector('.marked')
+            .css({
+              'background-color': '#00FF00',//'#AFAFAF',
+              'border-width': 2,
+              'width': 18, 
+              'height': 18             
+            })
+
           .selector('node.read')
             .css({
               //'background-color' : '#5E5E5E',
@@ -221,6 +229,12 @@ var graph_style = {
               'height' : 6,
               'border-width': 0.5,
               'opacity': 0.6
+            })
+
+          .selector('.marked.read')
+            .css({
+              'width': 12, 
+              'height': 12             
             })
 
           .selector('.marked.highlighted')
@@ -237,14 +251,6 @@ var graph_style = {
             .css({
               'width' : 1, 
               'height': 1
-            })
-
-          .selector('.marked')
-            .css({
-              'background-color': '#00FF00',//'#AFAFAF',
-              'border-width': 2,
-              'width': 18, 
-              'height': 18             
             })
 
           .selector('.unmarked')
@@ -266,7 +272,7 @@ var graph_style = {
               'height' : '2'
             })
 
-          .selector('node.glow.read')
+          .selector('node.marked.read')
             .css({
               //'background-color' : '#5E5E5E',
               'width' : 7.5, 
