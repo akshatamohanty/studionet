@@ -1,6 +1,6 @@
 var app = angular.module('studionet', ['ngAnimate', 'ngSanitize','ui.router','ui.bootstrap', 'nvd3',
 										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree', 
-										'angular-ranger','textAngular', 'angularMoment']);
+										'angular-ranger','textAngular', 'angularMoment', 'mentio']);
 
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){

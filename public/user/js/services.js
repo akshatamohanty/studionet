@@ -38,9 +38,11 @@ angular.module('studionet')
 				o.usersHash = o.users.hash();
 
 				// convert all names to title case
+				o.people = [];
 				for(var i=0; i < o.users.length; i++){
 					var u = o.users[i];
 					u.name = u.name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+					o.people.push({'label' : u.name});
 				}
 
 			});

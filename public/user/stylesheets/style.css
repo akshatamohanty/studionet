@@ -335,3 +335,28 @@ tr:hover{
 #level-up > .progress > .progress-bar-success{
 	background-color: #3a79b8;
 }
+
+.dropdown-menu>li>a{
+	font-family: 'Open Sans', sans-serif;
+}
+
+.side-bar{
+	background-color: rgba(0, 6, 35, 0.9);
+	border-color: #3a79b8;
+	width: 210px;
+}
+
+.side-bar > .panel-heading{
+	background-color: rgba(0, 6, 35, 0.9) !important;
+}
+
+.side-bar > .panel-heading > h4.panel-title{
+	font-size: 14px;
+	color: #ACAAAA;
+	font-weight: 300;
+}
+
+.panel-default>.panel-heading+.panel-collapse>.panel-body{
+	border-top-color: #337ab7;
+	padding: 7.5px;
+}

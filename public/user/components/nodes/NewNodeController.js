@@ -1,9 +1,10 @@
 angular.module('studionet')
 
-.controller('NewNodeController', ['$scope', 'supernode', 'GraphService', 'tags', function($scope, supernode, GraphService, tags){
+.controller('NewNodeController', ['$scope', 'supernode', 'GraphService', 'tags', 'users', function($scope, supernode, GraphService, tags, users){
 
       // for the new contribution
       $scope.contributionData = { _tags: [], attachments: [], tags: [], refType: "RELATED_TO", contentType: "text", ref: supernode.contribution};
+      $scope.people = users.people;
 
       $scope.loadTags = function($query){
           return tags.tags.filter(function(tag){
@@ -23,7 +24,6 @@ angular.module('studionet')
             console.log("Create Contribution Modal Closed");
 
       };
-
 
       //Uploaded files
       $scope.uplodateFiles = function (files){

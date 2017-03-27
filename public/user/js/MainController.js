@@ -5,6 +5,7 @@ angular.module('studionet')
                                function($scope, $stateParams, $rootScope, $uibModal, GraphService, users, profile, supernode, links, groups){
 
   $scope.dockmode = true;
+  $scope.usersHash = users.usersHash;
 
   // --------------- socket connection message handling
   socket.on('node_created', function (node) {
@@ -83,7 +84,7 @@ angular.module('studionet')
 
   // ----- quick finds
   $scope.qfs = [    
-                    { 'name': "--", 'id': 0},
+                    { 'name': "None", 'id': 0},
                     { 'name': "My Nodes", 'id': 1},
                     { 'name': "My Comments", 'id': 2},
                     { 'name': "Mention Me", 'id': 3},

@@ -13,8 +13,6 @@
   <!-- sidebar -->
   <div class='graph-controls'>
 
-
-
     <!-- Profile -->
     <img class="graph-nav-control icon" ng-if='!me.isGuest' src={{me.avatar}} uib-tooltip='{{me.nickname ? me.nickname : me.name}}' tooltip-placement='left' ng-click='track("own-profile");showProfile()'></i>
     <a href='/guest'><img class="graph-nav-control icon" ng-if='me.isGuest' src="../assets/images/avatar.png" uib-tooltip='Guest' tooltip-placement='left'></i></a>
@@ -44,7 +42,7 @@
     <i class="graph-nav-control icon fa fa-group" data-toggle="modal" data-target="#groupActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Group Activity' tooltip-placement='left' ng-click='track("board-group")'></i>
     <i class="graph-nav-control icon fa fa-star" data-toggle="modal" data-target="#contributionsActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Node Activity' tooltip-placement='left' ng-click='track("board-node")'></i>
     <i class="graph-nav-control icon fa fa-comment" data-toggle="modal" data-target="#commentActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Comment Activity' tooltip-placement='left' ng-click='track("board-comment")'></i>
-    <i class="graph-nav-control icon fa fa-filter" data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" uib-tooltip='Filter Nodes' tooltip-placement='left' ng-click='track("filter")'></i>
+    <!-- <i class="graph-nav-control icon fa fa-filter" data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" uib-tooltip='Filter Nodes' tooltip-placement='left' ng-click='track("filter")'></i> -->
     <i class="graph-nav-control icon fa fa-plus" ng-if='!me.isGuest' data-toggle="modal" data-target="#newNode" data-backdrop="static" data-keyboard="false" uib-tooltip='New Node' tooltip-placement='left' ng-click='track("new-node");'></i> 
     <i class="graph-nav-control icon fa fa-arrows-alt" ng-click='resetGraph(); zoomLevel=100.00' uib-tooltip='Fit Graph' tooltip-placement='left'></i>
     <i class="graph-nav-control icon fa fa-plus" ng-if='me.isGuest' uib-tooltip='New Node (only open to NUS users)' tooltip-placement='left'></i> 
@@ -60,33 +58,88 @@
 
       <br>
 
-      <div class="btn-group" uib-dropdown is-open="status.isopen">
-        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle style="width: auto !important; background-color: #000623;color:#969696; border-radius: 0px; padding: 5px;">
-          Layout: <b>{{layouts[currentLayout].name}}</b> <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu pointer" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-          <li role="menuitem" ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
-              <a>{{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i></a>
-          </li>
-          <li class="divider"></li>
-          <li role="menuitem"><a href="https://goo.gl/bo7OtP" target="_blank">Suggest New</a></li>
-        </ul>
-      </div>
+      <!-- accordian -->
+      <uib-accordion close-others="true">
+        
+        <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open="true">
+            <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
+            <div> Total Nodes: {{graph.nodes().length}} nodes</div> 
+            <div id='message'>{{message}}</div>
+        </div>
 
-      <br><br>
+        <div uib-accordion-group class="panel-default side-bar" heading="Layouts: {{layouts[currentLayout].name}}" is-open="false">
+              <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
+                  {{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
+              </div>
+              <hr style='border-bottom: 0px;'>
+              <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
+        </div>
 
-      <div class="btn-group" uib-dropdown is-open="statusFind.isopen">
-        <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle style="width: auto !important; background-color: #000623;color:#969696; border-radius: 0px; padding: 5px;" ng-disabled="filters.length > 0">
-          <i class='fa fa-lightbulb-o'></i> : <b>{{quickfind.name}}</b> <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu pointer" uib-dropdown-menu role="menu" aria-labelledby="single-button">
-          <li role="menuitem" ng-repeat='qf in qfs' ng-click='highlight(qf.id)'>
-              <a>{{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i></a>
-          </li>
-          <li class="divider"></li>
-          <li role="menuitem"><a href="https://goo.gl/bo7OtP" target="_blank">Suggest New</a></li>
-        </ul>
-      </div>
+
+        <div uib-accordion-group class="panel-default side-bar" heading="Highlighted: {{filters.length ? 'Custom'  : quickfind.name}}">
+
+            
+
+            <div id='filter-shortcuts' ng-show='filters.length>0'>
+              
+              <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
+              
+              <br>
+              <div class='filter-shortcut-container' ng-repeat="filter in filters" style='background-color: rgba(0, 6, 35, 0.9); max-width: 370px; word-wrap: break-word; height: 100%;'>
+                  
+                  <!-- if filter is an array of values -->
+                  <div ng-if='filter.type == "Array"'>
+                      <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
+                      <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
+                  </div>
+                  
+                  <!-- if filter is a range -->
+                  <div ng-if='filter.type == "Range"'>
+                      <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
+                      <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
+                  </div>
+              </div>
+            </div>
+
+            <div ng-if='filters.length == 0'>
+              <div ng-repeat='qf in qfs' ng-click='highlight(qf.id)' class='pointer'>
+                  {{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
+              </div>
+            </div>
+
+            <div class='pointer' data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false">Custom</div>
+            <hr style='border-bottom: 0px;'>
+            <div><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;''>Suggest New</a></div>
+        </div>
+
+
+        <div uib-accordion-group class="panel-default side-bar" heading="{{nodeInfo == undefined ? 'Node Information' : nodeInfo.title}}" is-open="nodeInfo !== undefined" is-disabled='nodeInfo == undefined'>
+            <div id='node-info' ng-show='nodeInfo' style='word-wrap: break-word; height: 100%;'>
+              
+              <h6>
+                <img src='{{usersHash[nodeInfo.createdBy].avatar}}' style='display: inline-block; width: 30px; height: 30px; border-radius: 50%;'> 
+                &nbsp;{{nodeInfo.auth}}
+              </h6>
+
+              <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
+              <h6 ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
+
+              <br>
+
+              <p>
+                  <i class='fa fa-calendar'>&nbsp;&nbsp;{{nodeInfo.dateCreated | amCalendar}} </i><br>
+                  <i class='fa fa-eye'>&nbsp;&nbsp;{{nodeInfo.views}} views </i><br>
+                  <i class='fa fa-star-o'>&nbsp;&nbsp;{{ nodeInfo.rating.toFixed(1) }} rating</i><br>
+                  <i class='fa fa-comment'>&nbsp;&nbsp;{{ nodeInfo.comments }} comment(s)</i><br>
+                  <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
+              </p>
+            </div>
+        </div>
+
+      </uib-accordion>
+
+
+
 
 <!--       <br><br>
       <div>
@@ -102,58 +155,8 @@
       </div> -->
 
 
-      <div id="message" style='width: 350px'>{{message}}&nbsp;&nbsp;&nbsp;&nbsp;</div>
+     
 
-      <div style='background-color: rgba(0, 6, 35, 0.9); max-height: 300px;'>
-        <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
-
-        <div ng-show='filters.length==0'>{{quickFindMatches.length || graph.nodes().length || 0}} matching nodes found.</div> 
-
-        <div id='filter-shortcuts' ng-show='filters.length>0'>
-          
-          <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
-          
-          <br>
-          <div class='filter-shortcut-container' ng-repeat="filter in filters" ng-hide='nodeInfo' style='background-color: rgba(0, 6, 35, 0.9); max-width: 370px; word-wrap: break-word; height: 100%;'>
-              
-              <!-- if filter is an array of values -->
-              <div ng-if='filter.type == "Array"'>
-                  <!-- <h6 id='filter-nodes-count'>{{ filter.value.length }} {{filter.name}}(s) selected</h6> -->
-                  <h6 class='clear-filter-shortcut' ng-repeat="fval in filter.value track by fval.id" ng-click="clearFilter(filter.code, fval.id)">{{ fval.name }}</h6>
-              </div>
-              
-              <!-- if filter is a range -->
-              <div ng-if='filter.type == "Range"'>
-                  <!-- <h6 id='filter-nodes-count' >{{filter.name}} selected</h6> -->
-                  <h6 class='clear-filter-shortcut' ng-click="clearFilter(filter.code)">{{filter.value}}</h6>
-              </div>
-          </div>
-        </div>
-
-        <div id='node-info' ng-show='nodeInfo' style='background-color: rgba(0, 6, 35, 0.9); word-wrap: break-word; height: 100%;'>
-          <br>
-          <h5> {{ nodeInfo.title }} </h5>
-          <hr>
-          <br>
-          <h6>
-            <img class="graph-nav-control icon" src={{usersHash[nodeInfo.createdBy].avatar}} style='display: inline-block;'> 
-            &nbsp;&nbsp;{{nodeInfo.auth}} 
-          </h6>
-
-          <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
-          <h6 ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
-
-          <br>
-
-          <p>
-              <i class='fa fa-calendar'>&nbsp;&nbsp;{{nodeInfo.dateCreated | amCalendar}} </i><br>
-              <i class='fa fa-eye'>&nbsp;&nbsp;{{nodeInfo.views}} views </i><br>
-              <i class='fa fa-star-o'>&nbsp;&nbsp;{{ nodeInfo.rating.toFixed(1) }} rating</i><br>
-              <i class='fa fa-comment'>&nbsp;&nbsp;{{ nodeInfo.comments }} comment(s)</i><br>
-              <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
-          </p>
-        </div>
-      </div>
 
 
       <div id='feedback-form' class='pointer'><a href='https://goo.gl/forms/XRWfltHR1MYym4bv2' target='_blank' style="position: fixed; bottom: 30px;color: #969696;">
