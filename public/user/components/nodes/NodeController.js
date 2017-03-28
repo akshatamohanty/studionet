@@ -12,6 +12,9 @@ angular.module('studionet')
 
         $scope.contribution = undefined, $scope.author = undefined, $scope.rate = undefined;
         $scope.usersHash = users.usersHash;
+        $scope.simplePeople = users.users.map(function(u){
+          return {label: u.name};
+        });
 
         /////// --------------- communication with parent container
         var target = document.getElementById('cy');

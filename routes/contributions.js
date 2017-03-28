@@ -136,7 +136,7 @@ router.route('/mentions')
       'MATCH (u:user) WHERE ID(u)={userIdParam}',
       'WITH u',
       'MATCH (c:contribution)',
-      'WHERE toLower(c.body) CONTAINS toLower(u.name) OR toLower(c.body) CONTAINS toLower(u.nickname)',
+      'WHERE toLower(c.body) CONTAINS toLower(u.name) OR toLower(c.body) CONTAINS toLower(u.nickname) OR toLower(c.body) CONTAINS toLower("@[" + u.name + "]")',
       'WITH u, collect(ID(c)) as mentions',
       'RETURN mentions'
     ].join('\n');

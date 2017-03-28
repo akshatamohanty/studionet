@@ -4,7 +4,9 @@ angular.module('studionet')
 
       // for the new contribution
       $scope.contributionData = { _tags: [], attachments: [], tags: [], refType: "RELATED_TO", contentType: "text", ref: supernode.contribution};
-      $scope.people = users.people;
+      $scope.simplePeople = users.users.map(function(u){
+        return {label: u.name};
+      });
 
       $scope.loadTags = function($query){
           return tags.tags.filter(function(tag){

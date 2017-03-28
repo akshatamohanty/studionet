@@ -8,7 +8,9 @@
 
             <!-- Content -->
             <div class='modal-section'>
-              <textarea name="comment" style='min-height: 80px;' ng-model='comment' maxlength="600"></textarea>
+              <textarea type="text" mentio mentio-typed-text="typedTerm" 
+                        mentio-items="simplePeople | filter:label:typedTerm"  name="comment" style='min-height: 80px;' ng-model='comment' maxlength="600">
+              </textarea>
               <h6>{{600 - comment.length}} characters left</h6>
             </div>
 

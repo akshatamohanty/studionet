@@ -398,3 +398,59 @@ angular.module('studionet')
 		return o;
 	}])
 
+
+
+
+
+// -------------- Experimental directive
+// http://embed.plnkr.co/aWBXtk4a5mCNWZFEebiP/ 
+angular.module('studionet').directive('myAwns', ['users', function(users) {
+    var directiveDefinitionObject = {
+      restrict: 'E',
+      templateUrl: "./templates/textAngularWithMentio.html",
+      require: '^ngModel',
+      scope: {
+        ngModel: '=',
+      },
+      controller: function($scope, $q, $http) {
+        $scope.setup = function(element) {
+          element.attr('mentio', 'mentio');
+          element.attr('mentio-typed-term', 'typedTerm');
+          element.attr('mentio-require-leading-space', 'true');
+          element.attr('mentio-id', "'htmlContent'");
+        };
+
+        $scope.searchPeople = function(term) {
+          	var peopleList = [];
+            
+            if(users.users.length == 0)
+            	users.getAll().then(function(){ return populatePeopleList(); });
+            else
+            	return populatePeopleList();
+
+
+            function populatePeopleList(){
+	            angular.forEach(users.users, function(item) {
+	              if (item.name.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
+	                peopleList.push(item);
+	              }
+	            });
+	            $scope.people = peopleList;
+            	return $q.when(peopleList);
+            }
+        
+        };
+
+        $scope.getPeopleText = function(item) {
+          return '@[<strong>' + item.name + '</strong>]';
+        };
+
+        $scope.getPeopleTextRaw = function(item) {
+          return '[@' + item.name + '~' + item.id + ']';
+        };
+      }
+    };
+
+    return directiveDefinitionObject;
+
+  }]);

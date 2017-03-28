@@ -5,7 +5,7 @@
   "scripts": {
     "pre-build": "echo I run before the build script",
     "start": "node ./bin/www",
-    "test": "mocha --timeout 15000"
+    "test": "mocha test -u bdd -R spec"
   },
   "dependencies": {
     "angular-ui-bootstrap": "^2.3.0",
@@ -20,7 +20,6 @@
     "glob": "^7.0.5",
     "gm": "^1.23.0",
     "mkdirp": "^0.5.1",
-    "mmmagic": "^0.4.5",
     "morgan": "~1.7.0",
     "multer": "^1.1.0",
     "nodemon": "^1.11.0",
@@ -44,6 +43,7 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "mocha": "^3.2.0",
+    "should": "^11.2.1",
     "supertest": "^2.0.1"
   }
 }

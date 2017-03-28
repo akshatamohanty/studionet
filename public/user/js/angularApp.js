@@ -70,3 +70,4 @@ app.config(function($provide) {
   		return taOptions;
     }]);
 });
+
