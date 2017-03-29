@@ -19,11 +19,11 @@ var draw_staggered =  function(graph, threshold, supernodeId, max_width, max_hei
   var nodeHash = graph.nodes.hash();
 
   var sortFn = function (ele1, ele2) {
-    return ( ele1.dateCreated > ele2.dateCreated ? -1 : 1)
+    return ( ele1.dateCreated < ele2.dateCreated ? -1 : 1)
   }
 
   // Sort the nodes first
-  var filterNodes = graph.nodes().filter( function(id, node){
+  var filterNodes = graph.nodes.filter( function(id, node){
     if(node.incomers == undefined || node.incomers.length==0)
       return true;
     else 
@@ -31,8 +31,8 @@ var draw_staggered =  function(graph, threshold, supernodeId, max_width, max_hei
   });
   var sortedNodes = filterNodes.sort( sortFn );
 
-  var currX = max_width;
-  var currY = 0;
+  var currX = 0;
+  var currY = max_height/4;
 
   filterNodes.map(function(node, index){
       
@@ -41,10 +41,10 @@ var draw_staggered =  function(graph, threshold, supernodeId, max_width, max_hei
 
       }
       else{
-        node.position = { x: max_width, y: currY }; 
+        node.position = { x: currX, y: max_height/4 }; 
         //console.log("iterating through node", index, node.position);
         node.placed == true
-        currY += 20;
+        currX += 20;
 
         if(node.incomers && node.incomers.length > 0){
           placeChild(node, node.position.x, node.position.y);
@@ -67,11 +67,11 @@ var draw_staggered =  function(graph, threshold, supernodeId, max_width, max_hei
       if(child.placed == true)
         continue;
 
-      var xpos = x+margin+10;
-      child.position = { x: xpos, y:currY }; 
+      var xpos = y+margin+10;
+      child.position = { x: currX, y:xpos }; 
       //console.log("placechild", child.position);
 
-      currY += 20;
+      currX += 20;
       child.placed = true;
 
       if(child.incomers && child.incomers.length > 0){
