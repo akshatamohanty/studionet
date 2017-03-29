@@ -5,10 +5,87 @@ onmessage = function(e) {
     draw_graph(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
   else if(parameters[5] == 1)
     draw_linear(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
-  else 
+  else if(parameters[5] == 2)
     draw_author(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
+  else 
+    draw_staggered(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
 
 }
+
+
+
+var draw_staggered =  function(graph, threshold, supernodeId, max_width, max_height){
+
+  var nodeHash = graph.nodes.hash();
+
+  var sortFn = function (ele1, ele2) {
+    return ( ele1.dateCreated > ele2.dateCreated ? -1 : 1)
+  }
+
+  // Sort the nodes first
+  var filterNodes = graph.nodes().filter( function(id, node){
+    if(node.incomers == undefined || node.incomers.length==0)
+      return true;
+    else 
+      return false;
+  });
+  var sortedNodes = filterNodes.sort( sortFn );
+
+  var currX = max_width;
+  var currY = 0;
+
+  filterNodes.map(function(node, index){
+      
+
+      if(node.placed == true){
+
+      }
+      else{
+        node.position = { x: max_width, y: currY }; 
+        //console.log("iterating through node", index, node.position);
+        node.placed == true
+        currY += 20;
+
+        if(node.incomers && node.incomers.length > 0){
+          placeChild(node, node.position.x, node.position.y);
+        }
+      }
+
+  })
+
+
+  function placeChild(parent, x, y){
+    var margin = 20;
+    
+
+    for(var i=0; i < parent.incomers.length; i++){
+      var child = nodeHash[parent.incomers[i]];
+
+      if(child == undefined)
+        continue;
+
+      if(child.placed == true)
+        continue;
+
+      var xpos = x+margin+10;
+      child.position = { x: xpos, y:currY }; 
+      //console.log("placechild", child.position);
+
+      currY += 20;
+      child.placed = true;
+
+      if(child.incomers && child.incomers.length > 0){
+          //console.log("place child's child")
+          placeChild(child, child.position.x, child.position.y);
+      }
+    }
+  }
+
+  postMessage(JSON.stringify(graph));
+
+}
+
+
 
 var draw_author =  function(graph, threshold, supernodeId, max_width, max_height){
 

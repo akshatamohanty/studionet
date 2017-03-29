@@ -141,7 +141,8 @@ angular.module('studionet')
 
   $scope.layouts = [{ 'name': "Spiral", 'id': 0}, 
                     { 'name': "By Date", 'id': 1}, 
-                    { 'name': "By Author", 'id': 2}]
+                    { 'name': "By Author", 'id': 2},
+                    { 'name': "Staggered", 'id': 3}]
   $scope.currentLayout = 0;
   $scope.switchLayout = function(id){
     $scope.currentLayout = id;
@@ -290,7 +291,7 @@ angular.module('studionet')
 
                                   //node.ungrabify(); 
                                   
-                                  $scope.graph.add({group: "nodes",    data: {'id': 'ghost'},   position: { x: window.innerWidth/2,  y : window.innerHeight/2 }});
+                                  $scope.graph.add({group: "nodes",    data: { id: 'ghost'},   position: { x: window.innerWidth/2,  y : window.innerHeight/2 }});
                                   $scope.graph.add({group: "edges",    data: { id: 'ghost-edge', source: node.id(), target: 'ghost'  } });
 
 
