@@ -167,7 +167,7 @@ angular.module('studionet')
 
       setTimeout(function(){
         $scope.message = "";
-        $scope.$apply();
+        $scope.$digest();
       }, 7000)
   
   }
@@ -216,7 +216,7 @@ angular.module('studionet')
                                 $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
                                 $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                 $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
-                                $scope.$apply();
+                                $scope.$digest();
                               }
                               else{
                                 
@@ -232,7 +232,7 @@ angular.module('studionet')
                                   $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
                                   $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                   $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
-                                  $scope.$apply();
+                                  $scope.$digest();
                                 }, 300);
                               }
                           }
@@ -250,7 +250,7 @@ angular.module('studionet')
 
                               nodeClearTimeout = setTimeout( function(){
                                       $scope.nodeInfo = undefined;
-                                      $scope.$apply();
+                                      $scope.$digest();
                                       console.log("cleared!");
                                     }, 300);
                             }
@@ -334,7 +334,7 @@ angular.module('studionet')
                                 $scope.nodeInfo.outgoers = evt.cyTarget.outgoers().length;
                                 $scope.nodeInfo.comments = GraphService.getCommentCount(evt.cyTarget.id());
                                 $scope.nodeInfo.refTitle = $scope.graph.getElementById( $scope.nodeInfo.ref ).data('title')
-                                $scope.$apply();
+                                $scope.$digest();
 
                                 GraphService.selectNode(evt.cyTarget.id());
                                 $scope.selectMode = true;
@@ -363,7 +363,7 @@ angular.module('studionet')
   var updateZoom = function(){
     if($scope.graph){
       $scope.zoomLevel = (100*$scope.graph.zoom()).toPrecision(4);
-      $scope.$apply();
+      $scope.$digest();
     }
   }
   setTimeout(updateZoom, 1000);

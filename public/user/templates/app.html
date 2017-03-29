@@ -38,10 +38,10 @@
     <br> -->
 
     <!-- Leaderboards & Graph Controls -->
-    <i class="graph-nav-control icon fa fa-user" data-toggle="modal" data-target="#userActivityBoard" data-backdrop="static" data-keyboard="false" uib-tooltip='User Activity' tooltip-placement='left' ng-click='track("board-user")'></i>
+    <!-- <i class="graph-nav-control icon fa fa-user" data-toggle="modal" data-target="#userActivityBoard" data-backdrop="static" data-keyboard="false" uib-tooltip='User Activity' tooltip-placement='left' ng-click='track("board-user")'></i>
     <i class="graph-nav-control icon fa fa-group" data-toggle="modal" data-target="#groupActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Group Activity' tooltip-placement='left' ng-click='track("board-group")'></i>
     <i class="graph-nav-control icon fa fa-star" data-toggle="modal" data-target="#contributionsActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Node Activity' tooltip-placement='left' ng-click='track("board-node")'></i>
-    <i class="graph-nav-control icon fa fa-comment" data-toggle="modal" data-target="#commentActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Comment Activity' tooltip-placement='left' ng-click='track("board-comment")'></i>
+    <i class="graph-nav-control icon fa fa-comment" data-toggle="modal" data-target="#commentActivityBoard" data-backdrop="static" data-keyboard="false"  uib-tooltip='Comment Activity' tooltip-placement='left' ng-click='track("board-comment")'></i> -->
     <!-- <i class="graph-nav-control icon fa fa-filter" data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" uib-tooltip='Filter Nodes' tooltip-placement='left' ng-click='track("filter")'></i> -->
     <i class="graph-nav-control icon fa fa-plus" ng-if='!me.isGuest' data-toggle="modal" data-target="#newNode" data-backdrop="static" data-keyboard="false" uib-tooltip='New Node' tooltip-placement='left' ng-click='track("new-node");'></i> 
     <i class="graph-nav-control icon fa fa-arrows-alt" ng-click='resetGraph(); zoomLevel=100.00' uib-tooltip='Fit Graph' tooltip-placement='left'></i>
@@ -69,7 +69,7 @@
 
         <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="false">
               <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
-                  {{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
+                  {{ ::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
               </div>
               <hr style='border-bottom: 0px;'>
               <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
@@ -104,7 +104,7 @@
             <div ng-if='filters.length == 0'>
               <h6 id='filter-nodes-count'>{{quickFindMatches.length}} matching node(s) found.</h6>
               <div ng-repeat='qf in qfs' ng-click='highlight(qf.id)' class='pointer'>
-                  {{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
+                  {{ ::qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
               </div>
             </div>
 
@@ -205,10 +205,10 @@
 <ng-include src="'components/nodes/newnode.html'"></ng-include>
 
 <!-- Leaderboard Modals -->
-<ng-include src="'components/boards/users.html'" ng-controller='UserBoardController' ></ng-include>
+<!-- <ng-include src="'components/boards/users.html'" ng-controller='UserBoardController' ></ng-include>
 <ng-include src="'components/boards/nodes.html'" ng-controller='NodeBoardController' ></ng-include>
 <ng-include src="'components/boards/comments.html'" ng-controller='CommentBoardController' ></ng-include>
-<ng-include src="'components/boards/groups.html'"></ng-include>
+<ng-include src="'components/boards/groups.html'"></ng-include> -->
 
 
 

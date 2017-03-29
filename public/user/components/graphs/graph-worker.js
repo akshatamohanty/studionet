@@ -1,7 +1,7 @@
 onmessage = function(e) {
 
   var parameters = e.data;
-  if(parameters[5] == undefined || parameters[5] == 0)
+  if(parameters[5] == 0)
     draw_graph(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
   else if(parameters[5] == 1)
     draw_linear(JSON.parse(parameters[0]), parameters[1], parameters[2], parameters[3], parameters[4]);
