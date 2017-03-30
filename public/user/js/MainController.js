@@ -359,11 +359,12 @@ angular.module('studionet')
 
 
   // ------------- Zooming & Nav Controls
-  $scope.zoomLevel = "Calibrating...";
+  //$scope.zoomLevel = "Calibrating...";
   var updateZoom = function(){
     if($scope.graph){
-      $scope.zoomLevel = (100*$scope.graph.zoom()).toPrecision(4);
-      $scope.$apply();
+      /*$scope.zoomLevel = (100*$scope.graph.zoom()).toPrecision(4);
+      $scope.$apply();*/
+      $('#zoom').html('<b>Z:</b> ' + (100*$scope.graph.zoom()).toPrecision(4) + ' %');
     }
   }
   setTimeout(updateZoom, 1000);

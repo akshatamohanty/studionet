@@ -62,14 +62,14 @@
       <uib-accordion close-others="true">
         
         <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open="true">
-            <div id='zoom'><b>Z:</b> {{zoomLevel}} %</div>
-            <div> Total Nodes: {{graph.nodes().length}} nodes</div> 
+            <div id='zoom'><b>Z:</b> Calibrating...<!-- {{zoomLevel}} % --></div>
+            <div> Total Nodes: {{::graph.nodes().length}} nodes</div> 
             <div id='message'>{{message}}</div>
         </div>
 
         <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="false">
               <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
-                  {{layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
+                  {{::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
               </div>
               <hr style='border-bottom: 0px;'>
               <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
@@ -104,7 +104,7 @@
             <div ng-if='filters.length == 0'>
               <h6 id='filter-nodes-count'>{{quickFindMatches.length}} matching node(s) found.</h6>
               <div ng-repeat='qf in qfs' ng-click='highlight(qf.id)' class='pointer'>
-                  {{qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
+                  {{::qf.name}}<i class='fa fa-check' ng-if='quickfind.id==qf.id' style="float:right"></i>
               </div>
             </div>
 
