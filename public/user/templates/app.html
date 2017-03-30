@@ -80,7 +80,7 @@
 
             
 
-            <div id='filter-shortcuts' ng-show='filters.length>0'>
+            <div id='filter-shortcuts' ng-if='filters.length>0'>
               
               <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
               
@@ -114,16 +114,19 @@
         </div>
 
 
-        <div uib-accordion-group class="panel-default side-bar" heading="{{nodeInfo == undefined ? 'Node Information' : nodeInfo.title}}" is-open="nodeInfo !== undefined" is-disabled='nodeInfo == undefined'>
-            <div id='node-info' ng-show='nodeInfo' style='word-wrap: break-word; height: 100%;'>
+        <div uib-accordion-group class="panel-default side-bar" heading="Node Information" is-open="nodeInfo !== undefined" is-disabled='nodeInfo == undefined' ng-cloak>
+            
+            <div id='node-info' ng-if='nodeInfo' style='word-wrap: break-word; height: 100%;'>
               
               <h6>
                 <img src='{{usersHash[nodeInfo.createdBy].avatar}}' style='display: inline-block; width: 30px; height: 30px; border-radius: 50%;'> 
                 &nbsp;{{nodeInfo.auth}}
               </h6>
 
-              <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
+              <br>
+              <h3>{{nodeInfo.title}}</h3>
 
+              <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
               <h6 ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined' style='font-weight: 300; line-height: 20px;'>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
 
               <br>
@@ -136,6 +139,10 @@
                   <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
               </p>
             </div>
+
+            <!-- <div ng-if='nodeInfo == undefined'>
+              <p> Hover/Click on a node to view information here </p>
+            </div> -->
         </div>
 
       </uib-accordion>

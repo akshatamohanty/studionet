@@ -20,7 +20,7 @@
 
 </style>
 
-<div class="modal-dialog" ng-show='groupDetails' ng-controller="GroupDetailsController" ng-init='init()'>
+<div class="modal-dialog" ng-if='groupDetails' ng-controller="GroupDetailsController" ng-init='init()'>
     <!-- Modal content-->
     <div class="modal-content">
 
@@ -70,38 +70,38 @@
                         </td>
                         <td class='col-sm-2'>
                           <a href="#" ng-click="sortType = 'lastLoggedIn'; sortReverse = !sortReverse">Last Logged In
-                            <span ng-show="sortType == 'lastLoggedIn' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'lastLoggedIn' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'lastLoggedIn' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'lastLoggedIn' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-5'>
                           <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">Name
-                            <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'name' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-1'>
                           <a href="#" ng-click="sortType = 'total'; sortReverse = !sortReverse">Level Increment
-                            <span ng-show="sortType == 'total' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'total' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'total' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'total' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-1'>
                           <a href="#" ng-click="sortType = 'created'; sortReverse = !sortReverse">Created
-                            <span ng-show="sortType == 'created' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'created' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'created' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'created' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-1'>
                           <a href="#" ng-click="sortType = 'rated'; sortReverse = !sortReverse">Rated
-                            <span ng-show="sortType == 'rated' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'rated' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'rated' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'rated' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-1'>
                           <a href="#" ng-click="sortType = 'viewed'; sortReverse = !sortReverse">Viewed
-                            <span ng-show="sortType == 'viewed' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'viewed' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'viewed' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'viewed' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
 
@@ -110,8 +110,8 @@
 
                     <tbody>
                     <tbody>
-                        <tr class='pointer' ng-repeat="member in group.members | orderBy: [ sortType, 'lastLoggedIn' ]:sortReverse | filter:searchUser as filtered" 
-                                ng-show='$index < (currentPage)*itemsPerPage && $index >= (currentPage-1)*itemsPerPage'
+                        <tr class='pointer' ng-repeat="member in group.members | orderBy: [ sortType, 'lastLoggedIn' ]:sortReverse | filter:searchUser as filtered track by $index" 
+                                ng-if='$index < (currentPage)*itemsPerPage && $index >= (currentPage-1)*itemsPerPage'
                                 ng-click='goToProfile(member.id)' data-dismiss='modal'>
                             <td class='col-sm-1'>{{ $index + 1 }}</td>
                             <td class='col-sm-2' ng-if='member.lastLoggedIn > -1'><time>{{ member.lastLoggedIn | amCalendar }}</time></td>

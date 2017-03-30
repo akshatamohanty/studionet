@@ -35,22 +35,22 @@
                         <td class='col-sm-3'>
                           <a href="#" ng-click="sortType = 'dateCreated'; sortReverse = !sortReverse">
                             Date Created 
-                            <span ng-show="sortType == 'dateCreated' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'dateCreated' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'dateCreated' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'dateCreated' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                          <td class='col-sm-3'>
                           <a href="#" ng-click="sortType = 'createdBy'; sortReverse = !sortReverse">
                             By
-                            <span ng-show="sortType == 'createdBy' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'createdBy' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'createdBy' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'createdBy' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
                         <td class='col-sm-5'>
                           <a href="#" ng-click="sortType = 'source'; sortReverse = !sortReverse">
                             For
-                            <span ng-show="sortType == 'source' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortType == 'source' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-if="sortType == 'source' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-if="sortType == 'source' && sortReverse" class="fa fa-caret-up"></span>
                           </a>
                         </td>
 
@@ -58,8 +58,8 @@
                     </thead>
 
                     <tbody> 
-                        <tr class='pointer' ng-repeat="contribution in contributions | orderBy:sortType:sortReverse | filter:searchContribution as filtered" 
-                                ng-show='$index < (currentPage)*itemsPerPage && $index >= (currentPage-1)*itemsPerPage'
+                        <tr class='pointer' ng-repeat="contribution in contributions | orderBy:sortType:sortReverse | filter:searchContribution as filtered  track by $index" 
+                                ng-if='$index < (currentPage)*itemsPerPage && $index >= (currentPage-1)*itemsPerPage'
                                 ng-click='goToNode(contribution.ref)' data-dismiss='modal'>
                             <td class='col-sm-1'>{{ $index + 1 }}</td>
                             <td class='col-sm-3'><time>{{ contribution.dateCreated | amCalendar }}</time></td>
