@@ -8,7 +8,10 @@
   </div>
 
   <!-- Graph -->
-  <div id='cy'></div>
+  <div class='graph-area' id='cy' ng-hide='forumActive'></div>
+  <div class='graph-area' id='forum' ng-show='forumActive'>
+    <ng-include src="'templates/forum.html'"></ng-include>
+  </div>
 
   <!-- sidebar -->
   <div class='graph-controls'>
@@ -71,6 +74,8 @@
               <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
                   {{::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
               </div>
+              <hr style='border-bottom: 0px;'>
+              <div class='pointer' ng-click='switchLayout(-1)'>Forum</div>
               <hr style='border-bottom: 0px;'>
               <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
         </div>

@@ -1,0 +1,27 @@
+<div class='inner-content' style='width: 50%; margin-top: 60px; margin-left: 25%;' ng-controller="forumController as fc">
+		<div ui-tree>
+		  <ol ui-tree-nodes="" ng-model="list">
+		    <li class='pointer' ng-repeat="item in list | orderBy: 'dateCreated'" ui-tree-node data-collapsed=false ng-click="console.log('hello')">
+		      <div class='node-list row'>
+		      	<div class='col-sm-10'>
+		        	{{item.title}} | <small> {{item.dateCreated | amCalendar }} </small>
+		        	<br>
+		        	<small><i>By {{ usersHash[item.createdBy].name }}</i></small>
+		      	</div>
+		      	<div class='col-sm-2 text-right'>
+		      		{{item.nodes.length}} replies
+		      	</div>
+		        <br>
+		      </div>
+		      <ol ui-tree-nodes="" ng-model="item.items">
+		        <li ng-repeat="subItem in item.items" ui-tree-node>
+		          <div>
+		            {{subItem.title}}
+		          </div>
+		        </li>
+		      </ol>
+		    </li>
+		  </ol>
+		</div>
+</div>
+

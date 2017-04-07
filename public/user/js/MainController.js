@@ -138,13 +138,20 @@ angular.module('studionet')
 
 
   // ---- layouts
-
+  $scope.forumActive = false;
   $scope.layouts = [{ 'name': "Spiral", 'id': 0}, 
                     { 'name': "By Date", 'id': 1}, 
                     { 'name': "By Author", 'id': 2},
                     { 'name': "Staggered", 'id': 3}]
   $scope.currentLayout = 0;
   $scope.switchLayout = function(id){
+
+    if(id == -1){
+      $scope.forumActive = true;
+      return;
+    }
+
+    $scope.forumActive = false;
     $scope.currentLayout = id;
     GraphService.draw_graph(null,  $scope.currentLayout );
     if(window["ga"] == undefined){
@@ -469,6 +476,7 @@ angular.module('studionet')
   $scope.$on( "SHOW_DETAILS_MODAL", function(event, args) {
       showDetailsModal(args.data);
   });
+  $scope.showDetails = showDetailsModal;
 
 
   // profile modal

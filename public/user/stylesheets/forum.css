@@ -1,0 +1,11 @@
+.node-list{
+	border: 1px solid #337AB7;
+	padding: 10px; 
+	color: #8C8D8E;
+	margin-bottom: 10px;
+}
+
+.inner-content{
+	height: calc(100% - 60px);
+	overflow: scroll;
+}
