@@ -1,10 +1,54 @@
 <!-- actual graph container -->
 <div class='graph-container' ng-init='graphInit();' ng-show='!me.isGuest || (me.isGuest && me.authenticated)'> 
 
+  <!-- Top Center -->
   <div id='level-up' uib-position='bottom'>
         <uib-progressbar class="progress active" max="100" value="value" type="success"><i></i></uib-progressbar>
         <b>Level {{level}}</b>
         <!-- <span style='float:right; max-width: 200px; word-wrap: break-word;'><small>Create a node to reach Level {{level + 1}}!</small></span> -->
+  </div>
+
+  <!-- Bottom Right -->
+  <div id='nodeInfoBox' ng-hide='forumActive'>
+    <uib-accordion>
+      <div uib-accordion-group class="panel-default side-bar" heading="Node Information" is-open="nodeInfo !== undefined" is-disabled='nodeInfo == undefined' ng-cloak>
+          
+          <div id='node-info' ng-if='nodeInfo' style='word-wrap: break-word; height: 100%;'>
+            
+            <h6>
+              <img src='{{usersHash[nodeInfo.createdBy].avatar}}' style='display: inline-block; width: 30px; height: 30px; border-radius: 50%;'> 
+              &nbsp;{{nodeInfo.auth}}
+            </h6>
+
+            <br>
+            <h3>{{nodeInfo.title}}</h3>
+
+            <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
+            <h6 ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined' style='font-weight: 300; line-height: 20px;'>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
+
+            <br>
+
+            <p>
+                <i class='fa fa-calendar'>&nbsp;&nbsp;{{nodeInfo.dateCreated | amCalendar}} </i><br>
+                <i class='fa fa-eye'>&nbsp;&nbsp;{{nodeInfo.views}} views </i><br>
+                <i class='fa fa-star-o'>&nbsp;&nbsp;{{ nodeInfo.rating.toFixed(1) }} rating</i><br>
+                <i class='fa fa-comment'>&nbsp;&nbsp;{{ nodeInfo.comments }} comment(s)</i><br>
+                <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
+            </p>
+          </div>
+
+          <!-- <div ng-if='nodeInfo == undefined'>
+            <p> Hover/Click on a node to view information here </p>
+          </div> -->
+      </div>
+    </uib-accordion>
+  </div>
+
+  <!-- Next to Profile Picture -->
+  <div id='layoutBox'>
+    <uib-accordion>
+
+    </uib-accordion>
   </div>
 
   <!-- Graph -->
@@ -23,22 +67,6 @@
     <br>
 
     <!-- Recent Activity -->
-<!--     <i class="graph-nav-control icon fa fa-telegram" ng-if='!me.isGuest' data-toggle="modal" uib-tooltip='Recent Activity' tooltip-placement='left'>
-      <span style='position: absolute;top:0px; left: 0px; border: 1px solid green;font-size: 10px;width: 15px; height: 15px;margin: 0px;padding: 0px;color: white; font-weight: 600;line-height: 15px;background-color: rgba(0,256,0, 0.4)' ng-if='me.newactivity !== null'>!</span>
-      <span uib-dropdown on-toggle="toggled(open)">
-      <a href id="simple-dropdown" uib-dropdown-toggle>
-        Click me for a dropdown, yo!
-      </a>
-      <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-        <li ng-repeat="choice in items">
-          <a href>{{choice}}</a>
-        </li>
-      </ul>
-    </span>
-    </i>
-    <i class="graph-nav-control icon fa fa-telegram" ng-if='me.isGuest' data-toggle="modal" uib-tooltip='Recent Activity' tooltip-placement='left'></i>
-
-    <br> -->
 
     <!-- Leaderboards & Graph Controls -->
     <i class="graph-nav-control icon fa fa-user" data-toggle="modal" data-target="#userActivityBoard" data-backdrop="static" data-keyboard="false" uib-tooltip='User Activity' tooltip-placement='left' ng-click='track("board-user")'></i>
@@ -51,8 +79,9 @@
     <i class="graph-nav-control icon fa fa-plus" ng-if='me.isGuest' uib-tooltip='New Node (only open to NUS users)' tooltip-placement='left'></i> 
     <i class="graph-nav-control icon fa fa-question" uib-tooltip='Help' tooltip-placement='left' ng-click='track("help");showHelp();'></i> 
     <i class="graph-nav-control icon fa fa-question" uib-tooltip='Dock' tooltip-placement='left' ng-hide=true></i> 
-
   </div>
+
+
 
   <!-- information text pane -->
   <div class='info-pane'>
@@ -63,28 +92,19 @@
 
       <!-- accordian -->
       <uib-accordion close-others="true">
-        
-        <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open="true">
-            <div id='zoom'><b>Z:</b> Calibrating...<!-- {{zoomLevel}} % --></div>
-            <div> Total Nodes: {{::graph.nodes().length}} nodes</div> 
-            <div id='message'>{{message}}</div>
-        </div>
+
 
         <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="false">
-              <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'>
-                  {{::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
-              </div>
-              <hr style='border-bottom: 0px;'>
-              <div class='pointer' ng-click='switchLayout(-1)'>Forum</div>
-              <hr style='border-bottom: 0px;'>
-              <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
+            <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'  data-toggle="collapse">
+                {{::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
+            </div>
+            <hr style='border-bottom: 0px;'>
+            <div class='pointer' ng-click='switchLayout(-1)'  data-toggle="collapse" >Forum</div>
+            <hr style='border-bottom: 0px;'>
+            <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
         </div>
 
-
         <div uib-accordion-group class="panel-default side-bar" heading="Highlighted: {{filters.length ? 'Custom'  : quickfind.name}}">
-
-            
-
             <div id='filter-shortcuts' ng-if='filters.length>0'>
               
               <h6 id='filter-nodes-count'>{{matchingNodes.length}} matching node(s) found.</h6>
@@ -117,74 +137,25 @@
             <hr style='border-bottom: 0px;'>
             <div><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;''>Suggest New</a></div>
         </div>
-
-
-        <div uib-accordion-group class="panel-default side-bar" heading="Node Information" is-open="nodeInfo !== undefined" is-disabled='nodeInfo == undefined' ng-cloak>
-            
-            <div id='node-info' ng-if='nodeInfo' style='word-wrap: break-word; height: 100%;'>
-              
-              <h6>
-                <img src='{{usersHash[nodeInfo.createdBy].avatar}}' style='display: inline-block; width: 30px; height: 30px; border-radius: 50%;'> 
-                &nbsp;{{nodeInfo.auth}}
-              </h6>
-
-              <br>
-              <h3>{{nodeInfo.title}}</h3>
-
-              <br ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined'>
-              <h6 ng-if='nodeInfo.outgoers > 0 && nodeInfo.refTitle!=undefined' style='font-weight: 300; line-height: 20px;'>This post is a reply to {{ nodeInfo.refTitle }}.</h6>
-
-              <br>
-
-              <p>
-                  <i class='fa fa-calendar'>&nbsp;&nbsp;{{nodeInfo.dateCreated | amCalendar}} </i><br>
-                  <i class='fa fa-eye'>&nbsp;&nbsp;{{nodeInfo.views}} views </i><br>
-                  <i class='fa fa-star-o'>&nbsp;&nbsp;{{ nodeInfo.rating.toFixed(1) }} rating</i><br>
-                  <i class='fa fa-comment'>&nbsp;&nbsp;{{ nodeInfo.comments }} comment(s)</i><br>
-                  <i class='fa fa-share-alt'>&nbsp;&nbsp;{{ nodeInfo.incomers/2 }} trail(s)</i><br>
-              </p>
-            </div>
-
-            <!-- <div ng-if='nodeInfo == undefined'>
-              <p> Hover/Click on a node to view information here </p>
-            </div> -->
+        
+        <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open="true">
+          <div id='zoom'><b>Z:</b> Calibrating...<!-- {{zoomLevel}} % --></div>
+          <div> Total Nodes: {{::graph.nodes().length}} nodes</div> 
+          <div id='message'>{{message}}</div>
         </div>
 
       </uib-accordion>
-
-
-
-
-<!--       <br><br>
-      <div>
-
-        <div class="row">
-          <input style="border: 1px solid grey;background: #050b27; height: 30px;" placeholder="Search for a node..." ng-model='searchTerm'>
-          <span class='pointer fa fa-search' ng-click="searchNode()" ng-if='searchTerm != undefined'></span>
-          <span class='pointer fa fa-close' ng-if='searchTerm != undefined && searchTermActive' ng-click='searchTermActive=false;searchTerm=undefined;'></span>
-        </div>
-
-        <a class='pointer' href='' style='float:right; color: grey;font-size: 9px;' data-toggle="modal" data-target="#filterModal" data-backdrop="static" data-keyboard="false" >Advanced Search</a>
-
-      </div> -->
-
-
-     
-
-
-
+  
       <div id='feedback-form' class='pointer'><a href='https://goo.gl/forms/XRWfltHR1MYym4bv2' target='_blank' style="position: fixed; bottom: 30px;color: #969696;">
             Do you have feedback?</a>
       </div>
-
-
-
-
 
   </div>
   
   
 </div>
+
+
 
 <div class='dock' ng-hide=true></div>
 

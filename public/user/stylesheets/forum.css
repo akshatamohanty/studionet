@@ -5,6 +5,10 @@
 	margin-bottom: 10px;
 }
 
+.node-list:hover{
+	background-color: #181818;
+}
+
 .inner-content{
 	height: calc(100% - 60px);
 	overflow: scroll;

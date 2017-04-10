@@ -365,3 +365,19 @@ tr:hover{
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
+#nodeInfoBox{
+	position: absolute; 
+	right: 30px; 
+	bottom: 30px; 
+	z-index: 3; 
+	color: #bbb;
+}
+
+#layoutBox{
+	position: absolute; 
+	right: 70px; 
+	top: 15px; 
+	z-index: 3; 
+	color: #bbb;	
+}
