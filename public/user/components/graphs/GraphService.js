@@ -119,7 +119,7 @@ angular.module('studionet')
 			repositionNodes();
 
 			var nodeHash = [];
-			for(var i=0; i < o.graph.nodes().length; i++){
+			/*for(var i=0; i < o.graph.nodes().length; i++){
 
 				var node = o.graph.nodes()[i];
 				nodeHash[ node.id ] = node;
@@ -129,7 +129,7 @@ angular.module('studionet')
 				if(node.outgoers().length == 0)
 					o.forumList.push( node.data() );
 
-			}
+			}*/
 
 
 
