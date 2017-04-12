@@ -34,6 +34,7 @@ angular.module('studionet')
 		threshold: 0,
 		comments: undefined,
 		flattenedGraph : undefined,
+		forumList : [],
 		spinner : new Spinner(opts) // refactor
 	};
 
@@ -117,6 +118,18 @@ angular.module('studionet')
 			o.graph.reset();
 			repositionNodes();
 
+			var nodeHash = [];
+			for(var i=0; i < o.graph.nodes().length; i++){
+
+				var node = o.graph.nodes()[i];
+				nodeHash[ node.id ] = node;
+
+				node.data('nodes', node.incomers().nodes().map(function(c){ return c.data(); }));
+
+				if(node.outgoers().length == 0)
+					o.forumList.push( node.data() );
+
+			}
 
 
 

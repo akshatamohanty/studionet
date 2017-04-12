@@ -91,15 +91,15 @@
       <br>
 
       <!-- accordian -->
-      <uib-accordion close-others="true">
+      <uib-accordion close-others="false">
 
 
-        <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="false">
+        <div uib-accordion-group class="panel-default side-bar" heading="Layout: {{layouts[currentLayout].name}}" is-open="true">
             <div class='pointer' ng-repeat='layout in layouts' ng-click='switchLayout(layout.id)'  data-toggle="collapse">
                 {{::layout.name}}<i class='fa fa-check' ng-if='currentLayout==layout.id' style="float:right"></i>
             </div>
             <hr style='border-bottom: 0px;'>
-            <div class='pointer' ng-click='switchLayout(-1)'  data-toggle="collapse" >Forum</div>
+            <div class='pointer' data-toggle="collapse" ng-disabled="true">Forum -<i> Coming Soon!</i></div>
             <hr style='border-bottom: 0px;'>
             <div class='pointer'><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;'>Suggest New</a></div>
         </div>
@@ -138,7 +138,7 @@
             <div><a href="https://goo.gl/bo7OtP" target="_blank" style='color: inherit;''>Suggest New</a></div>
         </div>
         
-        <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open="true">
+        <div uib-accordion-group class="panel-default side-bar" heading="Messages" is-open=true>
           <div id='zoom'><b>Z:</b> Calibrating...<!-- {{zoomLevel}} % --></div>
           <div> Total Nodes: {{::graph.nodes().length}} nodes</div> 
           <div id='message'>{{message}}</div>

@@ -199,8 +199,6 @@ angular.module('studionet')
       var graphObject = {
         threshold : 5, 
         onMouseOver: function(evt){
-
-
                       if(evt.cyTarget.isNode && evt.cyTarget.isNode()){
                           if(evt.cyTarget.id() =='ghost'){
                             //console.log(evt.cyTarget.id());
@@ -258,7 +256,6 @@ angular.module('studionet')
                               nodeClearTimeout = setTimeout( function(){
                                       $scope.nodeInfo = undefined;
                                       $scope.$apply();
-                                      console.log("cleared!");
                                     }, 300);
                             }
                       }
