@@ -71,3 +71,7 @@ app.config(function($provide) {
     }]);
 });
 
+app.config(function(treeConfig) {
+  treeConfig.defaultCollapsed = true; // collapse nodes by default
+});
+

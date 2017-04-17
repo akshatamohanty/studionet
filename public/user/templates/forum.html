@@ -1,24 +1,38 @@
 <script type="text/ng-template" id="nodes_renderer.html">
-  <div class='node-list row'>
+  <div class='node-list row' ng-click='toggle(this)'>
 	<div class='col-sm-10'>
 		{{node.title}} | <small><i>By {{ usersHash[node.createdBy].name }}</i></small> | <small> {{node.dateCreated | amCalendar }} </small>
-		
 	</div>
-	<div class='col-sm-2 text-right' ng-if='node.nodes.length > 0'>
+	<div class='col-sm-2 text-right'>
 		{{node.nodes.length}} replies
 	</div>
   </div>
   <ol ui-tree-nodes="" ng-model="node.nodes">
-    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'">
+    <li ng-repeat="node in node.nodes" ui-tree-node collapsed="true" ng-include="'nodes_renderer.html'">
     </li>
   </ol>
 </script>
 
 
 <div class='inner-content' style='width: calc(100% - 570px); margin-top: 60px; margin-left: 300px;' ng-controller="forumController as fc">
-	<div ui-tree>
+
+	<!-- Search bar -->
+    <form>
+	    <div class="form-group">
+		    <div class="input-group">
+		    <div class="input-group-addon" style='background: transparent; border-color: #337AB7;'><i class="fa fa-search"></i></div>
+		    <input type="text" class="form-control" placeholder="Search ..." ng-model="searchContribution" style='background: transparent; color: #b9b9b9; border-color: #337AB7;'>
+	    </div>      
+	    </div>
+    </form>
+
+    <h3 style='color: #b9b9b9;'> Forum </h3>
+
+    <br>
+
+	<div ui-tree="treeOptions">
 	  <ol ui-tree-nodes="" ng-model="list" id="tree-root">
-	    <li ng-repeat="node in list | orderBy: '-dateCreated' track by $index" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+	    <li ng-repeat="node in list | filter:searchContribution | orderBy: '-dateCreated' track by $index"  collapsed="true" ui-tree-node ng-include="'nodes_renderer.html'"></li>
 	  </ol>
 	</div>
 </div>

@@ -60,11 +60,10 @@ angular.module('studionet')
 	//------ Gets the graph from the URL and creates the graph
 	var lastTapped = 0;
 	o.getGraph = function( container, graphObject ){
-		
+
 		o.spinner.spin(document.getElementById('cy'));
 
 		var graph_url  = '/graph/all';
-
 	
 		return $http.get(graph_url).success(function(data){
 
@@ -119,7 +118,7 @@ angular.module('studionet')
 			repositionNodes();
 
 			var nodeHash = [];
-			/*for(var i=0; i < o.graph.nodes().length; i++){
+			for(var i=0; i < o.graph.nodes().length; i++){
 
 				var node = o.graph.nodes()[i];
 				nodeHash[ node.id ] = node;
@@ -129,9 +128,7 @@ angular.module('studionet')
 				if(node.outgoers().length == 0)
 					o.forumList.push( node.data() );
 
-			}*/
-
-
+			}
 
 			// notify any controller watching the graph
 			notifyObservers();
@@ -718,4 +715,6 @@ angular.module('studionet')
 
 	return o;
 }]);
+
+
 
