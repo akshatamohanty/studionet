@@ -8,55 +8,28 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 	// user 'routes'
 	$stateProvider
 		.state('home', {
-			abstract: true,
-			url: '/'
-		})
-		.state('contributions', {
-			url: '/contributions',
-			templateUrl: '/user/templates/app.html',
-			controller: 'MainController',
+			url: '/home',
+			templateUrl: '/user/templates/dashboard.html',
 			resolve: {
-				supernodePromise: ['supernode', function(supernode){
-					return supernode.getSupernodes();
-				}],
-				tagsPromise: ['tags', function(tags){
-					return tags.getAll();
-				}],
-				groupsPromise: ['groups', function(groups){
-					return groups.getAll();
-				}],
-				usersPromise: ['users', function(users){ 
-					return users.getAll();
-				}],
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
 			}
 		})
-		.state('contribution', {
-			url: '/contributions/:contributionId',
-			templateUrl: '/user/templates/app.html',
-			controller: 'MainController',
-			resolve: {
-				supernodePromise: ['supernode', function(supernode){
-					return supernode.getSupernodes();
-				}],
-				tagsPromise: ['tags', function(tags){
-					return tags.getAll();
-				}],
-				groupsPromise: ['groups', function(groups){
-					return groups.getAll();
-				}],
-				usersPromise: ['users', function(users){ 
-					return users.getAll();
-				}],
+		.state('tag', {
+			url: '/tag/:tags',
+			templateUrl: '/user/templates/space.html',
+			params: {
+		        tags: null
+		    },
+		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
 			}
 		})
 
-	$urlRouterProvider.otherwise('/contributions');
+	$urlRouterProvider.otherwise('/home');
 
 }]);
 

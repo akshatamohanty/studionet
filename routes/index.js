@@ -42,7 +42,9 @@ router.get('/admin', auth.ensureAuthenticated, auth.ensureSuperAdmin, function(r
 
 // GET user page
 router.get('/user', auth.ensureAuthenticated, function(req, res){
-	res.render('user');
+	res.render('user', {
+    user: req.user
+  });
 });
 
 router.get('/guest', auth.ensureAuthenticated, function(req, res, next){

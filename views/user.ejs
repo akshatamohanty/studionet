@@ -34,20 +34,25 @@
     <link rel="stylesheet" href="/user/plugins/qtip/jquery.qtip.min.css">
 
     <!-- Studionet CSS -->
-    <link rel='stylesheet' href='/user/stylesheets/style.css' />
+    <!-- <link rel='stylesheet' href='/user/stylesheets/style.css' />
     <link rel='stylesheet' href='/user/stylesheets/modals.css' />
     <link rel='stylesheet' href='/user/stylesheets/graphs.css' />
     <link rel='stylesheet' href='/user/stylesheets/filters.css'/>
-    <link rel='stylesheet' href='/user/stylesheets/forum.css'/>
+    <link rel='stylesheet' href='/user/stylesheets/forum.css'/> -->
 
-
+    <style>
+      html, body{
+        background-color: #F7D6B6;
+      }
+    </style>
 
   </head>
 
   <body ng-app="studionet">
     <div class="app app-default">
         <div class="app-container">
-            <ui-view></ui-view>
+          <top-bar></top-bar> <!-- constant top bar for anchor -->
+          <ui-view></ui-view> <!-- graph changes -->
         </div>
     </div>
   </body>
@@ -58,21 +63,6 @@
   <script>
     var socket = io();
   </script>
-
-  <!-- Disable text selection -->
-  <!-- <script>
-  $(document).ready(function(){
-    $(function(){
-      $.extend($.fn.disableTextSelect = function() {
-        return this.each(function(){
-            $(this).mousedown(function(){return false;});
-        });
-      });
-      $('.noSelect').disableTextSelect();//No text selection on elements with a class of 'noSelect'
-    });
-  }
-  </script>
- -->
 
   <!-- Constants -->
   <script type="text/javascript" src="../user/js/constants.js"></script>
@@ -98,7 +88,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-moment/0.9.0/angular-moment.min.js"></script>
   <!-- Angular d3-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js" charset="utf-8"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.3/nv.d3.min.js"></script>
   <script src="https://rawgit.com/krispo/angular-nvd3/v1.0.7/dist/angular-nvd3.js"></script>
 
@@ -160,7 +150,7 @@
   <script type="text/javascript" src="/user/components/graphs/graph-worker.js"></script>
   
   <!-- Controllers -->
-  <script type="text/javascript" src="/user/js/MainController.js"></script>
+<!--   <script type="text/javascript" src="/user/js/MainController.js"></script>
   <script type="text/javascript" src="/user/js/ForumController.js"></script>
   <script type="text/javascript" src="/user/js/HelpController.js"></script> 
   <script type="text/javascript" src="/user/components/nodes/NodeController.js"></script>
@@ -173,8 +163,12 @@
   <script type="text/javascript" src="/user/components/boards/NodeBoardController.js"></script>
   <script type="text/javascript" src="/user/components/boards/CommentBoardController.js"></script>
   <script type="text/javascript" src="/user/components/boards/GroupBoardController.js"></script>
-  <script type="text/javascript" src="/user/components/links/LinksController.js"></script> 
+  <script type="text/javascript" src="/user/components/links/LinksController.js"></script>  -->
 
-
+  <script type="text/javascript" src="/user/js/AppController.js"></script>
+  <script type="text/javascript" src="/user/components/topbar/topbar-directive.js"></script>
+  <script type="text/javascript" src="/user/components/userbar/userbar-directive.js"></script>
+  <script type="text/javascript" src="/user/components/tagcontainer/tagcontainer-directive.js"></script>
+  
 
 </html>
