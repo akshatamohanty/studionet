@@ -1,17 +1,461 @@
-<div class='container'style='padding: 20px 50px'>
-	
-	<div class='col-sm-6 col-xs-12'>
-		<h3>Space Xplorer</h3>
-		<p style='text-align: justify;'>Sit pariatur sunt sed eiusmod irure ad veniam et eiusmod dolor ex ea mollit non consectetur aute sit excepteur ut occaecat non nostrud id dolore aute aute reprehenderit dolor cupidatat ut qui culpa do aliqua dolor voluptate sint excepteur et quis qui ad est ut aute do pariatur enim anim anim in sed in eiusmod veniam exercitation qui ullamco adipisicing pariatur est ex minim voluptate enim aliqua aute consectetur ullamco exercitation exercitation deserunt veniam incididunt veniam dolore velit consequat in officia cillum aliqua velit aliquip et enim dolore exercitation nulla proident dolore quis ut fugiat cupidatat laboris reprehenderit cillum sit dolor proident velit mollit velit in officia aliquip aliqua ut in fugiat duis mollit dolore mollit exercitation irure sit quis in pariatur occaecat cupidatat cillum labore elit ut velit nulla consequat fugiat exercitation esse enim fugiat magna nulla officia cupidatat proident culpa et in dolore nulla et laborum qui qui consectetur et mollit id ad aute id mollit anim nulla nulla amet laboris dolor culpa ut deserunt adipisicing non irure ut proident eiusmod pariatur ut aute in incididunt sunt veniam laborum cillum do eiusmod aliquip excepteur amet dolore ad do velit ullamco in in minim minim ut nulla ea irure in anim commodo velit irure nostrud enim sint aliqua in ea consequat ut do laboris mollit magna.
-		</p>
+<style>
+
+html, body{
+	position: relative;
+	height: 100%; 
+	width: 100%;	
+	background-color: #8F8F8F;
+	text-align: justify;
+	color: #454444;
+}
+
+.vertical-text {
+	writing-mode: vertical-lr;
+}
+
+.row{
+}
+
+.header{
+/*	height: 45px;*/
+	line-height: 45px;
+	color: white;
+	text-align: center;
+}
+
+.light-bg{
+	background-color: #F0DFC8;
+}
+
+.branding{
+	font-size: 18px; 
+	font-weight: 600;
+	color: #F1EAEA;
+}
+
+.summary{
+	border: 1px solid #5A5959; 
+	border-radius: 35px;
+	padding: 20px 15px 15px 15px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.section-heading{
+	text-transform: uppercase;
+	margin-bottom: 8px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid grey;
+	color: #403F3F;
+}
+
+h5.section-heading{
+	font-size: 16px;
+}
+
+h3.section-heading{
+	font-size: 20px;
+	width: 100%;
+}
+
+h6.subsection-heading{
+	font-size: 12px;
+	text-transform: uppercase;
+	background-color: #E8B438;
+	margin-bottom: 4px;
+	cursor: pointer;
+	padding: 5px;
+}
+
+button#dropdownMenuButton{
+	background: none; 
+	font-size: 14px; 
+	border-color: #5A5959: 
+	padding: 4px 10px;
+}
+
+div.dropdown-menu{
+	background-color: #F0DFC8;
+}
+.no-margin-padding{
+	margin: 0px;
+	padding: 0px;
+}
+
+.search-results{
+	text-align: center;
+}
+
+.search-result{ 
+	height: 200px;
+}
+
+.grow { transition: all .2s ease-in-out; }
+.grow:hover { transform: scale(1.1); z-index: 2; }
+
+.linear-show { transition: all 0.3s ease-in-out; }
+.linear-show:hover { transform: translate(0px, -120px);; }
+
+.card{
+	background-color: #C3873A;
+	cursor: pointer;
+}
+
+.fa{
+	line-height: 45px;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+
+.main-container{
+	padding: 30px 15px 30px 15px
+}
+
+.timed-tags{
+	position: relative;
+}
+
+.timed-tag-container{
+	float: right;
+	font-size: 12px;
+	text-align: center;
+	margin-left: 20px;
+}
+
+.timed-tag{
+	border: 1px solid grey;
+	padding: 2px 10px; 
+	background: #C3873A;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.show-on-hover{ display: none; };
+.timed-tag-container:hover .show-on-hover{ display: inline; }
+.timed-tag-container:hover .hide-on-hover{ display: none; }
+
+
+.badge{
+	background: grey;
+	margin-left: 10px;
+	margin-top: -5px;
+}
+
+</style>
+
+<div class='container'>
+
+	<div class='row header'>
+		
+		<div class='col-sm-1 branding'>
+			Studionet
+		</div>
+
+		<div class='col-sm-9'>
+			<div class="input-group" style='height: 35px; margin-top: 5px; margin-bottom: 5px;'>
+			  <input type="text" class="form-control" placeholder="Tags" aria-describedby="basic-addon1" style='background-clip: border-box;border-radius: 0px;'>
+			  <span class="input-group-addon" id="basic-addon1"><i class='fa fa-search'></i></span>
+			</div>
+		</div>
+		
+		<div class='col-sm-2'>
+			<i class='fa fa-2x fa-user-circle-o' style='margin-left: 20px;'></i>
+			<i class='fa fa-2x fa-asterisk'  style='margin-left: 20px;'></i>
+			<div class='fa fa-2x fa-bell-o'  style='margin-left: 20px;'></div>
+		</div>
+
 	</div>
 
-	<div class='col-sm-6 col-xs-12'>
-		<tag-container></tag-container>
+	<div class='row main-container light-bg'>
+		
+		<!-- <div class='side-bar vertical-text col-sm-1'>
+			<span class='light-bg'>Home</span>
+		</div> -->
+
+		<div class='results col-sm-12'>
+
+			<div class='row' style='margin-bottom: 20px; border-bottom: 1px solid grey;'>
+				<div class='col-sm-3'>
+					<h3 class='section-heading' style='border: none;'>
+						My Subscriptions
+					</h3>
+				</div>
+				<div class='col-sm-9'>
+					<div class='timed-tags'>
+						<div class='timed-tag-container'>
+								<span class='timed-tag'>#ar2521 #assignment3<span class="badge">5</span></span>
+								<br>
+								<span class='show-on-hover' style='padding-top: 5px;'>120 nodes</span>
+								<span class='hide-on-hover' style='padding-top: 5px;'>52 minutes left</span>
+						</div>
+						<div class='timed-tag-container'>
+								<span class='timed-tag'>#ar3241 #assignment2<span class="badge">15</span></span>
+								<br>
+								<span class='show-on-hover' style='padding-top: 5px;'>3 nodes</span>
+								<span class='hide-on-hover' style='padding-top: 5px;'>12 days left</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class='row' style='margin-bottom: 20px;'>
+				<div class="dropdown">
+				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    Sort By: Views
+				  </button>
+				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				    <a class="dropdown-item" href="#">Sort By: Likes</a>
+				    <a class="dropdown-item" href="#">Sort By: Date</a>
+				    <a class="dropdown-item" href="#">Sort By: Relevance</a>
+				  </div>
+				</div>
+			</div>		
+
+			<div class='row'>
+
+				<div class='col-sm-9 no-margin-padding'>
+
+					<div class='container no-margin-padding'>
+						<div class='row no-margin-padding text-justify'>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+														<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class='col-sm-3'>
+					<div class='summary'>
+
+						<h5 class='section-heading' style='border-bottom: 1px solid #4C4A4A; margin-bottom: 15px;'>Popular Tags</h5>
+
+						<h6 class='subsection-heading'>#archicad</h6>
+						<p>142 subscribers<br>25 new posts</p>
+						
+						<h6 class='subsection-heading'>#archicon</h6>
+						<p>159 subscribers<br>15 new posts</p>
+						
+						<h6 class='subsection-heading'>#rhino</h6>
+						<p>135 subscribers<br>15 new posts</p>
+
+					</div>
+				</div>
+
+			</div>		
+			
+		</div>
 	</div>
 
-	
-	
+	<div class='row'>
+		<user-bar class='linear-show' style='position: fixed; width: 100%; left: 0px; bottom: -120px; z-index: 3;'></user-bar>
+	</div>
+
 </div>
-
-<user-bar></user-bar><!-- contant -->

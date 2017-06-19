@@ -7,8 +7,8 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 
 	// user 'routes'
 	$stateProvider
-		.state('home', {
-			url: '/home',
+		.state('profile', {
+			url: '/profile',
 			templateUrl: '/user/templates/dashboard.html',
 			resolve: {
 				userProfile: ['profile', function(profile){
@@ -16,9 +16,10 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}
 		})
-		.state('tag', {
-			url: '/tag/:tags',
+		.state('home', {
+			url: '/home/:tags',
 			templateUrl: '/user/templates/space.html',
+			controller: 'AppController',
 			params: {
 		        tags: null
 		    },
@@ -29,7 +30,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}
 		})
 
-	$urlRouterProvider.otherwise('/home');
+	$urlRouterProvider.otherwise('/home/all');
 
 }]);
 

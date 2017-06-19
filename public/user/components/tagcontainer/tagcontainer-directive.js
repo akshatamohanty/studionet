@@ -8,11 +8,10 @@ angular.module('studionet')
     var svgwidth = d3.select('#svg-container').style('width');
     var svgheight = d3.select('#svg-container').style('height');
     var svg = d3.select("#svg-container").append('svg').attr('width', svgwidth).attr('height', svgheight);
-
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", d3.forceManyBody().strength(-5000))
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("center", d3.forceCenter(240, 240));
 
 
     d3.json("./templates/main-tags.json", function(error, graph) {
@@ -36,7 +35,7 @@ angular.module('studionet')
       .enter().append("circle")
               .attr("r", 20)
               .on("click", function(d){
-                $state.go('tag', {tags:d.name});
+                $state.go('post', {tags:d.name});
               });
 
       
