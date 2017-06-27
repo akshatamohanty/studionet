@@ -4,9 +4,9 @@ html, body{
 	position: relative;
 	height: 100%; 
 	width: 100%;	
-	background-color: #8F8F8F;
+	background-color: #E8E5E5;
 	text-align: justify;
-	color: #454444;
+	color: #353535;
 }
 
 .vertical-text {
@@ -19,18 +19,17 @@ html, body{
 .header{
 /*	height: 45px;*/
 	line-height: 45px;
-	color: white;
+	color: #4D4D4D;
 	text-align: center;
 }
 
 .light-bg{
-	background-color: #F0DFC8;
+	background-color: #FFFCF9;
 }
 
 .branding{
 	font-size: 18px; 
 	font-weight: 600;
-	color: #F1EAEA;
 }
 
 .summary{
@@ -143,19 +142,56 @@ div.dropdown-menu{
 	margin-top: -5px;
 }
 
+a{
+	color: #292828;
+}
+
+a:hover{
+	text-decoration: none;
+	color: #292828;
+}
+
+.card-title{
+	font-size: 16px;
+}
+
+.card-subtitle{
+	font-size: 12px;
+}
+
+.pointer{
+	cursor: pointer;
+}
+
 </style>
 
 <div class='container'>
 
 	<div class='row header'>
 		
-		<div class='col-sm-1 branding'>
-			Studionet
+		<div class='col-sm-1 branding pointer'>
+			<a ui-sref='home({tags: null})'>Studionet</a>
 		</div>
 
 		<div class='col-sm-9'>
+<!-- 				<tags-input class='tags-input' class="bootstrap"
+	                type='text'
+	                ng-model="location"
+	                display-property='name'
+	                placeholder="Add a tag"
+	                replace-spaces-with-dashes="false"
+	                template='tag-item-template'>
+	              	<auto-complete source="loadTags($query)"
+	                             min-length="0"
+	                             debounce-delay="0"
+	                             max-results-to-show="10000"
+	                             load-on-down-arrow="true"
+	                             load-on-focus="true"
+	                             template="tags-template"></auto-complete>
+              	</tags-input> -->
+
 			<div class="input-group" style='height: 35px; margin-top: 5px; margin-bottom: 5px;'>
-			  <input type="text" class="form-control" placeholder="Tags" aria-describedby="basic-addon1" style='background-clip: border-box;border-radius: 0px;'>
+			  <input type="text" ng-model='searchedTags' class="form-control" placeholder="Search for a tag..." aria-describedby="basic-addon1" style='background-clip: border-box;border-radius: 0px;'>
 			  <span class="input-group-addon" id="basic-addon1"><i class='fa fa-search'></i></span>
 			</div>
 		</div>
@@ -176,7 +212,7 @@ div.dropdown-menu{
 
 		<div class='results col-sm-12'>
 
-			<div class='row' style='margin-bottom: 20px; border-bottom: 1px solid grey;'>
+			<div class='row' style='margin-bottom: 20px; border-bottom: 1px solid grey;' ng-show='home'>
 				<div class='col-sm-3'>
 					<h3 class='section-heading' style='border: none;'>
 						My Subscriptions
@@ -184,17 +220,11 @@ div.dropdown-menu{
 				</div>
 				<div class='col-sm-9'>
 					<div class='timed-tags'>
-						<div class='timed-tag-container'>
-								<span class='timed-tag'>#ar2521 #assignment3<span class="badge">5</span></span>
+						<div class='timed-tag-container' ng-repeat="tag in timedTags">
+								<span class='timed-tag'><a ui-sref='home({tags: tag.name.join("+") })'> #{{tag.name.join(" #")}} </a><span class="badge">{{tag.post_count}}</span></span>
 								<br>
 								<span class='show-on-hover' style='padding-top: 5px;'>120 nodes</span>
 								<span class='hide-on-hover' style='padding-top: 5px;'>52 minutes left</span>
-						</div>
-						<div class='timed-tag-container'>
-								<span class='timed-tag'>#ar3241 #assignment2<span class="badge">15</span></span>
-								<br>
-								<span class='show-on-hover' style='padding-top: 5px;'>3 nodes</span>
-								<span class='hide-on-hover' style='padding-top: 5px;'>12 days left</span>
 						</div>
 					</div>
 				</div>
@@ -220,6 +250,85 @@ div.dropdown-menu{
 					<div class='container no-margin-padding'>
 						<div class='row no-margin-padding text-justify'>
 
+							<div class='col-sm-3 grow search-result'  ng-repeat='card in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card Number {{card}}</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">This is subtitle {{card}}</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+<!-- 							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+							<div class='col-sm-3 grow search-result'>
+								<div class="card">
+								  <div class="card-block">
+								    <h4 class="card-title">Card title</h4>
+								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+								    <p class="card-text" style='font-size: 12px;'>
+								      Some quick example text to build on the card title
+								      and make up the bulk of the card's content.
+								    </p>
+								  </div>
+								</div>
+							</div>
+
+
 							<div class='col-sm-3 grow search-result'>
 								<div class="card">
 								  <div class="card-block">
@@ -272,7 +381,7 @@ div.dropdown-menu{
 								</div>
 							</div>
 
-														<div class='col-sm-3 grow search-result'>
+							<div class='col-sm-3 grow search-result'>
 								<div class="card">
 								  <div class="card-block">
 								    <h4 class="card-title">Card title</h4>
@@ -298,8 +407,7 @@ div.dropdown-menu{
 								</div>
 							</div>
 
-
-														<div class='col-sm-3 grow search-result'>
+							<div class='col-sm-3 grow search-result'>
 								<div class="card">
 								  <div class="card-block">
 								    <h4 class="card-title">Card title</h4>
@@ -325,7 +433,7 @@ div.dropdown-menu{
 								</div>
 							</div>
 
-														<div class='col-sm-3 grow search-result'>
+							<div class='col-sm-3 grow search-result'>
 								<div class="card">
 								  <div class="card-block">
 								    <h4 class="card-title">Card title</h4>
@@ -349,84 +457,7 @@ div.dropdown-menu{
 								    </p>
 								  </div>
 								</div>
-							</div>
-
-														<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
-
-							<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
-
-														<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
-
-							<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
-														<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
-
-							<div class='col-sm-3 grow search-result'>
-								<div class="card">
-								  <div class="card-block">
-								    <h4 class="card-title">Card title</h4>
-								    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-								    <p class="card-text" style='font-size: 12px;'>
-								      Some quick example text to build on the card title
-								      and make up the bulk of the card's content.
-								    </p>
-								  </div>
-								</div>
-							</div>
+							</div> -->
 
 						</div>
 					</div>
@@ -437,14 +468,13 @@ div.dropdown-menu{
 
 						<h5 class='section-heading' style='border-bottom: 1px solid #4C4A4A; margin-bottom: 15px;'>Popular Tags</h5>
 
-						<h6 class='subsection-heading'>#archicad</h6>
-						<p>142 subscribers<br>25 new posts</p>
-						
-						<h6 class='subsection-heading'>#archicon</h6>
-						<p>159 subscribers<br>15 new posts</p>
-						
-						<h6 class='subsection-heading'>#rhino</h6>
-						<p>135 subscribers<br>15 new posts</p>
+						<div ng-repeat='tag in popularTags track by $index'>
+							<h6 class='subsection-heading'><a ui-sref='home({tags: tag.name.join("+") })'> #{{tag.name.join(" #")}} </a></h6>
+							<p>	
+								{{tag.subscribers}} subscribers
+								<br>{{tag.post_count}} new posts
+							</p>
+						</div>
 
 					</div>
 				</div>
