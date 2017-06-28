@@ -17,8 +17,21 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}
 		})
 		.state('home', {
-			url: '/home/:tags',
+			url: '/home',
 			templateUrl: '/user/templates/homepage.html',
+			controller: 'AppController',
+		    resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}], 
+				tags: ['tags', function(tags){
+					return tags.getAll();
+				}]
+			}
+		})
+		.state('search', {
+			url: '/home/:tags',
+			templateUrl: '/user/templates/dashboard.html',
 			controller: 'AppController',
 			params: {
 		        tags: null
@@ -33,7 +46,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}
 		})
 
-	$urlRouterProvider.otherwise('/home/');
+	$urlRouterProvider.otherwise('/home');
 
 }]);
 
@@ -65,3 +78,11 @@ app.directive('userAvatar', function() {
 });
 
 
+app.filter('removeSpaces', [function() {
+    return function(string) {
+        if (!angular.isString(string)) {
+            return string;
+        }
+        return string.replace(/[\s]/g, '');
+    };
+}])

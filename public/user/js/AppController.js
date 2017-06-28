@@ -3,18 +3,45 @@ angular.module('studionet')
                                function($scope, profile, $stateParams, $rootScope, $timeout, $mdBottomSheet, $mdToast, $mdSidenav, tags, $mdDialog, $mdMedia){
 
           $scope.showBench = true;
+          $scope.showInfo = true;
 
           $scope.user = {
             "name": "Akshata Mohanty",
             "level": "Junior Architect",
-            "subscribed_to": [
-              { "name": "assignment1", "id": 12, "type" : "tagspace" },
-              { "name": "rhino", "id": 22, "type" : "tag"  },
-              { "name": "design_ideas", "id": 1,  "type" : "tagspace"  },
-              { "name": "trivia", "id": 43,  "type" : "tag"  }
-            ]
+            "subscribed_to": [2, 5]
           }//profile.user;
+
+          $scope.tagSpaces = [
+            { id: 1, tags: [1, 2, 3], people: [], time: [] },
+            { id: 2, tags: [3, 4, 5], people: [], time: [new Date(), new Date() + 10] },
+            { id: 3, tags: [3, 1], people: [], time: [] },
+            { id: 4, tags: [2, 6], people: [], time: [] },
+            { id: 5, tags: [3, 0], people: [], time: [] },
+          ]
+
+
           $scope.location = $stateParams.tags;
+
+          $scope.usersOnline = [
+              {"name" : "John", "profile": "http://placehold.it/150x150" },
+              {"name" : "Jane", "profile": "http://placehold.it/150x150" },
+              {"name" : "Ivan", "profile": "http://placehold.it/150x150" },
+              {"name" : "Laura", "profile": "http://placehold.it/150x150" },
+              {"name" : "Shi", "profile": "http://placehold.it/150x150" },
+              {"name" : "Petunia", "profile": "http://placehold.it/150x150" },
+              {"name" : "Heidi", "profile": "http://placehold.it/150x150" }
+          ]
+
+          $scope.recentPosts = [
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" },
+              {"title" : "Something", "img": "http://placehold.it/150x150" }
+          ]
+
 
           $scope.isTagSpace = false;
 
@@ -26,19 +53,6 @@ angular.module('studionet')
 
 
           $scope.searchedTags = [];
-
-          // think about how to get this right?
-          $scope.popularTags = [
-          	{ name: ["fall-17", "ar2311", "assignment1"], subscribers: 120, post_count: 200 },
-          	{ name: ["archicad"], subscribers: 243, post_count: 2 },
-          	{ name: ["archicon", "rhino"], subscribers: 34, post_count: 12 }
-          ]
-
-          // think about how to get this right?
-          $scope.timedTags = [
-          	{ name: ["fall-17", "ar2311", "assignment1"], expire_time: 123, post_count: 200 },
-          	{ name: ["ar2321", "assignment4"], expire_time: 243, post_count: 2 },
-          ]
 
           // use this to animate properly
           $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
@@ -144,6 +158,60 @@ angular.module('studionet')
 
 
 }]);
+
+(function() {
+  'use strict';
+
+  angular.module('studionet')
+    .controller('FabCtrl', function($scope, $mdDialog, $timeout) {
+      var self = this;
+
+      self.hidden = false;
+      self.isOpen = false;
+      self.hover = false;
+
+      // On opening, add a delayed property which shows tooltips after the speed dial has opened
+      // so that they have the proper position; if closing, immediately hide the tooltips
+      $scope.$watch('demo.isOpen', function(isOpen) {
+        if (isOpen) {
+          $timeout(function() {
+            $scope.tooltipVisible = self.isOpen;
+          }, 600);
+        } else {
+          $scope.tooltipVisible = self.isOpen;
+        }
+      });
+
+      self.items = [
+        { name: "Note", icon: "img/icons/twitter.svg", direction: "bottom" },
+        { name: "Question", icon: "img/icons/facebook.svg", direction: "top" },
+        { name: "Assignment", icon: "img/icons/hangout.svg", direction: "bottom" }
+      ];
+
+      self.openDialog = function($event, item) {
+        // Show the dialog
+        $mdDialog.show({
+          clickOutsideToClose: true,
+          controller: function($mdDialog) {
+            // Save the clicked item
+            this.item = item;
+
+            // Setup some handlers
+            this.close = function() {
+              $mdDialog.cancel();
+            };
+            this.submit = function() {
+              $mdDialog.hide();
+            };
+          },
+          controllerAs: 'dialog',
+          templateUrl: 'dialog.html',
+          targetEvent: $event
+        });
+      };
+    });
+})();
+
 
 
 (function () {

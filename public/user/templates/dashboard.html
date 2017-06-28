@@ -1,69 +1,508 @@
 <style>
-.tag{
-	display: inline-block;
-	margin-right: 10px;
-	border: 1px solid grey;
-	border-radius: 3px;
-	padding: 5px;
+body{
+  background-color: #E8E8E8;
+  perspective: 1000px;
 }
 
-h3{
-	border-bottom: 1px solid black;
+md-content{
+  background-color: #E8E8E8;
 }
-</style>t
 
-<div class='container' style='padding: 0px 50px;margin-top: -20px; border: 1px solid black;'>
-	
-	<div class='row'>
-		<div class='col-sm-12'>
-			<h3>Timed Tags</h3>
-			<div scroll-horizontal style='border: 1px solid blue;overflow-x: hidden;'>
-				<div style='overflow-x: scroll;width: 10000px;'>
-				<div class='tag' my-draggable>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				<div class='tag'>Tag1</div>
-				</div>
-			</div>
-		</div>
-	</div>
+md-sidenav{
+  background-color:  #E8E8E8;
+}
 
-	<br>
+md-backdrop{
+  display: none;
+}
 
-	<div class='row'>
-		
-		<div class='col-sm-4'>
-			<h3>User Profile</h3>
-		</div>
-		<div class='col-sm-8'>
-			<div class='row'>
-				<div class='col-sm-12'>
-					<h3>Skyline</h3>
-					<div class='skyline-container' style='height: 150px; width: 100%;  border: 1px solid black;'></div>
-				</div>
-				<div class='col-sm-4'>
-					<h4>Description of Skyline</h4>
-					Cupidatat ut ut enim elit elit ullamco proident enim nisi culpa excepteur mollit duis ut nisi dolor labore duis eiusmod cupidatat sed do eu deserunt do occaecat cupidatat nulla aliqua ut cupidatat est dolore consectetur laborum do est exercitation dolore incididunt aute dolor sit nisi esse est consequat veniam minim mollit voluptate mollit non ea culpa anim et ut ut consectetur sunt tempor sunt occaecat dolore ad cupidatat irure enim sunt ea mollit laborum.
-				</div>
-				<div class='col-sm-4'>
-					<h4>Top Contributor</h4>
-				</div>
-				<div class='col-sm-4'>
-					<h4>Top Posts</h4>
-				</div>
-			</div>
-		</div>
+.pointer:hover{
+  cursor: pointer;
+  background-color: gray;
+}
+
+a{
+  color: inherit;
+}
+
+a:hover{
+  color: inherit; 
+  text-decoration: none;
+}
+
+.empty-card > *{
+  text-align: center;
+  border: 1px dashed grey;
+  background: #E8E8E8;
+}
+
+md-content.md-default-theme {
+  background-color: #eee;
+}
+md-card {
+  background-color: #fff;
+  h2:first-of-type {
+    margin-top: 0;
+  }
+}
+md-toolbar > .md-button.md-default-theme {
+    border-radius: 99%; // round toolbar buttons
+}
+h2 {
+  font-weight: 400;
+}
+.md-toolbar-tools-bottom {
+  font-size: small;
+  & :last-child {
+    opacity: 0.8;
+  }
+}
+md-toolbar:not(.md-hue-1),
+.md-fab {
+  fill: #fff;
+}
+md-sidenav {
+  fill: #737373;
+  ng-md-icon {
+    position: relative;
+    top: 5px; // adjust for svg viewbox
+  }
+}
+.user-avatar {
+  border-radius: 99%;
+}
+
+.left-show-hide.ng-hide-add {
+  //transform: translateX(100%);//rotateY(110deg);
+  //transform: rotateZ(0);
+  //transform-origin: right;
+  transition: all 0.5s ease-in-out;
+}
+
+.left-show-hide.ng-hide-add.ng-hide-add-active {
+  //transform: rotateZ(-135deg);
+  transform: translateX(-100%);
+}
+
+.left-show-hide.ng-hide-remove {
+  transform: translateX(-100%);//rotateY(110deg);
+  transform-origin: left;
+  transition: all 0.5s ease;
+}
+
+.left-show-hide.ng-hide-remove.ng-hide-remove-active {
+  transform: rotateY(0);
+}
+
+.right-show-hide.ng-hide-add {
+  //transform: translateX(100%);//rotateY(110deg);
+  //transform: rotateZ(0);
+  //transform-origin: right;
+  transition: all 0.5s ease-in-out;
+}
+
+.right-show-hide.ng-hide-add.ng-hide-add-active {
+  //transform: rotateZ(-135deg);
+  transform: translateX(100%);
+}
+
+.right-show-hide.ng-hide-remove {
+  transform: translateX(100%);//rotateY(110deg);
+  transform-origin: right;
+  transition: all 0.5s ease;
+}
+
+.right-show-hide.ng-hide-remove.ng-hide-remove-active {
+  transform: rotateY(0);
+}
+
+</style>
+
+<div ng-cloak layout="row">
+    <div layout="column" class="relative" layout-fill role="main">
+      
+      <!-- header -->
+      <md-toolbar class="md-hue-2" style="height: 60px;">
+        <div class="md-toolbar-tools">
+          
+          <div flex="5" style="text-align:left">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showBench=!showBench">
+              <ng-md-icon icon="dehaze" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+          </div>
+
+          <div flex="15" style="text-align:left">
+            <h2 md-truncate ui-sref='home' style='cursor: pointer;'>Studionet</h2>
+          </div>
+
+          <div ng-controller="DemoCtrl as ctrl" flex="60" style="text-align:center">
+                <md-autocomplete ng-show='isTagSpace'
+                    ng-disabled="ctrl.isDisabled"
+                    md-no-cache="ctrl.noCache"
+                    md-selected-item="ctrl.selectedItem"
+                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+                    md-search-text="ctrl.searchText"
+                    md-selected-item-change="ctrl.selectedItemChange(item)"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.display"
+                    md-min-length="0"
+                    placeholder="Enter some tags...">
+                  <md-item-template>
+                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                  </md-item-template>
+                  <md-not-found>
+                    No states matching "{{ctrl.searchText}}" were found.
+                    <a ng-click="ctrl.newState(ctrl.searchText)">Create a new one!</a>
+                  </md-not-found>
+                </md-autocomplete>
+          </div>
+
+          <div hide show-gt-sm flex="20" style="text-align:right">
+          
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo" ng-show='isTagSpace'>
+              <ng-md-icon icon="info" style="fill: white" size="25"></ng-md-icon> 
+              <md-tooltip
+                md-direction="bottom">
+                Toggle More Information
+              </md-tooltip>
+            </md-button>
+
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-hide='isTagSpace || searching' ng-click=''>
+              <ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="notifications" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click='showProfile()'>
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+          </div>
+
+        </div>
+      </md-toolbar>
+
+      <!-- body -->
+      <md-content layout="row" layout-xs="column" layout-fill>
+
+            <!-- workbench -->
+            <!-- workbench -->
+            <md-content flex="25" ng-controller="FabCtrl as demo" ng-cloak>
+                <div class='left-show-hide' ng-show='showBench' ng-hide="$mdMedia('gt-md')" layout='column' style='margin-top: 20px;'>
+                  
+                    <div layout='column' layout-align='center center'>
+                      <user-avatar></user-avatar>
+                      <h3 class='md-body-2'>{{user.name}}</h3>
+                      <h4 class='md-caption'>{{user.level}}</h3>
+                      <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
+                    </div>
+                
+                    <md-divider></md-divider>
+
+                    <md-toolbar>
+                      <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
+                                         class="md-scale md-fab-top-right" ng-class="{ 'md-hover-full': demo.hover }"
+                                         ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
+                        <md-fab-trigger>
+                          <md-button aria-label="menu" class="md-fab md-warn">
+                            <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
+                            <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
+                          </md-button>
+                        </md-fab-trigger>
+
+                        <md-fab-actions>
+                          <div ng-repeat="item in demo.items">
+                            <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini"
+                                       ng-click="demo.openDialog($event, item)">
+                              <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
+                                          md-autohide="false">
+                                {{item.name}}
+                              </md-tooltip>
+
+                              <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon>
+                            </md-button>
+                          </div>
+                        </md-fab-actions>
+                      </md-fab-speed-dial>
+                    </md-toolbar>
+
+                    <br><br>
+
+                    <div class='folder'>
+                      
+                      <div class='folder-title'>My Node</div>
+                        
+                      <div class='folder-notes'>
+
+                      </div>
+
+                    </div>
+
+                    <md-divider></md-divider>
+
+                    <div class='folder' ng-repeat="subs in user.subscribed_to">
+                      <div class='folder-title'>${{subs}}</div>
+                      <div class='folder-notes'>
+
+                      </div>
+                    </div>
+
+                </div>
+            </md-content>
+
+            <!-- posts -->
+            <md-content layout-fill layout-padding layout-margin>
+
+                <div layout="column" layout-padding>
+                  
+                  <md-chips>
+                    <md-chip class="pointer" ng-repeat="item in [1, 2, 3, 4]">
+                      <a ui-sref="home({tags: [item]})"><ng-md-icon icon="alarm" style="fill: black" size="18"></ng-md-icon>&nbsp;&nbsp; {{item}}</a>
+                    </md-chip>
+                  </md-chips>
+
+                </div>
+
+                <div layout="row" layout-padding>
+                  <md-input-container>
+                    <md-select ng-model="selectedItem" md-selected-text="getSelectedText()">
+                      <md-optgroup label="items">
+                        <md-option ng-value="item" ng-repeat="item in items">Sort By: {{item}}</md-option>
+                      </md-optgroup>
+                    </md-select>
+                  </md-input-container>
+                </div>
+
+                <!-- content -->
+                <div flex layout-padding class="md-padding" layout-xs="column" layout="row" id="central-panel">
+                    
+                    <div flex-xs flex-gt-xs="33" layout="column">
+
+                      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
+                        <md-card-title layout-align='center'>
+                          <md-card-title-text>
+                            <span class="md-headline">+</span>
+                            <span class="md-subhead">Create a new node</span>
+                          </md-card-title-text>
+                          <!-- <md-card-title-media>
+                            <div class="md-media-lg card-media"></div>
+                          </md-card-title-media> -->
+                        </md-card-title>
+                      </md-card>
+                    
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Extra Large</span>
+                          </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content layout="row" layout-align="space-between">
+                          <div class="md-media-xl card-media"></div>
+
+                          <md-card-actions layout="column">
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                          </md-card-actions>
+                        </md-card-content>
+                      </md-card>
+       
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Small</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-sm card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+                      
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Medium</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-md card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+
+                    </div>
+
+                    <div flex-xs flex-gt-xs="33" layout="column">
+                      
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Small</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-sm card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+                      
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Medium</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-md card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Large</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-lg card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+                    
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Extra Large</span>
+                          </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content layout="row" layout-align="space-between">
+                          <div class="md-media-xl card-media"></div>
+
+                          <md-card-actions layout="column">
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                          </md-card-actions>
+                        </md-card-content>
+                      </md-card>
+
+                     </div>
+
+                    <div flex-xs flex-gt-xs="33" layout="column">
+    
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Extra Large</span>
+                          </md-card-title-text>
+                        </md-card-title>
+                        <md-card-content layout="row" layout-align="space-between">
+                          <div class="md-media-xl card-media"></div>
+
+                          <md-card-actions layout="column">
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                            </md-button>  
+                          </md-card-actions>
+                        </md-card-content>
+                      </md-card>
+
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Small</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-sm card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+                      
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Medium</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-md card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+
+                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+                        <md-card-title>
+                          <md-card-title-text>
+                            <span class="md-headline">Card with image</span>
+                            <span class="md-subhead">Large</span>
+                          </md-card-title-text>
+                          <md-card-title-media>
+                            <div class="md-media-lg card-media"></div>
+                          </md-card-title-media>
+                        </md-card-title>
+                      </md-card>
+                    
 
 
+                     </div>
 
+                </div>
+            </md-content>
 
-	</div>
+            <!-- space information -->
+            <div flex="30" class='right-show-hide' ng-show='showInfo'>
+	              <md-card md-theme="default" ng-click='showAdvanced($event)'>
+	                <md-card-title>
+	                  <md-card-title-text>
+	                  	<span class="md-subhead">Tag Space</span>
+	                    <span class="md-title">#ar2512 #assignments #week1</span>
+	                    <span class="md-subhead">Jan 12, '17 - Jan 28, '17</span>
+	                  </md-card-title-text>
+	                </md-card-title>
+	                <md-card-content>
+	                	<p>Forked by : Jane Doe, John Lim ...</p>
 
-	<!-- <tag-container></tag-container> -->
-	
+	                	<span class="md-subhead">Top Contributors</span><br>
+	                	1. ...<br>
+	                	2. ...<br>
+	                	3. ...<br>
+
+	                </md-card-content>
+					<md-card-actions layout="row" layout-align="end center">
+			          <md-button>Fork</md-button>
+			          <md-button>Share</md-button>
+			        </md-card-actions>
+	              </md-card>
+            </div>
+
+      </md-content>
+    </div>
+
 </div>
+
+

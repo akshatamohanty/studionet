@@ -116,6 +116,39 @@ md-sidenav {
   transform: rotateY(0);
 }
 
+.shortcut-div{
+  padding: 10px;
+  text-align: center;
+  padding-top: 30px;
+  background-color: #598E5F; 
+  color: white; 
+  min-width: 150px !important;
+  height: 150px; 
+  border-right: 1px solid white;
+  border-top: 1px solid white;
+}
+
+.full-height{
+  height: auto;
+
+  -webkit-transition: height 1s; 
+  -moz-transition: height 1s; 
+  -ms-transition: height 1s; 
+  -o-transition: height 1s; 
+  transition: height 1s;
+
+}
+
+.fixed-height{
+  height: 150px;
+  -webkit-transition: height 1s; 
+  -moz-transition: height 1s; 
+  -ms-transition: height 1s; 
+  -o-transition: height 1s; 
+  transition: height 1s;
+
+}
+
 </style>
 
 <div ng-cloak layout="row">
@@ -136,7 +169,7 @@ md-sidenav {
           </div>
 
           <div ng-controller="DemoCtrl as ctrl" flex="60" style="text-align:center">
-                <md-autocomplete
+                <md-autocomplete ng-show='isTagSpace'
                     ng-disabled="ctrl.isDisabled"
                     md-no-cache="ctrl.noCache"
                     md-selected-item="ctrl.selectedItem"
@@ -159,11 +192,7 @@ md-sidenav {
 
           <div hide show-gt-sm flex="20" style="text-align:right">
           
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-              <ng-md-icon icon="notifications" style="fill: white" size="25"></ng-md-icon> 
-            </md-button>
-
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo" ng-show='isTagSpace'>
               <ng-md-icon icon="info" style="fill: white" size="25"></ng-md-icon> 
               <md-tooltip
                 md-direction="bottom">
@@ -171,6 +200,13 @@ md-sidenav {
               </md-tooltip>
             </md-button>
 
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-hide='isTagSpace || searching' ng-click=''>
+              <ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="notifications" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
 
             <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click='showProfile()'>
               <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
@@ -181,229 +217,133 @@ md-sidenav {
       </md-toolbar>
 
       <!-- body -->
-      <md-content layout="row" layout-xs="column" layout-fill>
+      <div layout="row" layout-xs="column">
 
             <!-- workbench -->
-            <div flex="30">
-                <div class='left-show-hide'  ng-show='showBench'>
-                  <md-toolbar class="md-tall md-hue-2">
-                    <span flex></span>
-                    <div layout="column" class="md-toolbar-tools-bottom inset">
-                      <user-avatar></user-avatar>
-                      <span></span>
-                      <div>{{user.name}}</div>
-                      <div>{{user.level}}</div>
-                    </div>
-                  </md-toolbar>
+            <md-content flex="25" ng-controller="FabCtrl as demo" ng-cloak>
+                <div class='left-show-hide' ng-show='showBench' ng-hide="$mdMedia('gt-md')" layout='column' style='margin-top: 20px;'>
                   
-                  <md-tabs md-selected="selectedIndex" md-border-bottom md-autoselect>
-                    <md-tab ng-repeat="tab in user.subscribed_to"
-                            ng-disabled="tab.disabled"
-                            label="{{tab.name}}" style='height: 100%;'>
-                      <div >
+                    <div layout='column' layout-align='center center'>
+                      <user-avatar></user-avatar>
+                      <h3 class='md-body-2'>{{user.name}}</h3>
+                      <h4 class='md-caption'>{{user.level}}</h3>
+                      <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
+                    </div>
+                
+                    <md-divider></md-divider>
 
-                        <h3>{{tab.name}}</h3>
-                        <p>
-                        Aute adipisicing pariatur consequat irure mollit fugiat cillum aliquip excepteur laborum sit id cillum in minim cillum magna magna nulla consectetur reprehenderit aute dolore ea officia duis nostrud dolore laboris ut ea officia aliqua adipisicing excepteur aute velit consectetur nostrud ut elit irure magna ex laborum in fugiat sint ut amet et id voluptate sunt culpa esse laboris nulla cillum occaecat enim ut pariatur et nulla nisi ut enim incididunt dolore cillum sint est est est dolor irure occaecat consectetur quis labore sint nulla ut aliquip laboris velit in in nulla ex in dolor culpa mollit in ad dolor ea mollit dolore dolore do sint elit eu incididunt esse ut id nisi labore velit ad nostrud dolore ea consequat excepteur consequat culpa et occaecat proident sed laboris sunt nostrud aliquip et nulla in anim fugiat ullamco velit commodo consequat amet exercitation sit cillum labore sunt amet adipisicing sint nostrud voluptate incididunt.
+                    <md-toolbar>
+                      <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
+                                         class="md-scale md-fab-top-right" ng-class="{ 'md-hover-full': demo.hover }"
+                                         ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
+                        <md-fab-trigger>
+                          <md-button aria-label="menu" class="md-fab md-warn">
+                            <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
+                            <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
+                          </md-button>
+                        </md-fab-trigger>
 
-                         Aute adipisicing pariatur consequat irure mollit fugiat cillum aliquip excepteur laborum sit id cillum in minim cillum magna magna nulla consectetur reprehenderit aute dolore ea officia duis nostrud dolore laboris ut ea officia aliqua adipisicing excepteur aute velit consectetur nostrud ut elit irure magna ex laborum in fugiat sint ut amet et id voluptate sunt culpa esse laboris nulla cillum occaecat enim ut pariatur et nulla nisi ut enim incididunt dolore cillum sint est est est dolor irure occaecat consectetur quis labore sint nulla ut aliquip laboris velit in in nulla ex in dolor culpa mollit in ad dolor ea mollit dolore dolore do sint elit eu incididunt esse ut id nisi labore velit ad nostrud dolore ea consequat excepteur consequat culpa et occaecat proident sed laboris sunt nostrud aliquip et nulla in anim fugiat ullamco velit commodo consequat amet exercitation sit cillum labore sunt amet adipisicing sint nostrud voluptate incididunt.
+                        <md-fab-actions>
+                          <div ng-repeat="item in demo.items">
+                            <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini"
+                                       ng-click="demo.openDialog($event, item)">
+                              <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
+                                          md-autohide="false">
+                                {{item.name}}
+                              </md-tooltip>
 
-                          Aute adipisicing pariatur consequat irure mollit fugiat cillum aliquip excepteur laborum sit id cillum in minim cillum magna magna nulla consectetur reprehenderit aute dolore ea officia duis nostrud dolore laboris ut ea officia aliqua adipisicing excepteur aute velit consectetur nostrud ut elit irure magna ex laborum in fugiat sint ut amet et id voluptate sunt culpa esse laboris nulla cillum occaecat enim ut pariatur et nulla nisi ut enim incididunt dolore cillum sint est est est dolor irure occaecat consectetur quis labore sint nulla ut aliquip laboris velit in in nulla ex in dolor culpa mollit in ad dolor ea mollit dolore dolore do sint elit eu incididunt esse ut id nisi labore velit ad nostrud dolore ea consequat excepteur consequat culpa et occaecat proident sed laboris sunt nostrud aliquip et nulla in anim fugiat ullamco velit commodo consequat amet exercitation sit cillum labore sunt amet adipisicing sint nostrud voluptate incididunt.
-                           Aute adipisicing pariatur consequat irure mollit fugiat cillum aliquip excepteur laborum sit id cillum in minim cillum magna magna nulla consectetur reprehenderit aute dolore ea officia duis nostrud dolore laboris ut ea officia aliqua adipisicing excepteur aute velit consectetur nostrud ut elit irure magna ex laborum in fugiat sint ut amet et id voluptate sunt culpa esse laboris nulla cillum occaecat enim ut pariatur et nulla nisi ut enim incididunt dolore cillum sint est est est dolor irure occaecat consectetur quis labore sint nulla ut aliquip laboris velit in in nulla ex in dolor culpa mollit in ad dolor ea mollit dolore dolore do sint elit eu incididunt esse ut id nisi labore velit ad nostrud dolore ea consequat excepteur consequat culpa et occaecat proident sed laboris sunt nostrud aliquip et nulla in anim fugiat ullamco velit commodo consequat amet exercitation sit cillum labore sunt amet adipisicing sint nostrud voluptate incididunt.
-                            Aute adipisicing pariatur consequat irure mollit fugiat cillum aliquip excepteur laborum sit id cillum in minim cillum magna magna nulla consectetur reprehenderit aute dolore ea officia duis nostrud dolore laboris ut ea officia aliqua adipisicing excepteur aute velit consectetur nostrud ut elit irure magna ex laborum in fugiat sint ut amet et id voluptate sunt culpa esse laboris nulla cillum occaecat enim ut pariatur et nulla nisi ut enim incididunt dolore cillum sint est est est dolor irure occaecat consectetur quis labore sint nulla ut aliquip laboris velit in in nulla ex in dolor culpa mollit in ad dolor ea mollit dolore dolore do sint elit eu incididunt esse ut id nisi labore velit ad nostrud dolore ea consequat excepteur consequat culpa et occaecat proident sed laboris sunt nostrud aliquip et nulla in anim fugiat ullamco velit commodo consequat amet exercitation sit cillum labore sunt amet adipisicing sint nostrud voluptate incididunt.
-                        </p>
-                        <br/>
+                              <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon>
+                            </md-button>
+                          </div>
+                        </md-fab-actions>
+                      </md-fab-speed-dial>
+                    </md-toolbar>
+
+                    <br><br>
+
+                    <div class='folder'>
+                      
+                      <div class='folder-title'>My Node</div>
+                        
+                      <div class='folder-notes'>
 
                       </div>
-                    </md-tab>
-                  </md-tabs>
-                </div>
-            </div>
-
-            <!-- posts -->
-            <md-content layout-fill layout-padding layout-margin>
-
-                <div layout="column" layout-padding >
-                  
-                  <md-chips>
-                    <md-chip class="pointer" ng-repeat="item in [1, 2, 3, 4]">
-                      <a ui-sref="home({tags: [item]})"><ng-md-icon icon="alarm" style="fill: black" size="18"></ng-md-icon>&nbsp;&nbsp; {{item}}</a>
-                    </md-chip>
-                  </md-chips>
-
-                </div>
-
-                <div layout="row" layout-padding>
-                  <md-input-container>
-                    <md-select ng-model="selectedItem" md-selected-text="getSelectedText()">
-                      <md-optgroup label="items">
-                        <md-option ng-value="item" ng-repeat="item in items">Sort By: {{item}}</md-option>
-                      </md-optgroup>
-                    </md-select>
-                  </md-input-container>
-                </div>
-
-                <!-- content -->
-                <div flex layout-padding class="md-padding" layout-xs="column" layout="row" id="central-panel">
-                    
-                    <div flex-xs flex-gt-xs="50" layout="column">
-
-                      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
-                        <md-card-title layout-align='center'>
-                          <md-card-title-text>
-                            <span class="md-headline">+</span>
-                            <span class="md-subhead">Create a new node</span>
-                          </md-card-title-text>
-                          <!-- <md-card-title-media>
-                            <div class="md-media-lg card-media"></div>
-                          </md-card-title-media> -->
-                        </md-card-title>
-                      </md-card>
-                    
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Extra Large</span>
-                          </md-card-title-text>
-                        </md-card-title>
-                        <md-card-content layout="row" layout-align="space-between">
-                          <div class="md-media-xl card-media"></div>
-
-                          <md-card-actions layout="column">
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>  
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>  
-                          </md-card-actions>
-                        </md-card-content>
-                      </md-card>
-       
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Small</span>
-                          </md-card-title-text>
-                          <md-card-title-media>
-                            <div class="md-media-sm card-media"></div>
-                          </md-card-title-media>
-                        </md-card-title>
-                      </md-card>
-                      
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Medium</span>
-                          </md-card-title-text>
-                          <md-card-title-media>
-                            <div class="md-media-md card-media"></div>
-                          </md-card-title-media>
-                        </md-card-title>
-                      </md-card>
 
                     </div>
 
-                    <div flex-xs flex-gt-xs="50" layout="column">
-                      
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Small</span>
-                          </md-card-title-text>
-                          <md-card-title-media>
-                            <div class="md-media-sm card-media"></div>
-                          </md-card-title-media>
-                        </md-card-title>
-                      </md-card>
-                      
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Medium</span>
-                          </md-card-title-text>
-                          <md-card-title-media>
-                            <div class="md-media-md card-media"></div>
-                          </md-card-title-media>
-                        </md-card-title>
-                      </md-card>
+                    <md-divider></md-divider>
 
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Large</span>
-                          </md-card-title-text>
-                          <md-card-title-media>
-                            <div class="md-media-lg card-media"></div>
-                          </md-card-title-media>
-                        </md-card-title>
-                      </md-card>
-                    
-                      <md-card md-theme="default" ng-click='showAdvanced($event)'>
-                        <md-card-title>
-                          <md-card-title-text>
-                            <span class="md-headline">Card with image</span>
-                            <span class="md-subhead">Extra Large</span>
-                          </md-card-title-text>
-                        </md-card-title>
-                        <md-card-content layout="row" layout-align="space-between">
-                          <div class="md-media-xl card-media"></div>
+                    <div class='folder' ng-repeat="subs in user.subscribed_to">
+                      <div class='folder-title'>${{subs}}</div>
+                      <div class='folder-notes'>
 
-                          <md-card-actions layout="column">
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>  
-                            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-                              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-                            </md-button>  
-                          </md-card-actions>
-                        </md-card-content>
-                      </md-card>
+                      </div>
+                    </div>
 
-                     </div>
                 </div>
             </md-content>
 
-            <!-- space information -->
-            <div flex="30" class='right-show-hide' ng-show='showInfo'>
-                  Tag Space Title
-                  Tag Space Curators
-                  Top Contributors
-                  <!-- <md-subheader class="md-no-sticky">Tag Space : $assignment1</md-subheader>
-                  <img src='http://placehold.it/70x70' class="md-avatar" />
-                  <div class="md-list-item-text" layout="column">
-                    <h3>Item {{item}}</h3>
-                    <h4>Veniam adipisicing qui ea aliqua sed irure voluptate eiusmod sint sed in.</h4>
-                    <p>Aute laborum consectetur sint culpa laborum non adipisicing anim ut ex et labore ea officia nisi.</p>
-                  </div>
+            <!-- timed tags / site overview -->
+            <md-content flex="70" layout-margin>
 
-
-                  <md-list>
-                    <md-subheader>Top Contributors</md-subheader>
-                    <md-list-item class="md-3-line" ng-repeat="item in [1, 2, 3]">
-                      <img src='http://placehold.it/70x70' class="md-avatar" />
-                      <div class="md-list-item-text" layout="column">
-                        <h3>Item {{item}}</h3>
-                        <h4>Veniam adipisicing qui ea aliqua sed irure voluptate eiusmod sint sed in.</h4>
-                        <p>Aute laborum consectetur sint culpa laborum non adipisicing anim ut ex et labore ea officia nisi.</p>
+              <div layout='column'>
+                
+                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Timed Tags <span class='md-caption' style='float: right'>More</span></h3>
+                  <md-divider md-inset></md-divider>
+                  <div layout='row'>
+                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+                        <a>tagspace {{ts}}</a>
+                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
                       </div>
-                    </md-list-item>
-                  </md-list> -->
-            </div>
+                  </div>
+                </md-card>
 
-      </md-content>
+                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Recently Visited</h3>
+                  <md-divider md-inset></md-divider>
+                  <div layout='row' >
+                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+                        tagspace {{ts}}
+                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
+                      </div>
+                  </div>
+                </md-card>
+
+                <md-card class='swipe-down swipe-up'  style='width: 600px;'  ng-hide='searchMode' md-theme="default">
+                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Explore Posts</h3>
+                  <md-divider md-inset></md-divider>
+                  <div layout='row' >
+                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+                        tagspace {{ts}}
+                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
+                      </div>
+                  </div>
+                </md-card>
+
+                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>
+                            Users Online 
+                            <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
+                              {{ user_expand ? "Less" : "More"}}
+                            </span>
+                  </h3>
+                  <md-divider md-inset></md-divider>
+                  <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+                      <div class='shortcut-div' ng-repeat='user in usersOnline' style='width: 150px;'>
+                        <img src='{{user.profile}}' style='width: 40px; height: 40px; border-radius: 50%; margin: 0 auto;'>
+                        <br>
+                        <h5 class='md-caption'>{{user.name}}</h5>
+                      </div>
+                  </div>
+                </md-card>
+              
+
+              </div>
+
+            </md-content>
+
+      </div>
     </div>
 
 </div>
