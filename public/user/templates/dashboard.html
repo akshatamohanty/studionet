@@ -116,6 +116,22 @@ md-sidenav {
   transform: rotateY(0);
 }
 
+/* start 'enter' transition on main view */
+main.ng-enter {
+    /* transition on enter for .5s */
+    transition: .5s;
+
+    /* start with opacity 0 (invisible) */
+    opacity: 0;
+}
+
+/* end 'enter' transition on main view */
+main.ng-enter-active {
+    /* end with opacity 1 (fade in) */
+    opacity: 1;
+}
+
+
 </style>
 
 <div ng-cloak layout="row">
@@ -247,7 +263,6 @@ md-sidenav {
 
                       </div>
                     </div>
-
                 </div>
             </md-content>
 
@@ -258,7 +273,7 @@ md-sidenav {
                   
                   <md-chips>
                     <md-chip class="pointer" ng-repeat="item in [1, 2, 3, 4]">
-                      <a ui-sref="home({tags: [item]})"><ng-md-icon icon="alarm" style="fill: black" size="18"></ng-md-icon>&nbsp;&nbsp; {{item}}</a>
+                      <a><ng-md-icon icon="alarm" style="fill: black" size="18"></ng-md-icon>&nbsp;&nbsp; {{item}}</a>
                     </md-chip>
                   </md-chips>
 
@@ -493,7 +508,7 @@ md-sidenav {
 	                	3. ...<br>
 
 	                </md-card-content>
-					<md-card-actions layout="row" layout-align="end center">
+					  <md-card-actions layout="row" layout-align="end center">
 			          <md-button>Fork</md-button>
 			          <md-button>Share</md-button>
 			        </md-card-actions>

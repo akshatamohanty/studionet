@@ -45,12 +45,7 @@
   </head>
 
   <body ng-app="studionet">
-    <div class="app app-default" ng-cloak>
-        <div class="app-container">
-          <!-- <top-bar></top-bar> --> <!-- constant top bar for anchor -->
-          <ui-view></ui-view> <!-- graph changes -->
-        </div>
-    </div>
+    <ui-view></ui-view>
   </body>
 
 
@@ -170,9 +165,10 @@
   <script type="text/javascript" src="/user/components/boards/GroupBoardController.js"></script>
   <script type="text/javascript" src="/user/components/links/LinksController.js"></script>  -->
 
+  <script type="text/javascript" src="/user/js/SkeletonController.js"></script>
   <script type="text/javascript" src="/user/js/AppController.js"></script>
   <script type="text/javascript" src="/user/components/topbar/topbar-directive.js"></script>
-  <script type="text/javascript" src="/user/components/userbar/userbar-directive.js"></script>
+  <script type="text/javascript" src="/user/components/workbench/workbench-directive.js"></script>
   <script type="text/javascript" src="/user/components/tagcontainer/tagcontainer-directive.js"></script>
   <script type="text/javascript" src="/user/js/mousefunctions.js"></script>
 

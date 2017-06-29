@@ -1,0 +1,438 @@
+<div layout="row" layout-align="center" layout-fill layout-margin>
+
+  <div flex='70' layout="column" style="max-width: 700px;">
+    
+    <div>
+      <h3 class='md-caption'>Suggested Tags</h3>
+      <div layout="row" layout-margin>
+        <md-chips layout='row' ng-repeat="item in ['architecture', 'design-ideas', 'roark', 'design']">
+          <md-chip class="pointer" style='padding: 10px; border-radius:5px;'>{{item}}</md-chip>
+        </md-chips>
+      </div>
+    </div>
+
+    <div>        
+      <md-input-container>
+          <md-select ng-model="selectedItem" md-selected-text="getSelectedText()">
+            <md-optgroup label="items">
+              <md-option ng-value="item" ng-repeat="item in items">Sort By: {{item}}</md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
+    </div>
+
+    <div layout="row" layout-xs="column" layout-margin layout-wrap style='overflow-y: auto;'>
+
+      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
+        <md-card-title layout-align='center'>
+          <md-card-title-text>
+            <span class="md-headline">+</span>
+            <span class="md-subhead">Create a new node</span>
+          </md-card-title-text>
+        </md-card-title>
+      </md-card>
+
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+    
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Extra Large</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"></div>
+
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>  
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>  
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Small</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+      
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Small</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-sm card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+      
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Large</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-lg card-media"></div>
+          </md-card-title-media>
+        </md-card-title>
+      </md-card>
+    
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Card with image</span>
+            <span class="md-subhead">Extra Large</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="space-between">
+          <div class="md-media-xl card-media"></div>
+
+          <md-card-actions layout="column">
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>  
+            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+            </md-button>  
+          </md-card-actions>
+        </md-card-content>
+      </md-card>
+
+
+    </div>
+  </div>
+
+  <div flex='30' style="max-width: 300px;">
+
+    <h3 class='md-caption'>Space</h3>
+    <h1 class='md-title'>Lorem Ipsum</h1>
+    <p class='md-caption'>Founded by: [username] <br> Forked by [list of users]</p>
+
+    <i>Location: ___</i>
+    <br><br><br>
+    <h2 class='md-title'>Top Curators</h2>
+    <ul>
+      <li>Name 1</li>
+      <li>Name 1</li>
+      <li>Name 1</li>
+    </ul>
+
+    <md-button class="md-raised">Add/Remove</md-button>
+
+  </div>
+  
+  <!-- space information -->
+  <!-- <div flex="20" class='right-show-hide' ng-show='showInfo'>
+      <md-card md-theme="default" ng-click='showAdvanced($event)'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-subhead">Tag Space</span>
+            <span class="md-title">#ar2512 #assignments #week1</span>
+            <span class="md-subhead">Jan 12, '17 - Jan 28, '17</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <p>Forked by : Jane Doe, John Lim ...</p>
+
+          <span class="md-subhead">Top Contributors</span><br>
+          1. ...<br>
+          2. ...<br>
+          3. ...<br>
+
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button>Fork</md-button>
+            <md-button>Share</md-button>
+        </md-card-actions>
+      </md-card>
+  </div>  
+
+
+  <md-content flex="70">
+
+      <div layout="column" layout-padding>
+        
+        <md-chips>
+          <md-chip class="pointer" ng-repeat="item in [1, 2, 3, 4]">
+            <a><ng-md-icon icon="alarm" style="fill: black" size="18"></ng-md-icon>&nbsp;&nbsp; {{item}}</a>
+          </md-chip>
+        </md-chips>
+
+      </div>
+
+      <div layout="row" layout-padding>
+        <md-input-container>
+          <md-select ng-model="selectedItem" md-selected-text="getSelectedText()">
+            <md-optgroup label="items">
+              <md-option ng-value="item" ng-repeat="item in items">Sort By: {{item}}</md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
+      </div>
+
+      <div flex layout-padding class="md-padding" layout-xs="column" layout="row" id="central-panel">
+          
+          <div flex-xs flex-gt-xs="33" layout="column">
+
+            <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
+              <md-card-title layout-align='center'>
+                <md-card-title-text>
+                  <span class="md-headline">+</span>
+                  <span class="md-subhead">Create a new node</span>
+                </md-card-title-text>
+              </md-card-title>
+            </md-card>
+          
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Extra Large</span>
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content layout="row" layout-align="space-between">
+                <div class="md-media-xl card-media"></div>
+
+                <md-card-actions layout="column">
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                </md-card-actions>
+              </md-card-content>
+            </md-card>
+
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Small</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-sm card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+            
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Medium</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-md card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+
+          </div>
+
+          <div flex-xs flex-gt-xs="33" layout="column">
+            
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Small</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-sm card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+            
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Medium</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-md card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Large</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-lg card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+          
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Extra Large</span>
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content layout="row" layout-align="space-between">
+                <div class="md-media-xl card-media"></div>
+
+                <md-card-actions layout="column">
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                </md-card-actions>
+              </md-card-content>
+            </md-card>
+
+           </div>
+
+          <div flex-xs flex-gt-xs="33" layout="column">
+
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Extra Large</span>
+                </md-card-title-text>
+              </md-card-title>
+              <md-card-content layout="row" layout-align="space-between">
+                <div class="md-media-xl card-media"></div>
+
+                <md-card-actions layout="column">
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
+                    <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
+                  </md-button>  
+                </md-card-actions>
+              </md-card-content>
+            </md-card>
+
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Small</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-sm card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+            
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Medium</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-md card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+
+            <md-card md-theme="default" ng-click='showAdvanced($event)'>
+              <md-card-title>
+                <md-card-title-text>
+                  <span class="md-headline">Card with image</span>
+                  <span class="md-subhead">Large</span>
+                </md-card-title-text>
+                <md-card-title-media>
+                  <div class="md-media-lg card-media"></div>
+                </md-card-title-media>
+              </md-card-title>
+            </md-card>
+          
+
+
+           </div>
+
+      </div>
+      
+  </md-content> -->
+
+
+
+</div>

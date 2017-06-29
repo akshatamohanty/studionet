@@ -1,351 +1,53 @@
-<style>
-body{
-  background-color: #E8E8E8;
-  perspective: 1000px;
-}
-
-md-content{
-  background-color: #E8E8E8;
-}
-
-md-sidenav{
-  background-color:  #E8E8E8;
-}
-
-md-backdrop{
-  display: none;
-}
-
-.pointer:hover{
-  cursor: pointer;
-  background-color: gray;
-}
-
-a{
-  color: inherit;
-}
-
-a:hover{
-  color: inherit; 
-  text-decoration: none;
-}
-
-.empty-card > *{
-  text-align: center;
-  border: 1px dashed grey;
-  background: #E8E8E8;
-}
-
-md-content.md-default-theme {
-  background-color: #eee;
-}
-md-card {
-  background-color: #fff;
-  h2:first-of-type {
-    margin-top: 0;
-  }
-}
-md-toolbar > .md-button.md-default-theme {
-    border-radius: 99%; // round toolbar buttons
-}
-h2 {
-  font-weight: 400;
-}
-.md-toolbar-tools-bottom {
-  font-size: small;
-  & :last-child {
-    opacity: 0.8;
-  }
-}
-md-toolbar:not(.md-hue-1),
-.md-fab {
-  fill: #fff;
-}
-md-sidenav {
-  fill: #737373;
-  ng-md-icon {
-    position: relative;
-    top: 5px; // adjust for svg viewbox
-  }
-}
-.user-avatar {
-  border-radius: 99%;
-}
-
-.left-show-hide.ng-hide-add {
-  //transform: translateX(100%);//rotateY(110deg);
-  //transform: rotateZ(0);
-  //transform-origin: right;
-  transition: all 0.5s ease-in-out;
-}
-
-.left-show-hide.ng-hide-add.ng-hide-add-active {
-  //transform: rotateZ(-135deg);
-  transform: translateX(-100%);
-}
-
-.left-show-hide.ng-hide-remove {
-  transform: translateX(-100%);//rotateY(110deg);
-  transform-origin: left;
-  transition: all 0.5s ease;
-}
-
-.left-show-hide.ng-hide-remove.ng-hide-remove-active {
-  transform: rotateY(0);
-}
-
-.right-show-hide.ng-hide-add {
-  //transform: translateX(100%);//rotateY(110deg);
-  //transform: rotateZ(0);
-  //transform-origin: right;
-  transition: all 0.5s ease-in-out;
-}
-
-.right-show-hide.ng-hide-add.ng-hide-add-active {
-  //transform: rotateZ(-135deg);
-  transform: translateX(100%);
-}
-
-.right-show-hide.ng-hide-remove {
-  transform: translateX(100%);//rotateY(110deg);
-  transform-origin: right;
-  transition: all 0.5s ease;
-}
-
-.right-show-hide.ng-hide-remove.ng-hide-remove-active {
-  transform: rotateY(0);
-}
-
-.shortcut-div{
-  padding: 10px;
-  text-align: center;
-  padding-top: 30px;
-  background-color: #598E5F; 
-  color: white; 
-  min-width: 150px !important;
-  height: 150px; 
-  border-right: 1px solid white;
-  border-top: 1px solid white;
-}
-
-.full-height{
-  height: auto;
-
-  -webkit-transition: height 1s; 
-  -moz-transition: height 1s; 
-  -ms-transition: height 1s; 
-  -o-transition: height 1s; 
-  transition: height 1s;
-
-}
-
-.fixed-height{
-  height: 150px;
-  -webkit-transition: height 1s; 
-  -moz-transition: height 1s; 
-  -ms-transition: height 1s; 
-  -o-transition: height 1s; 
-  transition: height 1s;
-
-}
-
-</style>
-
-<div ng-cloak layout="row">
-    <div layout="column" class="relative" layout-fill role="main">
-      
-      <!-- header -->
-      <md-toolbar class="md-hue-2" style="height: 60px;">
-        <div class="md-toolbar-tools">
-          
-          <div flex="5" style="text-align:left">
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showBench=!showBench">
-              <ng-md-icon icon="dehaze" style="fill: white" size="25"></ng-md-icon> 
-            </md-button>
-          </div>
-
-          <div flex="15" style="text-align:left">
-            <h2 md-truncate>Studionet</h2>
-          </div>
-
-          <div ng-controller="DemoCtrl as ctrl" flex="60" style="text-align:center">
-                <md-autocomplete ng-show='isTagSpace'
-                    ng-disabled="ctrl.isDisabled"
-                    md-no-cache="ctrl.noCache"
-                    md-selected-item="ctrl.selectedItem"
-                    md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
-                    md-search-text="ctrl.searchText"
-                    md-selected-item-change="ctrl.selectedItemChange(item)"
-                    md-items="item in ctrl.querySearch(ctrl.searchText)"
-                    md-item-text="item.display"
-                    md-min-length="0"
-                    placeholder="Enter some tags...">
-                  <md-item-template>
-                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
-                  </md-item-template>
-                  <md-not-found>
-                    No states matching "{{ctrl.searchText}}" were found.
-                    <a ng-click="ctrl.newState(ctrl.searchText)">Create a new one!</a>
-                  </md-not-found>
-                </md-autocomplete>
-          </div>
-
-          <div hide show-gt-sm flex="20" style="text-align:right">
-          
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo" ng-show='isTagSpace'>
-              <ng-md-icon icon="info" style="fill: white" size="25"></ng-md-icon> 
-              <md-tooltip
-                md-direction="bottom">
-                Toggle More Information
-              </md-tooltip>
-            </md-button>
-
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-hide='isTagSpace || searching' ng-click=''>
-              <ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon> 
-            </md-button>
-
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false">
-              <ng-md-icon icon="notifications" style="fill: white" size="25"></ng-md-icon> 
-            </md-button>
-
-            <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click='showProfile()'>
-              <ng-md-icon icon="person_outline" style="fill: white" size="25"></ng-md-icon> 
-            </md-button>
-          </div>
-
-        </div>
-      </md-toolbar>
-
-      <!-- body -->
-      <div layout="row" layout-xs="column">
-
-            <!-- workbench -->
-            <md-content flex="25" ng-controller="FabCtrl as demo" ng-cloak>
-                <div class='left-show-hide' ng-show='showBench' ng-hide="$mdMedia('gt-md')" layout='column' style='margin-top: 20px;'>
+<div layout='column' style="border: 1px solid blue;" layout-align='top center'>
                   
-                    <div layout='column' layout-align='center center'>
-                      <user-avatar></user-avatar>
-                      <h3 class='md-body-2'>{{user.name}}</h3>
-                      <h4 class='md-caption'>{{user.level}}</h3>
-                      <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
-                    </div>
-                
-                    <md-divider></md-divider>
-
-                    <md-toolbar>
-                      <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
-                                         class="md-scale md-fab-top-right" ng-class="{ 'md-hover-full': demo.hover }"
-                                         ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
-                        <md-fab-trigger>
-                          <md-button aria-label="menu" class="md-fab md-warn">
-                            <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                            <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
-                          </md-button>
-                        </md-fab-trigger>
-
-                        <md-fab-actions>
-                          <div ng-repeat="item in demo.items">
-                            <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini"
-                                       ng-click="demo.openDialog($event, item)">
-                              <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
-                                          md-autohide="false">
-                                {{item.name}}
-                              </md-tooltip>
-
-                              <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon>
-                            </md-button>
-                          </div>
-                        </md-fab-actions>
-                      </md-fab-speed-dial>
-                    </md-toolbar>
-
-                    <br><br>
-
-                    <div class='folder'>
-                      
-                      <div class='folder-title'>My Node</div>
-                        
-                      <div class='folder-notes'>
-
-                      </div>
-
-                    </div>
-
-                    <md-divider></md-divider>
-
-                    <div class='folder' ng-repeat="subs in user.subscribed_to">
-                      <div class='folder-title'>${{subs}}</div>
-                      <div class='folder-notes'>
-
-                      </div>
-                    </div>
-
-                </div>
-            </md-content>
-
-            <!-- timed tags / site overview -->
-            <md-content flex="70" layout-margin>
-
-              <div layout='column'>
-                
-                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Timed Tags <span class='md-caption' style='float: right'>More</span></h3>
-                  <md-divider md-inset></md-divider>
-                  <div layout='row'>
-                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
-                        <a>tagspace {{ts}}</a>
-                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
-                      </div>
-                  </div>
-                </md-card>
-
-                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Recently Visited</h3>
-                  <md-divider md-inset></md-divider>
-                  <div layout='row' >
-                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
-                        tagspace {{ts}}
-                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
-                      </div>
-                  </div>
-                </md-card>
-
-                <md-card class='swipe-down swipe-up'  style='width: 600px;'  ng-hide='searchMode' md-theme="default">
-                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Explore Posts</h3>
-                  <md-divider md-inset></md-divider>
-                  <div layout='row' >
-                      <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
-                        tagspace {{ts}}
-                        <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
-                      </div>
-                  </div>
-                </md-card>
-
-                <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-                  <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>
-                            Users Online 
-                            <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
-                              {{ user_expand ? "Less" : "More"}}
-                            </span>
-                  </h3>
-                  <md-divider md-inset></md-divider>
-                  <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-                      <div class='shortcut-div' ng-repeat='user in usersOnline' style='width: 150px;'>
-                        <img src='{{user.profile}}' style='width: 40px; height: 40px; border-radius: 50%; margin: 0 auto;'>
-                        <br>
-                        <h5 class='md-caption'>{{user.name}}</h5>
-                      </div>
-                  </div>
-                </md-card>
-              
-
-              </div>
-
-            </md-content>
-
+    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Timed Tags <span class='md-caption' style='float: right'>More</span></h3>
+      <md-divider md-inset></md-divider>
+      <div layout='row'>
+          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+            <a ui-sref='home'>tagspace {{ts}}</a>
+            <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
+          </div>
       </div>
-    </div>
+    </md-card>
 
+    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Recently Visited</h3>
+      <md-divider md-inset></md-divider>
+      <div layout='row' >
+          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+            tagspace {{ts}}
+            <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
+          </div>
+      </div>
+    </md-card>
+
+    <md-card class='swipe-down swipe-up'  style='width: 600px;'  ng-hide='searchMode' md-theme="default">
+      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Explore Posts</h3>
+      <md-divider md-inset></md-divider>
+      <div layout='row' >
+          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+            tagspace {{ts}}
+            <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
+          </div>
+      </div>
+    </md-card>
+
+    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
+      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>
+                Users Online 
+                <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
+                  {{ user_expand ? "Less" : "More"}}
+                </span>
+      </h3>
+      <md-divider md-inset></md-divider>
+      <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+          <div class='shortcut-div' ng-repeat='user in usersOnline' style='width: 150px;'>
+            <img src='{{user.profile}}' style='width: 40px; height: 40px; border-radius: 50%; margin: 0 auto;'>
+            <br>
+            <h5 class='md-caption'>{{user.name}}</h5>
+          </div>
+      </div>
+    </md-card>
+                
 </div>
-
-

@@ -7,17 +7,19 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 
 	// user 'routes'
 	$stateProvider
-		.state('profile', {
-			url: '/profile',
-			templateUrl: '/user/templates/dashboard.html',
-			resolve: {
+		.state('home', {
+			abstract: true,
+			url: '/',
+			templateUrl: '/user/templates/skeleton.html',
+			controller: 'SkeletonController',
+		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
 			}
 		})
-		.state('home', {
-			url: '/home',
+		.state('home.homepage', {
+			url: 'home',
 			templateUrl: '/user/templates/homepage.html',
 			controller: 'AppController',
 		    resolve: {
@@ -29,10 +31,23 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}
 		})
-		.state('search', {
-			url: '/home/:tags',
-			templateUrl: '/user/templates/dashboard.html',
+		.state('home.search', {
+			url: 'search',
+			templateUrl: '/user/templates/search-mode.html'/*,
 			controller: 'AppController',
+		    resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}], 
+				tags: ['tags', function(tags){
+					return tags.getAll();
+				}]
+			}*/
+		})
+		.state('home.search-results', {
+			url: 'search/:tags',
+			templateUrl: '/user/templates/search-results.html'
+			/*controller: 'AppController',
 			params: {
 		        tags: null
 		    },
@@ -43,10 +58,50 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				tags: ['tags', function(tags){
 					return tags.getAll();
 				}]
+			}*/
+		})
+		.state('home.note', {
+			abstract: true,
+			url: 'note',
+			template: '<h1>Displays a note</h1>',
+			resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}]
+			}
+		})
+		.state('home.note-details', {
+			url: 'note/:address',
+			template: '<h1>Displays a note in detail</h1>',
+			resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}]
+			}
+		})
+		.state('home.profile', {
+			abstract: true,
+			url: 'profile',
+			template: '<h1>Displays a profile</h1>',
+			resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}]
+			}
+		})
+		.state('home.profile-details', {
+			url: 'profile/:address',
+			template: '<h1>Displays a profile in detail</h1>',
+			resolve: {
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
+				}]
 			}
 		})
 
-	$urlRouterProvider.otherwise('/home');
+
+
+	$urlRouterProvider.otherwise('home');
 
 }]);
 
