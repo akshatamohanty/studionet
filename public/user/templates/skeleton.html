@@ -323,10 +323,10 @@ md-chips{
   <div layout="row" style='margin-top: 70px;'>
 
       <!-- workbench -->
-      <div flex="20" class='left-show-hide ' ng-show='showBench' ng-hide='$mdMedia("gt-sm") == false' >
-          <div ng-controller="FabCtrl as demo" layout='column' style='padding-top: 20px; border-right: 1px solid grey;'>
+      <div flex="20" class='left-show-hide ' ng-show='showBench' ng-hide='$mdMedia("gt-sm") == false'>
+          <div ng-controller="FabCtrl as demo" layout='column' layout-fill style='padding-top: 20px; border-right: 1px solid grey;'>
             
-              <div layout='column' layout-align='center center'>
+              <div layout='column' layout-align='center center' ng-click='goToProfile(user.id)'>
                 <user-avatar></user-avatar>
                 <h3 class='md-body-2'>{{user.name}}</h3>
                 <h4 class='md-caption'>{{user.level}}</h3>
@@ -368,7 +368,7 @@ md-chips{
                 <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>@{{user.name | lowercase | removeSpaces}}</a></div>
                 <div class='folder-notes'>
                     <div class='folder-notes'>
-                        <div class='post-box' ng-repeat='node in user.posts'>{{node}}</div>
+                        <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node}}</div>
                     </div>
                 </div>
               </div>
@@ -378,7 +378,7 @@ md-chips{
               <div class='folder' ng-repeat="subs in user.subscribed_to">
                 <div class='folder-title pointer' ng-click='goTo(spaces[subs].query)'>{{spaces[subs].name}}  ({{ spaces[subs].posts.length }})</div>
                 <div class='folder-notes'>
-                    <div class='post-box' ng-repeat='node in spaces[subs].posts'>{{node}}</div>
+                    <div class='post-box' ng-repeat='node in spaces[subs].posts' ng-click='goToNode(node)'>{{node}}</div>
                 </div>
               </div>
 
@@ -386,8 +386,8 @@ md-chips{
       </div>
 
       <ui-view flex></ui-view>
-
   </div>
+
 </div>
 
 

@@ -25,10 +25,12 @@
 
       <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
         <md-card-title layout-align='center'>
-          <md-card-title-text>
-            <span class="md-headline">+</span>
-            <span class="md-subhead">Create a new node</span>
-          </md-card-title-text>
+          <a ui-sref='home.note'>
+            <md-card-title-text>
+                <span class="md-headline">+</span>
+                <span class="md-subhead">Create a new node</span>
+            </md-card-title-text>
+          </a>
         </md-card-title>
       </md-card>
 

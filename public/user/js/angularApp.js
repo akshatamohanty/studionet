@@ -58,9 +58,8 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}*/
 		})
 		.state('home.note', {
-			abstract: true,
 			url: 'note',
-			template: '<h1>Displays a note</h1>',
+			template: '<h1>new note template</h1>',
 			resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();

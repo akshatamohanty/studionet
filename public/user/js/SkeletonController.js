@@ -9,8 +9,11 @@ angular.module('studionet')
           })
 
           function checkState(){
+
+            $scope.showBench = true;
+            $scope.showInfo = true;
+            
             if ($state.current.name.indexOf("search") > -1){
-              alert("Search active")
               $scope.searchClass = 'active';
               $scope.search = {};
               $scope.search.query = ["hannah", "banana"];
@@ -20,15 +23,13 @@ angular.module('studionet')
               $scope.search = {};
               $scope.search.query = [];
             }
+
+            if( $state.current.name.indexOf("profile") > -1 )
+                $scope.showBench = true;
+   
           }
 
           checkState();
-
-
-          $scope.showInfo = true;
-
-          // make responsive
-          $scope.showBench = true;
 
           $scope.user = {
             "name": profile.user.name,
@@ -46,6 +47,14 @@ angular.module('studionet')
 
           $scope.goTo = function(url){
             $state.go('home.search-results', { 'referer':'home.homepage', 'tags': url});
+          }
+
+          $scope.goToProfile = function(url){
+            $state.go('home.profile-details', { 'referer':'home.homepage', 'id': 1});
+          }
+
+          $scope.goToNode = function(url){
+            $state.go('home.note-details', { 'referer':'home.homepage', 'id': 1});
           }
 
 
