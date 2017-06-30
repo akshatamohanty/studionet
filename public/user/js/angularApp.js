@@ -21,15 +21,12 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.homepage', {
 			url: 'home',
 			templateUrl: '/user/templates/homepage.html',
-			controller: 'AppController',
+			controller: 'AppController'/*,
 		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
-				}], 
-				tags: ['tags', function(tags){
-					return tags.getAll();
 				}]
-			}
+			}*/
 		})
 		.state('home.search', {
 			url: 'search',
@@ -109,6 +106,11 @@ app.config(['$mdThemingProvider', function($mdThemingProvider){
 	$mdThemingProvider.theme('default')
 	.primaryPalette('blue-grey');
 }])
+
+
+app.config(['$mdIconProvider', function($mdIconProvider) {
+        $mdIconProvider.icon('md-close', 'img/icons/ic_close_24px.svg', 24);
+}]);
 
 // textAngular toolbar customisation
 app.config(function($provide) {

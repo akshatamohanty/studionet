@@ -170,6 +170,94 @@ md-sidenav {
   width: 2px;
 }
 
+.folder-title{
+  padding: 10px;
+  border-bottom: 1px solid white;
+  background-color: grey;
+  margin-bottom: 4px;
+}
+
+.post-box{
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 2px;
+  border: 1px solid grey;
+  margin: 4px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.post-box:hover{
+  background-color: grey;
+  color: white;
+}
+
+.search-bar{
+  border: 1px solid white;
+  color: white;
+  height: 40px;
+  padding: 0px;
+  background: none;
+}
+
+/*.search-bar > md-chips{
+  height: 30px;
+  padding-bottom: 0px;
+}*/
+
+md-chips-wrap{
+  background: none;
+
+  height: 30px;
+  padding-bottom: 0px;
+}
+
+md-chips{
+  background: none;
+}
+
+
+.chipsdemoBasicUsage .errors {
+  font-size: 12px;
+  color: #dd2c00;
+  margin-top: 10px; }
+
+.chipsdemoBasicUsage .custom-chips md-chip {
+  position: relative; }
+  .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    margin-right: 0;
+    height: 24px; }
+    .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip {
+      position: relative;
+      height: 24px;
+      width: 24px;
+      line-height: 30px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      transition: background 0.15s linear;
+      display: block; }
+      .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0) scale(0.7);
+        color: white;
+        fill: red; }
+      .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:focus {
+        background: rgba(255, 0, 0, 0.8); }
+
+.chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
+  padding-right: 5px; }
+
 </style>
 
 
@@ -181,26 +269,28 @@ md-sidenav {
     <div class="md-toolbar-tools" layout-margin layout-padding layout-fill layout-align='top center'>
       
       <!-- Show / Hide Workbench control -->
-      <div flex="5" style='border: 1px solid black;'>
+      <div flex="5">
        <!--  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" > -->
           <ng-md-icon icon="dehaze" style="fill: white" size="25" ng-click="showBench=!showBench"></ng-md-icon> 
        <!--  </md-button> -->
       </div>
 
       <!-- Branding -->
-      <div hide show-gt-xs flex-gt-sm="10"  style='border: 1px solid black;'>
-        <h2 md-truncate>Studionet</h2>
+      <div hide show-gt-xs flex-gt-sm="10" >
+        <span md-truncate style='text-align: left;'>Studionet</span>
       </div>
 
         
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="70" style='border: 1px solid black;'>
-        Search Bar
+      <div show-gt-sm flex="70">
+          <a ui-sref='search' ng-show='searchClass=="active"' class='search-bar'>
+            <md-chips ng-model="search.query" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+          </a>
       </div>
 
 
       <!-- buttons -->
-      <div flex="10" style='border: 1px solid black;'>
+      <div flex="10">
       
         <!-- <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo" ng-show='isTagSpace'>
           <ng-md-icon icon="info" style="fill: white" size="25"></ng-md-icon> 
@@ -210,8 +300,8 @@ md-sidenav {
           </md-tooltip>
         </md-button> -->
 
-        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='isTagSpace || searching'>
-          <a ui-sref='search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
+        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-show='searchClass=="inactive"'>
+          <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
           <md-tooltip
             md-direction="bottom">
             Search
@@ -219,7 +309,7 @@ md-sidenav {
         </md-button>
 
         <md-button class="md-icon-button" aria-label="Home" ng-disabled="false" ng-click='showProfile()'>
-          <ng-md-icon icon="home" style="fill: white" size="25"></ng-md-icon> 
+          <a ui-sref='home.homepage'><ng-md-icon icon="home" style="fill: white" size="25"></ng-md-icon></a>
           <md-tooltip
             md-direction="bottom">
             Home
@@ -234,7 +324,7 @@ md-sidenav {
 
       <!-- workbench -->
       <div flex="20" class='left-show-hide ' ng-show='showBench' ng-hide='$mdMedia("gt-sm") == false' >
-          <div ng-controller="FabCtrl as demo" layout='column' style='margin-top: 20px;'>
+          <div ng-controller="FabCtrl as demo" layout='column' style='padding-top: 20px; border-right: 1px solid grey;'>
             
               <div layout='column' layout-align='center center'>
                 <user-avatar></user-avatar>
@@ -275,23 +365,23 @@ md-sidenav {
               <br><br>
 
               <div class='folder'>
-                
-                <div class='folder-title'>My Node</div>
-                  
+                <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>@{{user.name | lowercase | removeSpaces}}</a></div>
                 <div class='folder-notes'>
-
+                    <div class='folder-notes'>
+                        <div class='post-box' ng-repeat='node in user.posts'>{{node}}</div>
+                    </div>
                 </div>
-
               </div>
 
               <md-divider></md-divider>
 
               <div class='folder' ng-repeat="subs in user.subscribed_to">
-                <div class='folder-title'>${{subs}}</div>
+                <div class='folder-title pointer' ng-click='goTo(spaces[subs].query)'>{{spaces[subs].name}}  ({{ spaces[subs].posts.length }})</div>
                 <div class='folder-notes'>
-
+                    <div class='post-box' ng-repeat='node in spaces[subs].posts'>{{node}}</div>
                 </div>
               </div>
+
           </div>
       </div>
 

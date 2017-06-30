@@ -9,7 +9,7 @@ angular.module('studionet')
             "name": "Akshata Mohanty",
             "level": "Junior Architect",
             "subscribed_to": [2, 5]
-          }//profile.user;
+          }
 
           $scope.tagSpaces = [
             { id: 1, tags: [1, 2, 3], people: [], time: [] },
