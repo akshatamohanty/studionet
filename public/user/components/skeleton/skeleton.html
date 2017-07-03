@@ -258,6 +258,56 @@ md-chips{
 .chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
   padding-right: 5px; }
 
+*
+{
+  box-sizing: border-box;
+}
+
+.Modal-backdrop
+{
+ position: fixed;
+ top: 0px;
+ left: 0px;
+ height:100%;
+ width:100%;
+ background: #000;
+ z-index: 1;
+ opacity: 0.5;
+}
+
+.Modal-holder
+{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height:100%;
+  width:100%;
+  background: transparent;
+  z-index: 2;
+  padding: 30px 15px;
+}
+
+.Modal-box
+{
+  margin: 0 auto;
+  width: 100%;
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+@media screen and (min-width: 992px)
+{
+  .Modal-box
+  {
+    width: 50%;
+    padding: 30px;
+  }
+}
+
+
 </style>
 
 
@@ -342,7 +392,7 @@ md-chips{
                   <md-fab-trigger>
                     <md-button aria-label="menu" class="md-fab md-warn">
                       <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                      <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
+                      <!-- <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon> -->
                     </md-button>
                   </md-fab-trigger>
 
@@ -355,7 +405,7 @@ md-chips{
                           {{item.name}}
                         </md-tooltip>
 
-                        <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon>
+                        <!-- <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon> -->
                       </md-button>
                     </div>
                   </md-fab-actions>
@@ -382,9 +432,12 @@ md-chips{
                 </div>
               </div>
 
+
           </div>
       </div>
-
+      
+      <button ui-sref="Modal.confirmAddToCart" ng-click='alert("hello")' style='z-index: 2'>Add to cart</button>
+       
       <ui-view flex></ui-view>
   </div>
 

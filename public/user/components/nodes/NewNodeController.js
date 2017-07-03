@@ -1,5 +1,4 @@
 angular.module('studionet')
-
 .controller('NewNodeController', ['$scope', 'supernode', 'GraphService', 'tags', 'users', function($scope, supernode, GraphService, tags, users){
 
       // for the new contribution

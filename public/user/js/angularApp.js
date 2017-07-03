@@ -1,3 +1,8 @@
+/*
+ * This is the angular app bootstrapping file with the configurations, settings and routings.
+ * 
+ */
+
 var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','ui.router',
 										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree', 
 										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons']);
@@ -5,12 +10,54 @@ var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
 
-	// user 'routes'
+	$stateProvider.state("Modal", {
+		views:{
+		  "modal": {
+		    template: "<div class='Modal-backdrop'></div>\
+						<div class='Modal-holder' ui-view='modal' autoscroll='false'></div>"
+		  }
+		},
+	    onEnter: ["$state", function($state) {
+	      $(document).on("keyup", function(e) {
+	        if(e.keyCode == 27) {
+	          $(document).off("keyup");
+	          $state.go("Default");
+	        }
+	      });
+
+	      $(document).on("click", ".Modal-backdrop, .Modal-holder", function() {
+	        $state.go("Default");
+	      });
+
+	      $(document).on("click", ".Modal-box, .Modal-box *", function(e) {
+	        e.stopPropagation();
+	      });
+	    }],
+		abstract: true
+	});
+
+	$stateProvider.state("Modal.confirmAddToCart", {
+		url: '/confirm',
+	    views:{
+	      "modal": {
+	        template: "<div class='Modal-box'>\
+  							Are you sure you want to do that?\
+  							<button>Yes</button>\
+						</div>"
+	      }
+	    }
+	  });
+
+	//
+	//	Home State - Abstract State 
+	//	Contains the App Skeleton with the top navigation bar and the sidebar (workbench) 
+	//	Needs to resolve the user identity and properties before loading
+	//		
 	$stateProvider
 		.state('home', {
 			abstract: true,
 			url: '/',
-			templateUrl: '/user/templates/skeleton.html',
+			templateUrl: '/user/components/skeleton/skeleton.html',
 			controller: 'SkeletonController',
 		    resolve: {
 				userProfile: ['profile', function(profile){
@@ -18,32 +65,53 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}
 		})
+		//
+		//	Homepage - Nested  (http://studionet.nus.edu.sg/user/#/home)
+		//	Nested in the Skeleton, contains shortcuts and call-to-actions for the user
+		//	Needs to resolve the additional user and system data before loading (like latest posts, mentions etc)
+		//	Check if any notifications for the user and navigate to notifications page, if yes
+		//	
 		.state('home.homepage', {
 			url: 'home',
-			templateUrl: '/user/templates/homepage.html',
-			controller: 'AppController'/*,
+			templateUrl: '/user/components/homepage/homepage.html',
+			controller: 'HomepageController'/*,
 		    resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
-				}]
+				//TODO: Resolve system data and user specific call-to-actions
 			}*/
 		})
+		//
+		//	Notifications - Popup  (http://studionet.nus.edu.sg/user/#/home/notifications)
+		//	Type: Popup
+		//	Resolve any notifications for the user
+		//	
+		.state('home.notifications', {
+			url: 'notifications',
+			templateUrl: '/user/components/notifications/notifications.html',
+			controller: 'NotificationsController'
+		})
+		//	Homepage - Search  (http://studionet.nus.edu.sg/user/#/search/:usertags)
+		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
+		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
+		//	
 		.state('home.search', {
 			url: 'search',
-			templateUrl: '/user/templates/search-mode.html'/*,
-			controller: 'AppController',
+			templateUrl: '/user/components/search/search-mode.html',
+			/*controller: 'SearchmodeController',
 		    resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
-				}], 
+
+				TODO: 
 				tags: ['tags', function(tags){
 					return tags.getAll();
 				}]
 			}*/
 		})
+		//	Homepage - Search (http://studionet.nus.edu.sg/user/#/search?tags=["helloworld"])
+		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
+		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
+		//	
 		.state('home.search-results', {
 			url: 'search/:tags',
-			templateUrl: '/user/templates/search-results.html'
+			templateUrl: '/user/components/search/search-results.html'
 			/*controller: 'AppController',
 			params: {
 		        tags: null
@@ -57,75 +125,94 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}*/
 		})
+		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
+		//	This state is when the user is creating a new note
+		//	
 		.state('home.note', {
 			url: 'note',
-			template: '<h1>new note template</h1>',
-			resolve: {
+			templateUrl: '/user/components/nodes/newnode.html',
+			controller: 'NewNodeController',
+			/*resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
-			}
+			}*/
 		})
+		//	Note Details - Note (http://studionet.nus.edu.sg/user/#/note/:id)
+		//	This state is when the user is viewing a note with a given ID. 
+		//	The state should resolve the contents of the note, the children and the parents of the note. 
+		//	The controller should allow for navigating to the next or the previous note based on the users' clicks without jumps. The location in the URL should change automatically. 
+		//	If the user chooses to reply, the view should navigate to home.note, while preserving the back/forward states for easy navigation. After saving the user, should navigate back to the original note.
+		//	
 		.state('home.note-details', {
 			url: 'note/:address',
-			template: '<h1>Displays a note in detail</h1>',
-			resolve: {
+			templateUrl: '/user/components/nodes/view.html',
+			controller: 'NodeController'
+			/*resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
-			}
+			}*/
 		})
+		//	Profile - Abstract state
 		.state('home.profile', {
-			abstract: true,
 			url: 'profile',
-			template: '<h1>Displays a profile</h1>',
-			resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
-				}]
-			}
+			template: "your own profile"
 		})
+		.state('home.profile-edit', {
+			url: 'profile/edit',
+			template: "edit your profile here"
+		})
+		//	Profile Details - Note (http://studionet.nus.edu.sg/user/#/profile/:user_id)
+		//	Displays all the user information, badges, posts of a particular user
+		//	Should resolve profile details before loading
+		//	
 		.state('home.profile-details', {
 			url: 'profile/:address',
-			template: '<h1>Displays a profile in detail</h1>',
+			templateUrl: '/user/components/profile/profile.html',
+			controller: 'ProfileController'/*,
 			resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}]
-			}
+			}*/
 		})
-
-
+		.state('home.profile-progress', {
+			url: 'profile/:address/progress',
+			template: "displays your profile progress here"
+		})
+		.state('home.leaderboard', {
+			url: 'leaderboard',
+			template: "displays a popup leaderboard for users"
+		})
 
 	$urlRouterProvider.otherwise('home');
 
 }]);
 
+
+// Configuration options for Angular Material and Plugins
 app.config(['$mdThemingProvider', function($mdThemingProvider){
 	$mdThemingProvider.theme('default')
-	.primaryPalette('blue-grey');
-}])
+			.primaryPalette('blue-grey');
+	}])
+	.config(['$mdIconProvider', function($mdIconProvider) {
+	        $mdIconProvider.icon('md-close', 'img/icons/ic_close_24px.svg', 24);
+	}])
+	.config(function($provide) {
+	    $provide.decorator('taOptions', ['$delegate', function(taOptions) {
+	    	taOptions.toolbar = [
+	      	['clear', 'h1', 'h2', 'h3', 'p', 'ul', 'ol',
+	      	'justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html','insertLink', 'insertVideo']];
+	  		return taOptions;
+	    }]);
+	})
+	.config(function(treeConfig) {
+  		treeConfig.defaultCollapsed = true; // collapse nodes by default
+	});
 
 
-app.config(['$mdIconProvider', function($mdIconProvider) {
-        $mdIconProvider.icon('md-close', 'img/icons/ic_close_24px.svg', 24);
-}]);
-
-// textAngular toolbar customisation
-app.config(function($provide) {
-    $provide.decorator('taOptions', ['$delegate', function(taOptions) {
-    	taOptions.toolbar = [
-      	['clear', 'h1', 'h2', 'h3', 'p', 'ul', 'ol',
-      	'justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html','insertLink', 'insertVideo']];
-  		return taOptions;
-    }]);
-});
-
-app.config(function(treeConfig) {
-  treeConfig.defaultCollapsed = true; // collapse nodes by default
-});
-
-
+// Directive - remove later (only for testing)
 app.directive('userAvatar', function() {
   return {
     replace: true,
@@ -133,7 +220,7 @@ app.directive('userAvatar', function() {
   };
 });
 
-
+// Custom filter
 app.filter('removeSpaces', [function() {
     return function(string) {
         if (!angular.isString(string)) {
