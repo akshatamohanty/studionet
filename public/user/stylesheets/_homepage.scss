@@ -1,0 +1,59 @@
+$font-color: white;
+$post-short-color: #6868FB;
+$user-short-color: #83ED83;
+$border-size: 1px;
+$count: 6;
+$container-width: 720px;
+$container-size: $container-width/$count;
+
+// Homepage
+.shortcut-container{
+  overflow:hidden;
+  width: $container-width;
+
+  .full-height{
+    height: auto;
+
+    -webkit-transition: height 1s; 
+    -moz-transition: height 1s; 
+    -ms-transition: height 1s; 
+    -o-transition: height 1s; 
+    transition: height 1s;
+  }
+
+  .fixed-height{
+    height: $container-size;
+    -webkit-transition: height 1s; 
+    -moz-transition: height 1s; 
+    -ms-transition: height 1s; 
+    -o-transition: height 1s; 
+    transition: height 1s;
+  }
+
+  .container-heading{
+    padding: 5px;
+    margin: 0px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+  }
+
+}
+
+.shortcut-div{
+  text-align: center;
+  color: $font-color; 
+  height: $container-size - $border-size;
+  width: $container-size - $border-size;
+  border-right: $border-size solid $font-color;
+  border-top: $border-size solid $font-color;
+  background-color: $post-short-color;
+
+  &:hover{
+    background-color: gray;
+  }
+}
+
+
+
+

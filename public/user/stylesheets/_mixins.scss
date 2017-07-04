@@ -1,0 +1,30 @@
+@mixin blank-card($size) {
+  box-shadow: none;
+  background: none;
+  text-align: center;
+  border: 1px dashed black;
+  text-align: center; 
+  width: $size;
+  height: $size;
+}
+
+@mixin animate-slide($size) {
+
+	@keyframes slideIn {
+	  from {
+	    margin-left: -$size;
+	  }
+	  to {
+	    margin-left: 0;
+	  }
+	}
+
+	@keyframes slideOut {
+	  from {
+	    margin-left: 0;
+	  }
+	  to {
+	    margin-left: -$size;
+	  }
+	}
+}

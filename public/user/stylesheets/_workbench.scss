@@ -1,0 +1,56 @@
+// Workbench
+@import 'mixins';
+
+$width: 250px;
+
+#workbench-container{
+  padding-top: 20px; 
+  border-right: 1px solid gray;
+  width: $width;
+
+  @include animate-slide($width);
+
+  &.expand{
+    animation: 0.5s slideIn;
+    margin-left: 0;
+  }
+
+  &.compress{
+    animation: 0.5s slideOut;
+    margin-left: -$width;
+  }
+
+}
+
+#workbench{
+
+}
+
+.folder-title{
+  padding: 10px;
+  border-bottom: 1px solid white;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.post-box{
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 2px;
+  margin: 4px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.post-box:hover{
+  color: white;
+}
+
+.search-bar{
+  border: 1px solid white;
+  color: white;
+  height: 40px;
+  padding: 0px;
+  background: none;
+}

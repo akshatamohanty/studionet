@@ -1,0 +1,6 @@
+@import 'mixins';
+
+.empty-card { 
+	@include blank-card(150px); 
+	background: transparent;
+}
