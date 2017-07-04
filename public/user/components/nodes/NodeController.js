@@ -1,10 +1,14 @@
 angular.module('studionet')
 
 .controller('NodeController', [ '$scope', '$http',  
-                                'profile', 'users', 'attachments', 'GraphService', 'tags', '$rootScope',
-                                function($scope, $http, profile, users, attachments, GraphService, tags, $rootScope){
+                                'profile', 'users', 'attachments', 'GraphService', 'tags', '$rootScope', '$stateParams', '$state',
+                                function($scope, $http, profile, users, attachments, GraphService, tags, $rootScope, $stateParams, $state){
 
         
+        $scope.node_id = $stateParams.address;
+        if($scope.node_id == null)
+          $state.go('home.homepage')
+
         //////// --------------  general declarations
         $scope.user = profile.user;
         $scope.tags = tags.tags;

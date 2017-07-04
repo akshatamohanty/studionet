@@ -4,6 +4,9 @@ angular.module('studionet')
 
           $scope.location = $stateParams.tags;
 
+          $scope.$emit('showBench');
+          $scope.$emit('hideSearch');
+
           $scope.usersOnline = [
               {"name" : "John", "profile": "http://placehold.it/150x150" },
               {"name" : "Jane", "profile": "http://placehold.it/150x150" },

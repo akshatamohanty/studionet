@@ -2,34 +2,13 @@ angular.module('studionet')
 .controller('SkeletonController', ['$scope', 'profile', '$stateParams', '$rootScope', '$timeout', '$mdBottomSheet', '$mdToast', '$mdSidenav', 'tags', '$mdDialog', '$mdMedia', '$state',
                                function($scope, profile, $stateParams, $rootScope, $timeout, $mdBottomSheet, $mdToast, $mdSidenav, tags, $mdDialog, $mdMedia, $state){
 
-          $rootScope.$on('$stateChangeSuccess', 
-          function(event, toState, toParams, fromState, fromParams){ 
-              // do something
-              checkState();
-          })
+          $scope.showBench = true;
+          $scope.searchActive = false;
 
-          function checkState(){
-
-            $scope.showBench = true;
-            $scope.showInfo = true;
-            
-            if ($state.current.name.indexOf("search") > -1){
-              $scope.searchClass = 'active';
-              $scope.search = {};
-              $scope.search.query = ["hannah", "banana"];
-            }
-            else{
-              $scope.searchClass = 'inactive';
-              $scope.search = {};
-              $scope.search.query = [];
-            }
-
-            if( $state.current.name.indexOf("profile") > -1 )
-                $scope.showBench = true;
-   
-          }
-
-          checkState();
+          $scope.$on('hideBench', function(){ $scope.showBench = false });
+          $scope.$on('hideSearch', function(){ $scope.searchActive = false });
+          $scope.$on('showBench', function(){ $scope.showBench = true });
+          $scope.$on('showSearch', function(){ $scope.searchActive = true });
 
           $scope.user = {
             "name": profile.user.name,
@@ -50,13 +29,12 @@ angular.module('studionet')
           }
 
           $scope.goToProfile = function(url){
-            $state.go('home.profile-details', { 'referer':'home.homepage', 'id': 1});
+            $state.go('home.profile-details', { 'referer':'home.homepage', 'address': 1});
           }
 
-          $scope.goToNode = function(url){
-            $state.go('home.note-details', { 'referer':'home.homepage', 'id': 1});
-          }
-
+          $scope.goToNode = function(node){
+            $state.go('home.node-details', { 'referer':'home.homepage', 'address': node })
+          };
 
 }]);
 

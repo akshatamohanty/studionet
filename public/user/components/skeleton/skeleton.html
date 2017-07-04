@@ -1,339 +1,23 @@
-<style>
-html, body{
-  background-color: #E8E8E8;
-  height: 100%;
-  width: 100%;
-  overflow-y: hidden;
-}
-
-md-content{
-  background-color: #E8E8E8;
-}
-
-md-sidenav{
-  background-color:  #E8E8E8;
-}
-
-md-backdrop{
-  display: none;
-}
-
-.pointer:hover{
-  cursor: pointer;
-  background-color: gray;
-}
-
-a{
-  color: inherit;
-}
-
-a:hover{
-  color: inherit; 
-  text-decoration: none;
-}
-
-.empty-card > *{
-  text-align: center;
-  border: 1px dashed grey;
-  background: #E8E8E8;
-}
-
-md-content.md-default-theme {
-  background-color: #eee;
-}
-md-card {
-  background-color: #fff;
-  h2:first-of-type {
-    margin-top: 0;
-  }
-}
-md-toolbar > .md-button.md-default-theme {
-    border-radius: 99%; // round toolbar buttons
-}
-h2 {
-  font-weight: 400;
-}
-.md-toolbar-tools-bottom {
-  font-size: small;
-  & :last-child {
-    opacity: 0.8;
-  }
-}
-md-toolbar:not(.md-hue-1),
-.md-fab {
-  fill: #fff;
-}
-md-sidenav {
-  fill: #737373;
-  ng-md-icon {
-    position: relative;
-    top: 5px; // adjust for svg viewbox
-  }
-}
-.user-avatar {
-  border-radius: 99%;
-}
-
-.left-show-hide.ng-hide-add {
-  //transform: translateX(100%);//rotateY(110deg);
-  //transform: rotateZ(0);
-  //transform-origin: right;
-  transition: all 0.5s ease-in-out;
-}
-
-.left-show-hide.ng-hide-add.ng-hide-add-active {
-  //transform: rotateZ(-135deg);
-  transform: translateX(-100%);
-}
-
-.left-show-hide.ng-hide-remove {
-  transform: translateX(-100%);//rotateY(110deg);
-  transform-origin: left;
-  transition: all 0.5s ease;
-}
-
-.left-show-hide.ng-hide-remove.ng-hide-remove-active {
-  transform: rotateY(0);
-}
-
-.right-show-hide.ng-hide-add {
-  //transform: translateX(100%);//rotateY(110deg);
-  //transform: rotateZ(0);
-  //transform-origin: right;
-  transition: all 0.5s ease-in-out;
-}
-
-.right-show-hide.ng-hide-add.ng-hide-add-active {
-  //transform: rotateZ(-135deg);
-  transform: translateX(100%);
-}
-
-.right-show-hide.ng-hide-remove {
-  transform: translateX(100%);//rotateY(110deg);
-  transform-origin: right;
-  transition: all 0.5s ease;
-}
-
-.right-show-hide.ng-hide-remove.ng-hide-remove-active {
-  transform: rotateY(0);
-}
-
-.shortcut-div{
-  padding: 10px;
-  text-align: center;
-  padding-top: 30px;
-  background-color: #598E5F; 
-  color: white; 
-  min-width: 150px !important;
-  height: 150px; 
-  border-right: 1px solid white;
-  border-top: 1px solid white;
-}
-
-.full-height{
-  height: auto;
-
-  -webkit-transition: height 1s; 
-  -moz-transition: height 1s; 
-  -ms-transition: height 1s; 
-  -o-transition: height 1s; 
-  transition: height 1s;
-
-}
-
-.fixed-height{
-  height: 150px;
-  -webkit-transition: height 1s; 
-  -moz-transition: height 1s; 
-  -ms-transition: height 1s; 
-  -o-transition: height 1s; 
-  transition: height 1s;
-
-}
-
-.slideup > .ng-enter {
-    /* transition on enter for .5s */
-    transition: 12s;
-
-    /* start with opacity 0 (invisible) */
-    opacity: 0
-}
-
-/* end 'enter' transition */
-.slideup > .ng-enter-active {
-    /* end with opacity 1 (fade in) */
-    opacity: 1;
-}
-
-::-webkit-scrollbar
-{
-  width: 2px;
-}
-
-.folder-title{
-  padding: 10px;
-  border-bottom: 1px solid white;
-  background-color: grey;
-  margin-bottom: 4px;
-}
-
-.post-box{
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border-radius: 2px;
-  border: 1px solid grey;
-  margin: 4px;
-  text-align: center;
-  font-size: 10px;
-}
-
-.post-box:hover{
-  background-color: grey;
-  color: white;
-}
-
-.search-bar{
-  border: 1px solid white;
-  color: white;
-  height: 40px;
-  padding: 0px;
-  background: none;
-}
-
-/*.search-bar > md-chips{
-  height: 30px;
-  padding-bottom: 0px;
-}*/
-
-md-chips-wrap{
-  background: none;
-
-  height: 30px;
-  padding-bottom: 0px;
-}
-
-md-chips{
-  background: none;
-}
-
-
-.chipsdemoBasicUsage .errors {
-  font-size: 12px;
-  color: #dd2c00;
-  margin-top: 10px; }
-
-.chipsdemoBasicUsage .custom-chips md-chip {
-  position: relative; }
-  .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container {
-    position: absolute;
-    right: 4px;
-    top: 4px;
-    margin-right: 0;
-    height: 24px; }
-    .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip {
-      position: relative;
-      height: 24px;
-      width: 24px;
-      line-height: 30px;
-      text-align: center;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-      margin: 0;
-      transition: background 0.15s linear;
-      display: block; }
-      .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0) scale(0.7);
-        color: white;
-        fill: red; }
-      .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:focus {
-        background: rgba(255, 0, 0, 0.8); }
-
-.chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
-  padding-right: 5px; }
-
-*
-{
-  box-sizing: border-box;
-}
-
-.Modal-backdrop
-{
- position: fixed;
- top: 0px;
- left: 0px;
- height:100%;
- width:100%;
- background: #000;
- z-index: 1;
- opacity: 0.5;
-}
-
-.Modal-holder
-{
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  height:100%;
-  width:100%;
-  background: transparent;
-  z-index: 2;
-  padding: 30px 15px;
-}
-
-.Modal-box
-{
-  margin: 0 auto;
-  width: 100%;
-  background: #fff;
-  padding: 15px;
-  border-radius: 4px;
-  box-shadow: 1px 2px 5px rgba(0,0,0,0.3);
-  position: relative;
-}
-
-@media screen and (min-width: 992px)
-{
-  .Modal-box
-  {
-    width: 50%;
-    padding: 30px;
-  }
-}
-
-
-</style>
-
-
 <div layout="column" class="relative" layout-fill role="main" ng-cloak>
   
   <!-- toolbar -->
-  <md-toolbar class="md-hue-2 scroll-shrink" style="height: 60px; position: fixed; top: 0px; z-index: 5;">
+  <md-toolbar class="scroll-shrink" id="toolbar">
     
     <div class="md-toolbar-tools" layout-margin layout-padding layout-fill layout-align='top center'>
       
       <!-- Show / Hide Workbench control -->
       <div flex="5">
-       <!--  <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" > -->
-          <ng-md-icon icon="dehaze" style="fill: white" size="25" ng-click="showBench=!showBench"></ng-md-icon> 
-       <!--  </md-button> -->
+        <ng-md-icon class='pointer' icon="dehaze" style="fill: white" size="25" ng-click="showBench=!showBench"></ng-md-icon> 
       </div>
 
       <!-- Branding -->
-      <div hide show-gt-xs flex-gt-sm="10" >
-        <span md-truncate style='text-align: left;'>Studionet</span>
+      <div hide show-gt-xs flex-gt-sm="10" layout-align='top left'>
+        <span md-truncat>Studionet</span>
       </div>
 
-        
       <!-- search bar (depends on state) -->
       <div show-gt-sm flex="70">
-          <a ui-sref='search' ng-show='searchClass=="active"' class='search-bar'>
+          <a ui-sref='search' ng-show='searchActive' class='search-bar'>
             <md-chips ng-model="search.query" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
           </a>
       </div>
@@ -350,7 +34,7 @@ md-chips{
           </md-tooltip>
         </md-button> -->
 
-        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-show='searchClass=="inactive"'>
+        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
           <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
           <md-tooltip
             md-direction="bottom">
@@ -370,21 +54,25 @@ md-chips{
     </div>
   </md-toolbar>
 
-  <div layout="row" style='margin-top: 70px;'>
+  <div id='app-body' layout="row" layout-fill>
 
       <!-- workbench -->
-      <div flex="20" class='left-show-hide ' ng-show='showBench' ng-hide='$mdMedia("gt-sm") == false'>
-          <div ng-controller="FabCtrl as demo" layout='column' layout-fill style='padding-top: 20px; border-right: 1px solid grey;'>
-            
-              <div layout='column' layout-align='center center' ng-click='goToProfile(user.id)'>
-                <user-avatar></user-avatar>
-                <h3 class='md-body-2'>{{user.name}}</h3>
-                <h4 class='md-caption'>{{user.level}}</h3>
-                <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
+      <div id='workbench-container' ng-class='showBench?"expand":"compress"'>
+          <div id='workbench' ng-controller="FabCtrl as demo" layout='column' layout-fill>
+
+              <!-- Profile Short Details -->
+              <div layout='column' layout-align='center center'>
+                <a ui-sref='home.profile'>
+                  <user-avatar></user-avatar>
+                  <h3 class='md-body-2'>{{user.name}}</h3>
+                  <h4 class='md-caption'>{{user.level}}</h4>
+                  <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
+                </a>
               </div>
           
               <md-divider></md-divider>
 
+              <!-- New Node Creation -->
               <md-toolbar>
                 <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
                                    class="md-scale md-fab-top-right" ng-class="{ 'md-hover-full': demo.hover }"
@@ -392,14 +80,13 @@ md-chips{
                   <md-fab-trigger>
                     <md-button aria-label="menu" class="md-fab md-warn">
                       <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                      <!-- <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon> -->
+                      <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
                     </md-button>
                   </md-fab-trigger>
 
                   <md-fab-actions>
                     <div ng-repeat="item in demo.items">
-                      <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini"
-                                 ng-click="demo.openDialog($event, item)">
+                      <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
                         <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
                                     md-autohide="false">
                           {{item.name}}
@@ -414,6 +101,7 @@ md-chips{
 
               <br><br>
 
+              <!-- Shortcuts to user own notes -->
               <div class='folder'>
                 <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>@{{user.name | lowercase | removeSpaces}}</a></div>
                 <div class='folder-notes'>
@@ -425,6 +113,7 @@ md-chips{
 
               <md-divider></md-divider>
 
+              <!-- Shortcuts to user-saved notes -->
               <div class='folder' ng-repeat="subs in user.subscribed_to">
                 <div class='folder-title pointer' ng-click='goTo(spaces[subs].query)'>{{spaces[subs].name}}  ({{ spaces[subs].posts.length }})</div>
                 <div class='folder-notes'>
@@ -436,9 +125,14 @@ md-chips{
           </div>
       </div>
       
-      <button ui-sref="Modal.confirmAddToCart" ng-click='alert("hello")' style='z-index: 2'>Add to cart</button>
-       
-      <ui-view flex></ui-view>
+      <!-- states -->
+      <div flex>
+        <div layout='column' layout-align='top left' layout-fill layout-padding>
+          <!-- view-container: centers the content -->
+          <ui-view class='view-container'></ui-view>
+        </div>
+      </div>
+  
   </div>
 
 </div>

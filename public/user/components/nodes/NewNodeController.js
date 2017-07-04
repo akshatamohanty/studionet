@@ -1,5 +1,7 @@
 angular.module('studionet')
-.controller('NewNodeController', ['$scope', 'supernode', 'GraphService', 'tags', 'users', function($scope, supernode, GraphService, tags, users){
+.controller('NewNodeController', ['$scope', 'supernode', 'GraphService', 'tags', 'users', '$stateParams', function($scope, supernode, GraphService, tags, users, $stateParams){
+
+      $scope.type = $stateParams.type
 
       // for the new contribution
       $scope.contributionData = { _tags: [], attachments: [], tags: [], refType: "RELATED_TO", contentType: "text", ref: supernode.contribution};

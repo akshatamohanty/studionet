@@ -1,40 +1,52 @@
 <div layout='column' layout-align='top center'>
                   
-    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Timed Tags <span class='md-caption' style='float: right'>More</span></h3>
+    <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
+      <h3 class='container-heading'>Timed Tags                 
+                <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
+                  {{ user_expand ? "Less" : "More"}}
+                </span></h3>
       <md-divider md-inset></md-divider>
-      <div layout='row'>
-          <div class='shortcut-div pointer' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+        <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+          <div class='shortcut-div pointer' ng-repeat='ts in user.subscribed_to'>
             <a ui-sref='home.search-results({"tags" : "helloworld"})'>tagspace {{ts}}
             <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6></a>
           </div>
       </div>
     </md-card>
 
-    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Recently Visited</h3>
+    <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
+      <h3 class='container-heading'>
+              Recently Visited
+              <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
+                  {{ user_expand ? "Less" : "More"}}
+                </span>
+              </h3>
       <md-divider md-inset></md-divider>
-      <div layout='row' >
-          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+        <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to'>
             tagspace {{ts}}
             <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
           </div>
       </div>
     </md-card>
 
-    <md-card class='swipe-down swipe-up'  style='width: 600px;'  ng-hide='searchMode' md-theme="default">
-      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>Explore Posts</h3>
+    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
+      <h3 class='container-heading'>
+                Explore Posts
+                <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
+                  {{ user_expand ? "Less" : "More"}}
+                </span></h3>
       <md-divider md-inset></md-divider>
-      <div layout='row' >
-          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to' style='background-color: #4285F4; color: white; height: 150px; width: 25%; border-right: 1px solid white;'>
+        <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+          <div class='shortcut-div' ng-repeat='ts in user.subscribed_to'>
             tagspace {{ts}}
             <h6 class='md-subhead' style='font-size: 10px;'><em>Expires in 6 days</em></h6>
           </div>
       </div>
     </md-card>
 
-    <md-card class='swipe-down swipe-up' style='width: 600px;' ng-hide='searchMode' md-theme="default">
-      <h3 class='md-body-2' style='line-height: 18px; height: 18px; padding: 5px;'>
+    <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
+      <h3 class='container-heading'>
                 Users Online 
                 <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
                   {{ user_expand ? "Less" : "More"}}
@@ -42,7 +54,8 @@
       </h3>
       <md-divider md-inset></md-divider>
       <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-          <div class='shortcut-div' ng-repeat='user in usersOnline' style='width: 150px;'>
+          <div class='shortcut-div' ng-repeat='user in usersOnline'>
+            <div>
             <img src='{{user.profile}}' style='width: 40px; height: 40px; border-radius: 50%; margin: 0 auto;'>
             <br>
             <h5 class='md-caption'>{{user.name}}</h5>

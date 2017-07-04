@@ -10,44 +10,6 @@ var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
 
-	$stateProvider.state("Modal", {
-		views:{
-		  "modal": {
-		    template: "<div class='Modal-backdrop'></div>\
-						<div class='Modal-holder' ui-view='modal' autoscroll='false'></div>"
-		  }
-		},
-	    onEnter: ["$state", function($state) {
-	      $(document).on("keyup", function(e) {
-	        if(e.keyCode == 27) {
-	          $(document).off("keyup");
-	          $state.go("Default");
-	        }
-	      });
-
-	      $(document).on("click", ".Modal-backdrop, .Modal-holder", function() {
-	        $state.go("Default");
-	      });
-
-	      $(document).on("click", ".Modal-box, .Modal-box *", function(e) {
-	        e.stopPropagation();
-	      });
-	    }],
-		abstract: true
-	});
-
-	$stateProvider.state("Modal.confirmAddToCart", {
-		url: '/confirm',
-	    views:{
-	      "modal": {
-	        template: "<div class='Modal-box'>\
-  							Are you sure you want to do that?\
-  							<button>Yes</button>\
-						</div>"
-	      }
-	    }
-	  });
-
 	//
 	//	Home State - Abstract State 
 	//	Contains the App Skeleton with the top navigation bar and the sidebar (workbench) 
@@ -96,7 +58,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.search', {
 			url: 'search',
 			templateUrl: '/user/components/search/search-mode.html',
-			/*controller: 'SearchmodeController',
+			controller: 'SearchModeController'/*,
 		    resolve: {
 
 				TODO: 
@@ -111,11 +73,11 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	
 		.state('home.search-results', {
 			url: 'search/:tags',
-			templateUrl: '/user/components/search/search-results.html'
-			/*controller: 'AppController',
+			templateUrl: '/user/components/search/search-results.html',
 			params: {
 		        tags: null
-		    },
+		    }
+			/*controller: 'AppController',
 		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
@@ -128,10 +90,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
 		//	This state is when the user is creating a new note
 		//	
-		.state('home.note', {
-			url: 'note',
+		.state('home.node', {
+			url: 'new/:type',
 			templateUrl: '/user/components/nodes/newnode.html',
 			controller: 'NewNodeController',
+			params:{
+				type: "note"
+			}
 			/*resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
@@ -144,10 +109,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	The controller should allow for navigating to the next or the previous note based on the users' clicks without jumps. The location in the URL should change automatically. 
 		//	If the user chooses to reply, the view should navigate to home.note, while preserving the back/forward states for easy navigation. After saving the user, should navigate back to the original note.
 		//	
-		.state('home.note-details', {
-			url: 'note/:address',
+		.state('home.node-details', {
+			url: 'node/:address',
 			templateUrl: '/user/components/nodes/view.html',
-			controller: 'NodeController'
+			controller: 'NodeController',
+			params:{
+				address: null
+			}
 			/*resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
@@ -157,11 +125,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Profile - Abstract state
 		.state('home.profile', {
 			url: 'profile',
-			template: "your own profile"
+			templateUrl: "/user/components/profile/profile.html",
+			controller: 'MyProfileController'
 		})
 		.state('home.profile-edit', {
 			url: 'profile/edit',
-			template: "edit your profile here"
+			template: "/user/components/profile/profile.html",
+			controller: 'MyProfileController'
 		})
 		//	Profile Details - Note (http://studionet.nus.edu.sg/user/#/profile/:user_id)
 		//	Displays all the user information, badges, posts of a particular user
@@ -179,17 +149,16 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		})
 		.state('home.profile-progress', {
 			url: 'profile/:address/progress',
-			template: "displays your profile progress here"
+			template: "displays user profile progress here"
 		})
 		.state('home.leaderboard', {
 			url: 'leaderboard',
-			template: "displays a popup leaderboard for users"
+			template: "displays a leaderboard for users"
 		})
 
 	$urlRouterProvider.otherwise('home');
 
 }]);
-
 
 // Configuration options for Angular Material and Plugins
 app.config(['$mdThemingProvider', function($mdThemingProvider){
@@ -229,3 +198,8 @@ app.filter('removeSpaces', [function() {
         return string.replace(/[\s]/g, '');
     };
 }])
+
+// variables in rootScope
+app.run(function($rootScope) {
+    // general variables
+})

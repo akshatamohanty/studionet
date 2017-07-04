@@ -16,3 +16,4 @@ syntheticdb.mdown
 logs/
 views/.gitignore
 misc/
+*.map
