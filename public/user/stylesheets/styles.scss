@@ -43,18 +43,39 @@ a:hover{
 }
 
 #app-body{
-  margin-top: $toolbar-height;
+  padding-top: $toolbar-height;
+  height: 100%;
 
   .view-container{
     //width: 90%;
     max-width: $max-width; 
     padding: 15px;
     margin: 0 auto;
-    overflow: auto;
+    overflow: hidden;
+    height: 100%;
   }
 
 }
 
+md-chips-wrap{
+  background-color: #E8E8E8;  
+}
+
+.md-chips{
+  padding: 0px 5px;
+}
+
+.md-chips .md-chip-input-container{
+  width: 100%;
+}
+
+.md-chips .md-chip-input-container input{
+  width: 100%;
+}
+
+md-content{
+  background: transparent;
+}
 
 @import 'animations';
 @import 'workbench';

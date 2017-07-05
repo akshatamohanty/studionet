@@ -1,10 +1,13 @@
 // Workbench
 @import 'mixins';
+@import 'animations';
 
 $width: 250px;
+$folder-height: 24px;
+$post-size: 50px; 
 
 #workbench-container{
-  padding-top: 20px; 
+  //padding-top: 20px; 
   border-right: 1px solid gray;
   width: $width;
 
@@ -23,28 +26,66 @@ $width: 250px;
 }
 
 #workbench{
-
+    [md-fab-speed-dial].md-fab-top-left{
+      left: 0px;
+    }
 }
 
-.folder-title{
-  padding: 10px;
-  border-bottom: 1px solid white;
-  margin-bottom: 4px;
-  font-size: 12px;
-}
+.folder{
 
-.post-box{
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border-radius: 2px;
-  margin: 4px;
-  text-align: center;
-  font-size: 10px;
-}
+  .folder-title{
+    border-bottom: 1px solid white;
+    font-size: 0.5*$folder-height;
+    line-height: $folder-height;
+    background-color: gray;
 
-.post-box:hover{
-  color: white;
+    a{
+      color: blue;
+    }
+  }
+
+  .folder-notes{
+    height: 0;
+    overflow: hidden;
+
+
+    &.open{
+      animation: 0.5s slideIn;
+      overflow: auto;
+      height: auto;
+      min-height: 100px;
+    }
+
+    &.close{
+      animation: 0.5s slideOut;
+      overflow: hidden;
+      height: 0;
+    }
+
+    .post-box{
+      display: inline-block;
+      width: $post-size;
+      height: $post-size;
+      border: 1px solid black;
+      border-radius: 2px;
+      margin: 4px;
+
+      .title{
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+        word-wrap: break-word;
+        margin: 0 auto;
+      }
+
+      &.hover{
+        background-color: gray;
+      }
+    }
+    
+  }
+
+
 }
 
 .search-bar{
@@ -53,4 +94,19 @@ $width: 250px;
   height: 40px;
   padding: 0px;
   background: none;
+}
+
+.dndDragging{
+  border: 2px solid black;
+  cursor: url("hyper.cur");
+}
+
+.dndDraggingSource{
+  background-color: gray;
+  display: none;
+}
+
+.dndPlaceholder{
+  height: $post-size;
+  width: $post-size;
 }

@@ -19,6 +19,26 @@ angular.module('studionet')
 		return o;
 	}])
 
+	.factory('contributions', ['$http', function($http){
+
+		var o = {
+			contributions: [],
+			contributionsHash: []
+		};
+
+		// Fetches the array of contributions
+		o.getAll = function(){
+			return $http.get('/api/contributions').success(function(data){
+
+				angular.copy(data, o.contributions);
+				o.contributionsHash = o.contributions.hash();
+
+			});
+		};
+
+		return o;
+	}])
+
 
 	// --------------- User List
 	.factory('users', ['$http', function($http){
@@ -261,7 +281,10 @@ angular.module('studionet')
 			return $http.get('/api/profile/').success(function(data){
 				angular.copy(data, o.user);
 
+				// TODO: rewire
 				o.user.newactivity = "You are all caught up!";
+				o.user.subscribed_to = [2, 5, 4, 21, 45];
+				o.user.posts = o.user.contributions;
 
 				notifyObservers();
 			});

@@ -5,7 +5,7 @@
 
 var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','ui.router',
 										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree', 
-										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons']);
+										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists']);
 
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
@@ -22,8 +22,8 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			templateUrl: '/user/components/skeleton/skeleton.html',
 			controller: 'SkeletonController',
 		    resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
+				userProfile: ['profile', 'contributions', function(profile, contributions){
+					return profile.getUser() && profile.getActivity() && contributions.getAll();
 				}]
 			}
 		})
@@ -72,12 +72,14 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
 		//	
 		.state('home.search-results', {
-			url: 'search/:tags',
+			url: 'space?tags&dates&users',
 			templateUrl: '/user/components/search/search-results.html',
 			params: {
-		        tags: null
-		    }
-			/*controller: 'AppController',
+		        tags: null,
+		        dates: null, 
+		        users: null
+		    },
+			controller: 'SearchResultsController'/*, 
 		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
@@ -198,6 +200,21 @@ app.filter('removeSpaces', [function() {
         return string.replace(/[\s]/g, '');
     };
 }])
+
+// Custom filter
+app.filter('shorten', [function() {
+    return function(string) {
+        if (!angular.isString(string)) {
+            return string;
+        }
+
+        if(string.length < 10)
+        	return string;
+        else 
+        	return string.substr(0, 7) + "..."
+    };
+}])
+
 
 // variables in rootScope
 app.run(function($rootScope) {

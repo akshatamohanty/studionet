@@ -4,7 +4,6 @@ angular.module('studionet')
 	$scope.$emit('hideBench');
 	$scope.$emit('showSearch');
 
-
 	// TODO: Functionality to help the user write a query
 
 
