@@ -3,7 +3,7 @@
  */
 angular.module('studionet')
 .controller('MyProfileController', ['$scope', 'profile', 'Upload', '$http', '$stateParams', function($scope, profile, Upload, $http, $stateParams){
-	
+
 	$scope.profile = profile.user.name;
 
 	$scope.$emit('hideBench');
@@ -21,7 +21,7 @@ angular.module('studionet')
 	  profile_picture = profile_picture[0];
 	  $scope.profilePic = profile_picture;
 
-	  
+
 	  var reader  = new FileReader();
 	  reader.addEventListener("load", function () {
 	    $scope.userData.avatar = reader.result;
@@ -30,7 +30,7 @@ angular.module('studionet')
 	  if(profile_picture){
 	  	reader.readAsDataURL(profile_picture);
 	  }
-  	
+
   	}
 
 	$scope.uploadPic = function(avatar) {
@@ -46,7 +46,7 @@ angular.module('studionet')
 				data: formData
 	    })
 	    .success(function(res) {
-	    	
+
 			profile.getUser().then(function(){
 			  $scope.user.avatar = $scope.user.avatar + "?cb=" + Math.random(0,1)*123124;
 			  $scope.init();
@@ -65,7 +65,7 @@ angular.module('studionet')
    		}
    		else{
    			console.log("Avatar unchanged");
-   		}		
+   		}
 
    		// check if name changed
    		if($scope.userData.nickname == profile.user.nickname){
@@ -85,7 +85,7 @@ angular.module('studionet')
  			}
 
  		}
- 
+
    	}
 
 }]);
