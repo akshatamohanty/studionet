@@ -38,20 +38,22 @@ angular.module('studionet')
         $scope.$on( 'VIEWMODE_ACTIVE', function(event, args) {
             $scope.setData(args.data);
         });
-        
+
         ////// ---- Modal related functions
         $scope.setData = function(node){
-            
+
             // will be used internally by the reply feature
             if( !(node instanceof Object )){
               node = GraphService.comments.getElementById(node).length ? GraphService.comments.getElementById(node) : GraphService.graph.getElementById(node);
             }
 
             $scope.showComments = true;
-            
+
             GraphService.getNode( node );
 
             $scope.contribution = node.data();
+
+            console.log($scope.contribution);
 
             $scope.parents = node.outgoers().nodes();
             $scope.children = node.incomers().nodes();
@@ -64,7 +66,7 @@ angular.module('studionet')
             $scope.author = users.getUser( $scope.contribution.createdBy, false );  // get the author details
 
             GraphService.updateViewCount($scope.contribution.id);    // update the viewcount of the contribution
-            
+
             node.addClass('read');
 
         }
@@ -98,7 +100,7 @@ angular.module('studionet')
         //////------------------ Dealing with Ratings
         $scope.rate = 0;
         $scope.max = 5;
-        $scope.overStar = null; 
+        $scope.overStar = null;
         $scope.percent = 0;
 
         // gets rating if the user has previously rated the contribution
@@ -115,7 +117,7 @@ angular.module('studionet')
             // check for bookmark
             if( user_contribution.type == "BOOKMARKED" && user_contribution.end == contribution_id ){
               $scope.bookmarked = true;
-            }          
+            }
 
           }
           previouslyRated = rating;
@@ -126,7 +128,7 @@ angular.module('studionet')
           $scope.overStar = value;
           $scope.percent = 100 * (value / $scope.max);
         };
-        
+
         $scope.rateContribution = function(rating, id){
 
           track("rate-node");
@@ -140,8 +142,8 @@ angular.module('studionet')
               }
               else{
 
-                $scope.contribution.ratingArray[5 - rating] = $scope.contribution.ratingArray[5 - rating] + 1; 
-                $scope.contribution.ratingArray[5 - previouslyRated] = $scope.contribution.ratingArray[5 - previouslyRated] - 1; 
+                $scope.contribution.ratingArray[5 - rating] = $scope.contribution.ratingArray[5 - rating] + 1;
+                $scope.contribution.ratingArray[5 - previouslyRated] = $scope.contribution.ratingArray[5 - previouslyRated] - 1;
                 previouslyRated = rating;
 
               }
@@ -152,28 +154,34 @@ angular.module('studionet')
         $scope.toggleBookmark = function(contribution_id){
 
             track("bookmark-node");
-            
+
             if($scope.bookmarked){
               GraphService.removeBookmark(contribution_id).success(function(data){
                 $scope.bookmarked = false;
                 alert("Bookmark was removed");
-              })        
+              })
             }
             else{
               GraphService.bookmarkNode(contribution_id).success(function(data){
                 $scope.bookmarked = true;
                 alert("Node added to bookmarks");
-              })                  
+              })
             }
 
         }
 
+        $scope.objfilter = function (attachment) {
+        var temp = $filter("filter")(attachment, { name: "Alonso+2007.obj" });
+        console.log("After filter", temp);
+        };
+
         ////////-------------- Dealing with attachments
         $scope.getThumb = function(contributionId, attachment){
+          console.log("This is the", attachment);
             if(attachment.thumb)
               return "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail";
             else{
-
+              console.log("Attachment name", attachment.name);
               if(attachment.name.indexOf(".pdf") > -1)
                 return "./img/file_pdf.jpeg"
               else if(attachment.name.indexOf(".doc") > -1)
@@ -190,7 +198,7 @@ angular.module('studionet')
                 files.forEach(function(file){
                       contributionData.attachments.push(file);
                 });
-            }   
+            }
         }
 
         //remove files
@@ -225,7 +233,7 @@ angular.module('studionet')
             else{
               alert("Cannot delete inline attachment. Please remove the image in the content first.")
             }
-        
+
         }
 
 
@@ -245,7 +253,6 @@ angular.module('studionet')
 
         $scope.contributionData = { attachments: [], tags: []}; //store the data of replying information
         $scope.comment = "";
-      
         //--------------- Function: - Comment
         $scope.commentMode = false;
         $scope.showCommentModal = function(){
@@ -272,7 +279,7 @@ angular.module('studionet')
 
             $scope.commentMode = false;
             GraphService.createNode( commentData ).then(function(res){
-                  
+
                   sendMessage( {status: 200, message: "Successfully commented on node" } );
                   getReplies();
                   $scope.showComments = true;
@@ -281,16 +288,17 @@ angular.module('studionet')
 
                   sendMessage( {status: 200, message: "Error commenting on node. Please try again." } );
                   $scope.close();
-            }); 
+            });
         }
 
 
-        //----------------- Function: - Reply 
+        //----------------- Function: - Reply
         $scope.replyMode = false;
         $scope.showReplyModal = function(id, type){
           track("reply-node");
           $scope.replyMode = true;
           $scope.contributionData = { attachments: [], tags: []}; //store the data of replying information
+          console.log(contributionData);
         }
 
         $scope.replyToContribution = function(contributionData, parentId){
@@ -322,7 +330,7 @@ angular.module('studionet')
                   });
 
               GraphService.createNode( contributionData ).then(function(res){
-                    
+
                     sendMessage( {status: 200, message: "Successfully replied to node" } );
                     $scope.replyMode = false;
 
@@ -330,7 +338,7 @@ angular.module('studionet')
 
                     sendMessage( {status: 200, message: "Error replying to node. Please try again." } );
                     $scope.close();
-              }); 
+              });
         };
 
 
@@ -341,7 +349,7 @@ angular.module('studionet')
               track("update-node");
               $scope.updateMode = true;
               $scope.contributionData = jQuery.extend({}, $scope.contribution);
-              $scope.contributionData.contentType = $scope.contribution.type; 
+              $scope.contributionData.contentType = $scope.contribution.type;
 
               if($scope.contributionData.attachments[0].id == null){
                 $scope.contributionData.attachments = [];
@@ -350,7 +358,7 @@ angular.module('studionet')
               $scope.contributionData._tags = $scope.contribution.tags.map(function(t){
                   return t;
               });
-              
+
               $scope.contributionData._attachments = $scope.contributionData.attachments;
               $scope.contributionData.attachments = [];
         }
@@ -401,7 +409,7 @@ angular.module('studionet')
             });
 
             $scope.close();
-       
+
         };
 
 
