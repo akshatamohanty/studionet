@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces',
-                               function($scope, profile, contributions, spaces){
+.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces', '$state',
+                               function($scope, profile, contributions, spaces, $state){
 
           $scope.showBench = true;
           $scope.searchActive = false;
