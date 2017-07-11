@@ -19,6 +19,33 @@ angular.module('studionet')
 		return o;
 	}])
 
+	.factory('contributions', ['$http', '$filter', function($http, $filter){
+
+		var o = {
+			contributions: [],
+			contributionsHash: []
+		};
+
+		// Fetches the array of contributions
+		o.getAll = function(){
+			return $http.get('/api/contributions').success(function(data){
+
+				// remove root node
+				if(data[0].dateCreated == null)
+					data.shift();
+
+				// orderby date
+				var ordered = $filter('orderBy')(data, 'dateCreated');
+
+				angular.copy(ordered, o.contributions);
+				o.contributionsHash = o.contributions.hash();
+
+			});
+		};
+
+		return o;
+	}])
+
 
 	// --------------- User List
 	.factory('users', ['$http', function($http){
@@ -224,6 +251,31 @@ angular.module('studionet')
 	}])
 
 
+	.factory('spaces', ['$http', function($http){
+
+		var o = {
+			spaces : [],
+			spacesHash: []
+		}
+
+		// gets all the spaces linked to user
+		o.getAll = function(){
+
+          	o.spaces = [
+          				{ id: 1, name: "ar2521-assignments", time: [132321432, 123214324], tags: [407, 426], posts: [1571, 1572, 1576, 1634, 1582] },
+          				{ id: 2, name: "design-ideas", time: null, tags: [4223, 1864, , 2569], posts: [2031, 2032, 2036, 2041, 2042, 2143, 2175, 1958, 1980, 1982] },
+          				{ id: 3, name: "modeling-software", time: null, tags: [417, 440], posts: [2530, 2566] },
+          				{ id: 4, name: "ping-pong", time: null, tags: [2303], posts: [] },
+          				{ id: 5, name: "technique", time: [12312312432, 12312432412], tags: [413], posts: [451, 469, 409, 409, 759, 759]}
+          			];
+          	o.spacesHash = o.spaces.hash();
+		}
+
+		return o;
+
+	}])
+
+
 	//--------------------- Profile
 	.factory('profile', ['$http', 'users', function($http, users){
 		
@@ -261,7 +313,11 @@ angular.module('studionet')
 			return $http.get('/api/profile/').success(function(data){
 				angular.copy(data, o.user);
 
+				// TODO: rewire
 				o.user.newactivity = "You are all caught up!";
+				o.user.forked = [1, 2];// tag space ids
+				o.user.subscribed_to = [1, 2, 3, 4, 5]; // tag space ids
+				o.user.posts = o.user.contributions;
 
 				notifyObservers();
 			});

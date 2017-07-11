@@ -1,6 +1,6 @@
 @mixin blank-card($size) {
   box-shadow: none;
-  background: none;
+  background-color: transparent !important;
   text-align: center;
   border: 1px dashed black;
   text-align: center; 

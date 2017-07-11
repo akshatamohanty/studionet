@@ -17,22 +17,12 @@
 
       <!-- search bar (depends on state) -->
       <div show-gt-sm flex="70">
-          <a ui-sref='search' ng-show='searchActive' class='search-bar'>
-            <md-chips ng-model="search.query" readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
-          </a>
+        <md-chips ng-model="search.query"  ng-show='searchActive'  readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
       </div>
 
 
       <!-- buttons -->
       <div flex="10">
-      
-        <!-- <md-button class="md-icon-button" aria-label="Settings" ng-disabled="false" ng-click="showInfo=!showInfo" ng-show='isTagSpace'>
-          <ng-md-icon icon="info" style="fill: white" size="25"></ng-md-icon> 
-          <md-tooltip
-            md-direction="bottom">
-            Toggle More Information
-          </md-tooltip>
-        </md-button> -->
 
         <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
           <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
@@ -49,6 +39,7 @@
             Home
           </md-tooltip>
         </md-button>
+        
       </div>
 
     </div>
@@ -60,27 +51,29 @@
       <div id='workbench-container' ng-class='showBench?"expand":"compress"'>
           <div id='workbench' ng-controller="FabCtrl as demo" layout='column' layout-fill>
 
-              <!-- Profile Short Details -->
-              <div layout='column' layout-align='center center'>
-                <a ui-sref='home.profile'>
-                  <user-avatar></user-avatar>
-                  <h3 class='md-body-2'>{{user.name}}</h3>
-                  <h4 class='md-caption'>{{user.level}}</h4>
-                  <h4 class='md-caption'>@{{user.name | lowercase | removeSpaces}}</h4>
-                </a>
-              </div>
-          
-              <md-divider></md-divider>
-
               <!-- New Node Creation -->
-              <md-toolbar>
+              <md-toolbar layout="column" style='padding-top: 20px; '>
+                
+                <!-- Profile Short Details -->
+                <div layout='column' layout-align='top center'>
+                  <a ui-sref='home.profile' style='margin: 0 auto; display: block;'>
+                    <!-- <user-avatar></user-avatar> -->
+                    <img src={{user.avatar}} style='width: 100px; height: 100px;'>
+                    <h3 class='md-body-2' style='margin: 0px;'>{{user.name}}</h3>
+                    <h4 class='md-caption' style='margin: 0px;'>Level: {{user.level}}</h4>
+                    <h4 class='md-caption' style='margin: 0px; margin-bottom: 15px;'>@{{user.name | lowercase | removeSpaces}}</h4>
+                  </a>
+                </div>
+
+                <md-divider></md-divider>
+
                 <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
-                                   class="md-scale md-fab-top-right" ng-class="{ 'md-hover-full': demo.hover }"
+                                   class="md-scale" ng-class="{ 'md-hover-full': demo.hover }"
                                    ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
                   <md-fab-trigger>
                     <md-button aria-label="menu" class="md-fab md-warn">
                       <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                      <md-icon md-svg-src="img/icons/menu.svg" aria-label="menu"></md-icon>
+                      <i class="material-icons" style='line-height: 56px;'>create</i>
                     </md-button>
                   </md-fab-trigger>
 
@@ -92,34 +85,50 @@
                           {{item.name}}
                         </md-tooltip>
 
-                        <!-- <md-icon md-svg-src="{{item.icon}}" aria-label="{{item.name}}"></md-icon> -->
+                        <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
                       </md-button>
                     </div>
                   </md-fab-actions>
                 </md-fab-speed-dial>
+
               </md-toolbar>
 
-              <br><br>
+              <md-content>
 
-              <!-- Shortcuts to user own notes -->
-              <div class='folder'>
-                <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>@{{user.name | lowercase | removeSpaces}}</a></div>
-                <div class='folder-notes'>
-                    <div class='folder-notes'>
-                        <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node}}</div>
-                    </div>
+                <md-divider></md-divider>
+
+                <div>Your Nodes</div>
+
+                <!-- Shortcuts to user own notes -->
+                <div class='folder'>
+                  <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>
+                          @{{user.name | lowercase | removeSpaces}}
+
+                          <a style='float: right' ng-click='ex1=!ex1'>...</a>
+                  </div>
+                  <div class='folder-notes open'>
+                      <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node.title}}</div>
+                  </div>
                 </div>
-              </div>
 
-              <md-divider></md-divider>
+                <md-divider></md-divider>
 
-              <!-- Shortcuts to user-saved notes -->
-              <div class='folder' ng-repeat="subs in user.subscribed_to">
-                <div class='folder-title pointer' ng-click='goTo(spaces[subs].query)'>{{spaces[subs].name}}  ({{ spaces[subs].posts.length }})</div>
-                <div class='folder-notes'>
-                    <div class='post-box' ng-repeat='node in spaces[subs].posts' ng-click='goToNode(node)'>{{node}}</div>
+                <div> Your Collections </div>
+
+                <!-- Shortcuts to user-saved notes -->
+                <div class='folder' ng-repeat="subs in user.forked" dnd-list='spaces[subs].posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
+                  <div class='folder-title pointer'>
+                          {{spaces[subs].name}}  ({{ spaces[subs].posts.length }})
+                          <a style='float: right'>...</a>
+                  </div>
+                  <div ng-class='spaces[subs].open ? "folder-notes open" : "folder-notes close"'>
+                      <div class='post-box' ng-repeat='node in spaces[subs].posts track by $index' ng-click='goToNode(node)'>
+                          <div class='title'>{{ posts[node].title | shorten }}</div>
+                      </div>
+                  </div>
                 </div>
-              </div>
+
+              </md-content>
 
 
           </div>

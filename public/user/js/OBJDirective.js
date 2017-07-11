@@ -1,4 +1,4 @@
-/*angular.module('studionet')
+angular.module('studionet')
   .directive('objdirective', function () {
     return {
       restrict: 'A',
@@ -7,7 +7,7 @@
         'height': '=',
         'fillcontainer': '=',
         'scale': '=',
-        'materialType': '=',
+        'materialType': '='
         'filename' : '='
       },
       link: function postLink(scope, element, attrs) {
@@ -169,4 +169,3 @@
       }
     };
   });
-*/

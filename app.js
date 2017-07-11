@@ -23,8 +23,12 @@ var graph_all = require('./routes/graph_all');
 var graph_med = require('./routes/graph_med');
 var contributions = require('./routes/contributions');
 var supernode = require('./routes/supernode');
-//var cloudTag = require('angular-tag-cloud');
+var spaces = require('./routes/spaces');
 
+
+// AKM - why this here?
+/*var cloudTag = require('angular-tag-cloud');
+*/
 
 var logs = require('./routes/logs');
 //if (process.env.NODE_ENV === 'test')
@@ -92,6 +96,7 @@ app.use('/api/moderators', moderators);
 app.use('/api/relationships', relationships);
 app.use('/api/contributions', contributions);
 app.use('/api/supernode', supernode);
+app.use('/api/spaces', spaces);
 app.use('/uploads', uploads);
 
 app.use('/api/logs', logs);
