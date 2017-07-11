@@ -23,7 +23,7 @@ var graph_all = require('./routes/graph_all');
 var graph_med = require('./routes/graph_med');
 var contributions = require('./routes/contributions');
 var supernode = require('./routes/supernode');
-var cloudTag = require('angular-tag-cloud');
+//var cloudTag = require('angular-tag-cloud');
 
 
 var logs = require('./routes/logs');
