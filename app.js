@@ -23,8 +23,12 @@ var graph_all = require('./routes/graph_all');
 var graph_med = require('./routes/graph_med');
 var contributions = require('./routes/contributions');
 var supernode = require('./routes/supernode');
-var spaces = require('./routes/spaces')
+var spaces = require('./routes/spaces');
 
+
+// AKM - why this here?
+/*var cloudTag = require('angular-tag-cloud');
+*/
 
 var logs = require('./routes/logs');
 //if (process.env.NODE_ENV === 'test')
@@ -42,7 +46,7 @@ if (process.env.NODE_ENV !== 'test') {
   });
   var morganLogFormat = '[:remote-addr][:userDetails][:date] ":method :url HTTP/:http-version"\\n\
   Status Code: :status, Content-Length: :res[content-length], Referrer: ":referrer", :response-time ms';
-  app.use(require('morgan')(morganLogFormat, { 
+  app.use(require('morgan')(morganLogFormat, {
     "stream": logger.stream,
     skip: function(req, res) { // for parsing url to reject image logs, remove if not needed
       var urlSource = url.parse(req.url).pathname.split('/')[1];
@@ -63,7 +67,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 // use express session
-app.use(session({ 
+app.use(session({
   secret: 'keyboard cat',   // some temp. secret
   cookie: {
     maxAge: 30*60*60*1000   // temp: expire in 30 hours

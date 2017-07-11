@@ -27,7 +27,7 @@ angular.module('studionet')
 
 	var computeStats = function(){
 
-		$scope.views = 0; 
+		$scope.views = 0;
 		$scope.rating = 0;
 		// compute the rating based on rating of the contributions the user has made
 		var rateCount = 0;
@@ -38,10 +38,10 @@ angular.module('studionet')
 		}
 		else{
 			for(var i=0; i < $scope.user.contributions.length; i++){
-				var contribution = $scope.user.contributions[i]; 
-				$scope.views += contribution.views; 
+				var contribution = $scope.user.contributions[i];
+				$scope.views += contribution.views;
 				totalRating += contribution.rateCount*contribution.rating;
-				rateCount += contribution.rateCount;  
+				rateCount += contribution.rateCount;
 			}
 		}
 
@@ -78,7 +78,7 @@ angular.module('studionet')
 		if(user_id == profile.user.id || user_id == undefined){
 
 
-			
+
 			$scope.user = profile.user;
 			$scope.own = true;
 
@@ -89,7 +89,7 @@ angular.module('studionet')
 			  $scope.user = profile.user;
 			};
 			profile.registerObserverCallback(updateProfile);
-			
+
 			computeStats();
 		}
 		else{
@@ -108,16 +108,16 @@ angular.module('studionet')
 
 
 			});
-		
+
 		}
-	
+
 	}
 
 	$scope.close = function() {
 	    $('body').removeClass('modal-open');
 	    $('.modal-backdrop').remove();
   	};
-  
+
 
 }])
 
