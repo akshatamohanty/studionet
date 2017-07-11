@@ -97,6 +97,8 @@
 
                 <md-divider></md-divider>
 
+                <div>Your Nodes</div>
+
                 <!-- Shortcuts to user own notes -->
                 <div class='folder'>
                   <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>
@@ -105,14 +107,16 @@
                           <a style='float: right' ng-click='ex1=!ex1'>...</a>
                   </div>
                   <div class='folder-notes open'>
-                      <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node.id}}</div>
+                      <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node.title}}</div>
                   </div>
                 </div>
 
                 <md-divider></md-divider>
 
+                <div> Your Collections </div>
+
                 <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.subscribed_to"  dnd-list='spaces[subs].posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
+                <div class='folder' ng-repeat="subs in user.forked" dnd-list='spaces[subs].posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
                   <div class='folder-title pointer'>
                           {{spaces[subs].name}}  ({{ spaces[subs].posts.length }})
                           <a style='float: right'>...</a>

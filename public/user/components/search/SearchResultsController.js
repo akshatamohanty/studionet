@@ -4,13 +4,18 @@ angular.module('studionet')
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
 
+	var tags = $stateParams.tags;
+	var dates = $stateParams.dates;
+	var users = $stateParams.users;
+
 	// TODO: Functionality to display the cards matching a query / tagspace
-	var tags = $stateParams.tags ? $stateParams.tags.split(",") : null;
+	/*var tags = $stateParams.tags && $stateParams.tags.length > 0 ? $stateParams.tags.split(",") : null;
 	var dates = $stateParams.dates ? $stateParams.dates.split(",") : null;
-	var users = $stateParams.users ? $stateParams.users.split(",") : null;
+	var users = $stateParams.users ? $stateParams.users.split(",") : null;*/
 
 	if( tags || dates || users )
-		$scope.location = "/space/tags=" + tags.join(",") + (dates || users ? "?" : "") + (dates ? "dates=" + dates.join(",") + "&" : "") + (users ? "&users=" + users.join(",") : "");
+		console.log(tags, dates, users);
+		//$scope.location = "/space/tags=" + tags.join(",") + (dates || users ? "?" : "") + (dates ? "dates=" + dates.join(",") + "&" : "") + (users ? "&users=" + users.join(",") : "");
 	else
 		$state.go('home.search');
 

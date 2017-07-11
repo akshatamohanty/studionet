@@ -22,8 +22,8 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			templateUrl: '/user/components/skeleton/skeleton.html',
 			controller: 'SkeletonController',
 		    resolve: {
-				userProfile: ['profile', 'contributions', function(profile, contributions){
-					return profile.getUser() && profile.getActivity() && contributions.getAll();
+				userProfile: ['profile', function(profile){
+					return profile.getUser() && profile.getActivity();
 				}]
 			}
 		})
@@ -36,10 +36,19 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.homepage', {
 			url: 'home',
 			templateUrl: '/user/components/homepage/homepage.html',
-			controller: 'HomepageController'/*,
+			controller: 'HomepageController',
 		    resolve: {
 				//TODO: Resolve system data and user specific call-to-actions
-			}*/
+		    	posts: ['contributions', function(contributions){
+					return contributions.getAll();
+				}],
+				sp: ['spaces', function(spaces){
+					return spaces.getAll();
+				}],
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
+				}]
+			}
 		})
 		//
 		//	Notifications - Popup  (http://studionet.nus.edu.sg/user/#/home/notifications)
@@ -72,22 +81,19 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
 		//	
 		.state('home.search-results', {
-			url: 'space?tags&dates&users',
+			url: 'space?tags&dates',
 			templateUrl: '/user/components/search/search-results.html',
 			params: {
-		        tags: null,
-		        dates: null, 
+		        tags: '1,2',
+		        dates: "2,4", 
 		        users: null
 		    },
-			controller: 'SearchResultsController'/*, 
+			controller: 'SearchResultsController', 
 		    resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
-				}], 
-				tags: ['tags', function(tags){
-					return tags.getAll();
+				sp: ['spaces', function(spaces){
+					return spaces.getAll();
 				}]
-			}*/
+			}
 		})
 		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
 		//	This state is when the user is creating a new note
