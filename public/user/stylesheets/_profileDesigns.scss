@@ -1,5 +1,7 @@
 $border-color: #f2f2f2;
 $badge-border: #B22222;
+$progress-bar : rgb(255, 64, 0);
+$progress-bar-bar : rgb(255, 128, 0);
 
 .badge {
     border-radius: 25px;
@@ -26,12 +28,39 @@ $badge-border: #B22222;
     height: 100px;
 }
 
+.rcornerTopPost {
+    border-radius: 25px;
+    border: 2px solid $border-color;
+    padding: 20px;
+    width: 720px;
+    height: 400px;
+}
+
 .rcornerbottom {
     border-radius: 25px;
     border: 2px solid $border-color;
     padding: 20px;
     width: 720px;
     height: 200px;
+}
+
+.progress-bar {
+  width: 720px;
+  height: 18px;
+  border-style: solid;
+  border-width: 1px;
+  /*border-radius: 8px;*/
+  background-color: $progress-bar;
+  border-color: #aaa;
+}
+
+.progress-bar-bar {
+  width: 0px;
+  background-color: $progress-bar-bar;
+  height: 100%;
+  color: #fff;
+  font-weight: normal
+  /*border-radius: 8px;*/
 }
 
 #left {
@@ -41,7 +70,6 @@ $badge-border: #B22222;
 
 #center {
     display: inline-block;
-    margin:0 auto;
     width:100px;
 }
 

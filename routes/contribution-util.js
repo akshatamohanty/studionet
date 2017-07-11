@@ -3,8 +3,8 @@ var glob = require('glob');
 var path = require('path');
 var fs = require('fs-extra');
 var gm = require('gm');
-var mmm = require('mmmagic'),
-      Magic = mmm.Magic;
+/*var mmm = require('mmmagic'),
+      Magic = mmm.Magic;*/
 var db = require('seraph')({
 	server: process.env.SERVER_URL || 'http://localhost:7474/', // 'http://studionetdb.design-automation.net'
 	user: process.env.DB_USER,
@@ -23,7 +23,7 @@ module.exports.handleGetContributionsWithoutParams = function(req, res, next) {
 	var query = [
 		'MATCH (c:contribution)',
 		'WITH c',
-		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), totalRatings: c.totalRating, rateCount: c.rateCount, rating: c.rating, views: c.views })'		
+		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), totalRatings: c.totalRating, rateCount: c.rateCount, rating: c.rating, views: c.views })'
 	].join('\n');
 
 	db.query(query, function(error, result) {
@@ -82,8 +82,8 @@ module.exports.ensureGetContributionsCorrectParams = function(req, res, next) {
 	sortedQueryKeys.splice(sortedQueryKeys.indexOf(REQ_DEPTH_KEYWORD), 1); // remove the depth param
 
 	var correctParams = requiredKeysWithoutDepth.reduce(function(acc, val, idx){
-		return acc 
-			&& (val == sortedQueryKeys[idx]) 
+		return acc
+			&& (val == sortedQueryKeys[idx])
 			&& (req.body[val].length > 0) // must not be blank queries for JSON.parse()
 	}, true);
 
@@ -131,7 +131,7 @@ module.exports.ensureUserOwnsContribution = function(req, res, next){
 
 module.exports.getHandlerToSendImage = function(isForThumbnail) {
 	return function(req, res, next){
-		
+
 		var query = [
 			'OPTIONAL MATCH (c:contribution)-[:ATTACHMENT]-(a:attachment)',
 			'WHERE ID(c)={contributionIdParam} AND ID(a)={attachmentIdParam}',
@@ -263,7 +263,7 @@ module.exports.updateDatabaseWithAttachmentsAndGenerateThumbnails = function(req
 	      .crop(200, 200)
 	      .quality(100)
 	      .write(attachmentsDest + '/thumbnails/' + f.filename, function(error){
-	      	if (error) 
+	      	if (error)
 	      		console.log('error!!! for : ' + f.filename);
 	      	else{
 	      		var query = [
