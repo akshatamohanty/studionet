@@ -6,30 +6,41 @@
     <!-- back button -->
     <a onclick='history.back()'><u>Back</u></a>
 
-    <div id="newNode" class="modal fade createContribution" role="dialog">
-      <div class="modal-dialog">
+    <div id="newNode" class="modal fade" role="dialog">
+      <div class="container-fluid">
 
         <!-- Modal content-->
-        <div class="modal-content">
+        <div class="container-fluid">
 
-             <div class="modal-body">
+             <div class="container-fluid">
 
-              <div class='editor'>
+              <div class='container-fluid'>
 
-                  <div class='modal-info'>
+                  <div class='container-fluid'>
                     <h5>New Node {{type}}</h5>
                   </div>
 
                   <!-- Title -->
                   <div class='modal-section'>
                     <!-- <label> Title </label> -->
-                    <input class='new-node-title' value='Title' ng-model="contributionData.title" placeholder="Enter a title">
+                      <md-input-container class="md-block">
+                  <label class="new-node-title">Enter a title</label>
+                   <textarea ng-model="vm.content"></textarea>
+                </md-input-container>
+                    
                   </div>
 
                   <!-- Content -->
-                  <div class='modal-section'>
-                    <!-- <label> Content </label> -->
-                    <my-awns ng-model="contributionData.body"></my-awns>
+                 <div class="modal-section">
+                
+    <md-input-container class="md-block" text="Enter your text here" style=" ; border-width:5px;  border-style:grove;">
+              
+                 
+                   <text-angular ng-model="vm.content1"></text-angular>
+                  
+                  </md-input-container>
+              
+                  
                     <!-- <div text-angular ng-model="contributionData.body" class="textAngular"></div> -->
                   </div>
 
@@ -46,10 +57,10 @@
                       <h5 style="color: blue; width: 70%; display: inline-block;"><u>{{ attachment.name }} ({{ attachment.size/1000 }} KB)</u></h5>
                       <button style='float: right; display: inline-block;' class="btn btn-xs" ng-click="removeFiles(attachment)">X</button>
                     </div>
-                  </div>
+                
 
                   <!-- tags -->
-                  <div class='modal-section'>
+                  <div class='modal-section1S'>
                     <h5> Tags <small>( {{ contributionData._tags.length || 0 }} tag(s) added) </small></h5>
                     <tags-input class='tags-input' class="bootstrap"
                       type='text'

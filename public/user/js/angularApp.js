@@ -111,6 +111,20 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}*/
 		})
+		
+		.state('home.progress', {
+           url: 'profile/:address/progress',
+           templateUrl: "/user/components/profile/progressbatch.html",
+           controller: 'BadgeprogressController'
+       })
+
+		
+		/*.state('home.progress', {
+           url: 'profile/:address/progress',
+           templateUrl: "/user/components/progress/progressbatch.html",
+           controller: 'BadgeprogressController'
+       })
+*/
 		//	Note Details - Note (http://studionet.nus.edu.sg/user/#/note/:id)
 		//	This state is when the user is viewing a note with a given ID. 
 		//	The state should resolve the contents of the note, the children and the parents of the note. 

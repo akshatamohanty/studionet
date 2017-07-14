@@ -24,7 +24,7 @@ var graph_med = require('./routes/graph_med');
 var contributions = require('./routes/contributions');
 var supernode = require('./routes/supernode');
 var spaces = require('./routes/spaces');
-
+//var progress=require('./routes/progress');
 
 // AKM - why this here?
 /*var cloudTag = require('angular-tag-cloud');

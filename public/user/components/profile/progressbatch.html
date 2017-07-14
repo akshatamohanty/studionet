@@ -1,0 +1,81 @@
+<div style=" width: 1700px background: #001c16; " layout-padding layout-wrap layout layout-align="left" >
+<md-card style="width:1000px">
+      <md-card-header>
+        <md-card-avatar>
+          <img class="md-user-avatar" src="" alt="student avatar">
+          <img ng-src=file:"G:\Arch\studionet-2.0\studionet-2.0\public\assets\images\profile.png">
+        </md-card-avatar>
+        <md-card-header-text>
+          <span class="md-title">Persona name</span>
+          <hr color=##060606>
+          <span class="md-subhead">Badge Progress</span>
+        </md-card-header-text>
+      </md-card-header>
+  </md-card>
+  </div>
+
+    <div layout="row" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak>
+       <md-whiteframe  class="md-whiteframe-10dp"  style="background: #ddd; margin: 20px; height: 100px; " ng-repeat="badge in badges" flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout layout-align="left">
+
+           <!--  <span> <img ng-src="img/upvote.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above</span>
+            <span>recieve 25 or more votes</span>
+          -->
+           <table>
+          <tr>
+          <th>
+          <span><img ng-src=file:"G:\Arch\studionet-2.0\studionet-2.0\public\assets\images\profile.png" style="width: 30px; height: 30px"></span> 
+          </th>
+		  <th>
+           <span><h5>{{badge.title}} </h5></span>
+           <span> <h6>{{badge.subtitle}}</h6></span>
+		  </table
+          </md-whiteframe>
+          </div>
+         <!-- <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center left">
+            <span> <img ng-src="img/upvotes.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above II</span><span>recieve 50 or more votes</span>
+         </md-whiteframe>
+         <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center center">
+           <span> <img ng-src="img/upvote.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+         </md-whiteframe>
+	  </div>
+        <div class="progressbatch" layout="row"  layout-padding layout-wrap  > 
+
+         <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="♦center right">
+            <span> <img ng-src="img/upvotes.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Answering Machine</span><span>Answer 5 Questions </span>
+         </md-whiteframe>
+         <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center center">
+          <span> <img ng-src="img/upvote.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+               </md-whiteframe> 
+	     </div>
+        <div class="progressbatch" layout="row"  layout-padding layout-wrap  >
+       <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center right">
+            
+              <span> <img ng-src="img/upvotes.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/>
+              </span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+         
+       
+            </md-whiteframe>
+	   </div>
+        <div class="BadgeprogressController" ng-controller="BadgeprogressController as ctrl" layout="row" layout-padding layout-wrap  style="padding-bottom: 32px;"ng-cloak>
+        <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center right">
+            <span> <img ng-src="img/upvote.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+         </md-whiteframe>
+         <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center center">
+          <span> <img ng-src="img/upvotes.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/></span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+               </md-whiteframe>
+	     
+       <md-whiteframe class="md-whiteframe-10dp" flex-sm="35" flex-gt-sm="25" flex-gt-md="15" layout layout-align="center right">
+            
+              <span>
+               <img ng-src="img/upvote.png" class="md-card-image" layout layout-align="left" alt="image caption" style="width: 50px; height: 70px"/>
+              </span><span>Up,Up and above</span><span>recieve 25 or more votes</span>
+         
+       
+            </md-whiteframe>
+          -->    </div>
+
+	     	   </div>
+           </md-card>
+           </div>
+
+           
