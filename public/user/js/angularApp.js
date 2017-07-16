@@ -1,20 +1,20 @@
 /*
  * This is the angular app bootstrapping file with the configurations, settings and routings.
- * 
+ *
  */
 
 var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','ui.router',
-										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree', 
-										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists']);
+										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree',
+										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists' , 'ngTagCloud']);
 
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
 
 	//
-	//	Home State - Abstract State 
-	//	Contains the App Skeleton with the top navigation bar and the sidebar (workbench) 
+	//	Home State - Abstract State
+	//	Contains the App Skeleton with the top navigation bar and the sidebar (workbench)
 	//	Needs to resolve the user identity and properties before loading
-	//		
+	//
 	$stateProvider
 		.state('home', {
 			abstract: true,
@@ -32,7 +32,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Nested in the Skeleton, contains shortcuts and call-to-actions for the user
 		//	Needs to resolve the additional user and system data before loading (like latest posts, mentions etc)
 		//	Check if any notifications for the user and navigate to notifications page, if yes
-		//	
+		//
 		.state('home.homepage', {
 			url: 'home',
 			templateUrl: '/user/components/homepage/homepage.html',
@@ -54,7 +54,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Notifications - Popup  (http://studionet.nus.edu.sg/user/#/home/notifications)
 		//	Type: Popup
 		//	Resolve any notifications for the user
-		//	
+		//
 		.state('home.notifications', {
 			url: 'notifications',
 			templateUrl: '/user/components/notifications/notifications.html',
@@ -63,14 +63,14 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Homepage - Search  (http://studionet.nus.edu.sg/user/#/search/:usertags)
 		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
-		//	
+		//
 		.state('home.search', {
 			url: 'search',
 			templateUrl: '/user/components/search/search-mode.html',
 			controller: 'SearchModeController'/*,
 		    resolve: {
 
-				TODO: 
+				TODO:
 				tags: ['tags', function(tags){
 					return tags.getAll();
 				}]
@@ -79,16 +79,16 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Homepage - Search (http://studionet.nus.edu.sg/user/#/search?tags=["helloworld"])
 		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
-		//	
+		//
 		.state('home.search-results', {
 			url: 'space?tags&dates',
 			templateUrl: '/user/components/search/search-results.html',
 			params: {
 		        tags: '1,2',
-		        dates: "2,4", 
+		        dates: "2,4",
 		        users: null
 		    },
-			controller: 'SearchResultsController', 
+			controller: 'SearchResultsController',
 		    resolve: {
 				sp: ['spaces', function(spaces){
 					return spaces.getAll();
@@ -97,7 +97,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		})
 		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
 		//	This state is when the user is creating a new note
-		//	
+		//
 		.state('home.node', {
 			url: 'new/:type',
 			templateUrl: '/user/components/nodes/newnode.html',
@@ -112,11 +112,11 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}*/
 		})
 		//	Note Details - Note (http://studionet.nus.edu.sg/user/#/note/:id)
-		//	This state is when the user is viewing a note with a given ID. 
-		//	The state should resolve the contents of the note, the children and the parents of the note. 
-		//	The controller should allow for navigating to the next or the previous note based on the users' clicks without jumps. The location in the URL should change automatically. 
+		//	This state is when the user is viewing a note with a given ID.
+		//	The state should resolve the contents of the note, the children and the parents of the note.
+		//	The controller should allow for navigating to the next or the previous note based on the users' clicks without jumps. The location in the URL should change automatically.
 		//	If the user chooses to reply, the view should navigate to home.note, while preserving the back/forward states for easy navigation. After saving the user, should navigate back to the original note.
-		//	
+		//
 		.state('home.node-details', {
 			url: 'node/:address',
 			templateUrl: '/user/components/nodes/view.html',
@@ -144,7 +144,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Profile Details - Note (http://studionet.nus.edu.sg/user/#/profile/:user_id)
 		//	Displays all the user information, badges, posts of a particular user
 		//	Should resolve profile details before loading
-		//	
+		//
 		.state('home.profile-details', {
 			url: 'profile/:address',
 			templateUrl: '/user/components/profile/profile.html',
@@ -216,7 +216,7 @@ app.filter('shorten', [function() {
 
         if(string.length < 10)
         	return string;
-        else 
+        else
         	return string.substr(0, 7) + "..."
     };
 }])

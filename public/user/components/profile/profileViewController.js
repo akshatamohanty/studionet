@@ -1,10 +1,34 @@
 angular.module('studionet')
 
-.controller('profileViewController', function($q, $scope) {
+.controller('profileViewController', function($q, $scope, $interval) {
 
   $scope.curVal= 0;
 
   $scope.maxVal = 100;
+
+    $scope.level = [
+              {"NOVICE" : 16},
+              {"COFFEE BOY" : 32 },
+              {"ARCHI INTERN" : 48 },
+              {"JR. ARCHITECT" : 60 },
+              {"ARCHITECT" : 80 },
+              {"LEAD ARCHITECT" : 100 },
+        ];
+
+    $scope.Badge = [
+              {"Name" : "Badge1"},
+        ];
+
+    $scope.data = [
+          {text: "Lorem", weight: 15, link: "https://google.com"},
+          {text: "Ipsum", weight: 9},
+          {text: "Dolor", weight: 6},
+          {text: "Sit", weight: 7},
+          {text: "Amet", weight: 5}
+
+      ];
+
+
 
 })
 

@@ -5,11 +5,15 @@ $progress-bar-bar : rgb(255, 128, 0);
 
 .badge {
     border-radius: 25px;
-    background: #73AD21;
+    background: #ffffff;
     padding: 40px;
     width: 80px;
     border: 2px solid $badge-border;
     height: 60px;
+}
+
+md-card.md-default-theme .md-card-image, md-card .md-card-image {
+    border-radius: 25px 25px 0 0;
 }
 
 .rcornertop {
@@ -24,8 +28,8 @@ $progress-bar-bar : rgb(255, 128, 0);
     border-radius: 25px;
     border: 2px solid $border-color;
     padding: 20px;
-    width: 720px;
-    height: 100px;
+    width: auto;
+    height: auto;
 }
 
 .rcornerTopPost {
@@ -42,6 +46,14 @@ $progress-bar-bar : rgb(255, 128, 0);
     padding: 20px;
     width: 720px;
     height: 200px;
+}
+
+.rcornerbadgeTopPost {
+    border-radius: 25px;
+    border: 2px solid $border-color;
+    padding: 20px;
+    width: 80px;
+    height: 60px;
 }
 
 .progress-bar {
