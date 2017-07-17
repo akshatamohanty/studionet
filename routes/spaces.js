@@ -15,9 +15,9 @@ router.route('/')
   .get(auth.ensureAuthenticated, function(req, res){
     
     var query = [
-      'MATCH (s:space)',
-      'OPTIONAL MATCH (u:user)-[r:FOLLOWS]->(s)',
-      'RETURN {by: s.created_by, id: id(s), user_count: collect({id: id(u), type: r.type}), timed: s.time, on: s.created_at}'
+      'MATCH (s:space)-[:CONTAINS]->(t:tag)',
+      'WITH s, collect({id: ID(t), name: t.name}) as tags',
+      'RETURN {id: id(s), timed: s.timed, tags: tags}'
     ].join('\n'); 
 
     var params = {
