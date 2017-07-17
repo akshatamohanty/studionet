@@ -6,22 +6,118 @@
     <br>
       <hr class="style1">
     <br>
-<div layout="row" layout-sm="column">
 
-    <!-- Top Post Window  -->
+<div layout="row" layout-sm="column" ng-controller='profileViewController'>
+
+    <!-- Profile Window  -->
+    <div flex>
+        <div class="container" >
+            <div layout="row" style="height:100%;">
+                <div layout="column">
+                           <h1><span class="headline">NOVICE</span></h1>
+
+                            <!-- Details section -->
+                            <div id="left">
+                                Last Seen : {{lastLoggedIn}}
+                            </div>
+
+                            <div id="detailContainer">
+                                        <div id="left">
+                                                <div>
+                                                   <p>Number of subscribers:</p>
+                                                </div>
+                                                <div>
+                                                    <p>Post Created:</p>
+                                                </div>
+                                                <div>
+                                                    <p>Comments Posted:</p>
+                                                </div>
+                                        </div>
+
+                                        <div id="center">
+                                            <p>Upvotes Received:</p>
+                                        </div>
+
+                                        <div id="right">
+                                            <user-avatar></user-avatar>
+                                        </div>
+                            </div>
+
+
+                        <!-- Progress Bar -->
+                        <div  class="rcornertop">
+
+                            <p>{{NOVICE}} | COFFEE BOY | ARCHI INTERN | JR. ARCHITECT | ARCHITECT | LEAD ARCHITECT
+
+                            </p>
+                            <div>
+                                   <!--  <label>Current Value</label>
+                                    <input type="number" ng-model="curVal" min="0" max="100"> -->
+
+                                    <br><br>
+
+                                    <progress-bar cur-val='{{curVal}}' max-val='{{maxVal}}'></progress-bar>
+
+                            </div>
+                        </div>
+
+
+                        <!--Badge Layer -->
+
+
+                        <h3>Badges Earned</h3>
+                        <div layout="row" class="rcornermiddle">
+                            <div ng-repeat='Badge in Badge'>
+                                 <div flex class="badge">
+                                 </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" id="separation">
+                            </br>
+                        </div>
+
+                        <!-- Tags Section -->
+                        <div class="rcornerbottom">
+                            <div class="cloud-container">
+                                   <ng-tag-cloud class="custom-1" cloud-width="250" cloud-height="250" cloud-data="data"></ng-tag-cloud>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!--  Right side Flex window Tag Post  -->
     <div flex>
         <div class="container">
             <div layout="row" style="height:100%;">
                 <div layout="column">
                     <div layout="row" layout-wrap>
-                          <div flex="30">
-
+                          <div flex="30" class="left">
+                            <md-card>
+                                <md-card-content>
+                                    <h2>Card headline</h2>
+                                    <p>Card content</p>
+                                </md-card-content>
+                                <md-card-footer>
+                                    Card footer
+                                </md-card-footer>
+                            </md-card>
                           </div>
                           <div flex="45">
-                            [flex="45"]
+                            <div>
+                               <p> PostTitle</p>
+                                <p>Views</p>
+                                <p>Upvotes</p>
+                                <p>Bookmark</p>
+                            </div>
                           </div>
-                          <div flex="25">
-                            [flex="25"]
+                          <div flex="25" class="rcornerbadgeTopPost">
+                                <div >
+
+                                </div>
                           </div>
                     </div>
 
@@ -36,8 +132,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 

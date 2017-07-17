@@ -8,12 +8,12 @@ html, body{
   background-color: $bg-color;
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 ::-webkit-scrollbar
 {
-  width: $scroll-thk; 
+  width: $scroll-thk;
 }
 
 :focus{
@@ -30,13 +30,13 @@ a{
 }
 
 a:hover{
-  color: inherit; 
+  color: inherit;
   text-decoration: none;
 }
 
 #toolbar{
-  position: fixed; 
-  top: 0px; 
+  position: fixed;
+  top: 0px;
   z-index: 5;
   height: $toolbar-height;
   background-color: $toolbar-bg;
@@ -48,17 +48,17 @@ a:hover{
 
   .view-container{
     //width: 90%;
-    max-width: $max-width; 
+    max-width: $max-width;
     padding: 15px;
     margin: 0 auto;
-    overflow: hidden;
+    overflow: auto;
     height: 100%;
   }
 
 }
 
 md-chips-wrap{
-  background-color: #E8E8E8;  
+  background-color: #E8E8E8;
 }
 
 .md-chips{
