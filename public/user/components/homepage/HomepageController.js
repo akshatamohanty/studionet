@@ -31,6 +31,7 @@ angular.module('studionet')
               {"name" : "Heidi", "profile": "http://placehold.it/150x150" }
           ];
 
+          // updates the status of the timed tags
           $scope.getStatus = function(times){
 
               if(times == null)
@@ -60,6 +61,23 @@ angular.module('studionet')
 
               return status;
 
+          }
+
+          // gets the space url associated with the tag; 
+          // shift this to service
+          $scope.getSpaceURL = function(space_id){
+
+            var sp = $scope.spaces[space_id];
+            var params = {};
+
+            var tags = sp.tags;
+            var tagString = tags.map(function(t){return t.id}).join(",");
+            params.tags = tagString;
+
+            if (sp.timed !== null)
+              params.dates=sp.timed;
+
+            return 'home.search-results(' + JSON.stringify(params) + ')';
           }
 
 

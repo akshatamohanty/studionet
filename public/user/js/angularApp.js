@@ -84,14 +84,17 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			url: 'space?tags&dates',
 			templateUrl: '/user/components/search/search-results.html',
 			params: {
-		        tags: '1,2',
-		        dates: "2,4",
+		        tags: null,
+		        dates: null,
 		        users: null
 		    },
 			controller: 'SearchResultsController',
 		    resolve: {
 				sp: ['spaces', function(spaces){
 					return spaces.getAll();
+				}],
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
 				}]
 			}
 		})

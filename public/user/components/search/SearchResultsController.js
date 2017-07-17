@@ -1,12 +1,15 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', '$state', '$stateParams', 'profile', function($scope, $state, $stateParams, profile){
+.controller('SearchResultsController', ['$scope', '$state', '$stateParams', 'profile', 'tags', function($scope, $state, $stateParams, profile, tags){
+
+	var allTags = tags.tagsHash;
 
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
 
-	var tags = $stateParams.tags;
+	var tagParams = $stateParams.tags.split(",");
 	var dates = $stateParams.dates;
 	var users = $stateParams.users;
+
 
 	// TODO: Functionality to display the cards matching a query / tagspace
 	/*var tags = $stateParams.tags && $stateParams.tags.length > 0 ? $stateParams.tags.split(",") : null;
@@ -38,6 +41,14 @@ angular.module('studionet')
 		{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"}
 	]
 
+	// update the location
+	$scope.location = "This space consists of posts which have the tags: " + tagParams.map(function(t){return allTags[t].name}).join(" and ");
+	if(dates !== null){
+		console.log("Dates", dates);
+		$scope.location += " and have been posted between " + (new Date( parseInt(dates[0]) )).toString().substr(0,10) + " and " + (new Date( parseInt(dates[1]) )).toString().substr(0,10)
+	}
+
+
 	$scope.leaders = [
 		{name: "Harry Potter", handle: "@harry"},
 		{name: "Draco Malfoy", handle: "@malfoy"},
@@ -51,7 +62,7 @@ angular.module('studionet')
 	$scope.forks = [ 2, 3, 4, 6, 7, 8, 9]
 
 	$scope.saveSpace = function(){
-		profile.user.subscribed_to.push(4123)
+		profile.user.curates.push(4123)
 	}
 
 }]);

@@ -11,7 +11,7 @@
       <md-divider md-inset></md-divider>
       <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
          <div class='shortcut-div' ng-repeat="space in user.follows | orderBy: '-getStatus(spaces[space.id].timed).time_left'" ng-if='spaces[space.id].timed !== null' ng-style="getStatus(spaces[space.id].timed).style"> 
-            <a ui-sref='home.search-results({"tags": spaces[space.id].tags.join(","), dates: spaces[space.id].timed.join(",")})'>
+            <a ui-sref={{getSpaceURL(space.id)}}>
               <div ng-mouseover="hover=true; status = getStatus(spaces[space.id].timed)" ng-mouseleave="hover=false">
                 <div style='padding: 12px; height: auto;' ng-hide='hover'> 
                   <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
@@ -41,7 +41,7 @@
       <md-divider md-inset></md-divider>
       <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
          <div class='shortcut-div' ng-repeat='space in user.follows'>
-            <a ui-sref='home.search-results({"tags": spaces[space.id].tags.join(","), dates: spaces[space.id].timed.join(",")})'>
+            <a ui-sref={{getSpaceURL(space.id)}}>
               <div style='margin: 12px; height: auto;'> 
                 <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
                 <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name}}</div>
