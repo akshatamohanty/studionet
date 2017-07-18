@@ -254,7 +254,7 @@ angular.module('studionet')
 	.factory('spaces', ['$http', function($http){
 
 		var o ={
-			spaces: {},
+			spaces: [],
 			spacesHash: [],
 		};
 
@@ -282,13 +282,23 @@ angular.module('studionet')
 		o.getAll = function(){
 			return $http.get('/api/spaces/').success(function(data){
 
-				angular.copy(data, o.space);
+				angular.copy(data, o.spaces);
 
 				if(data != undefined)	o.spacesHash = data.hash();
 
 				notifyObservers();
 			});
 		};
+
+		o.checkSpace = function(tArray, dates){
+			for(var i=0; i < o.spaces.length; i++){
+				if ( (JSON.stringify(o.spaces[i].tags.sort()) === JSON.stringify(tArray.sort())) && (JSON.stringify(o.spaces[i].timed.sort()) === JSON.stringify(dates.sort())) )
+					return o.spaces[i]; 
+			}
+
+			return null;
+
+		}
 
 		return o;
 

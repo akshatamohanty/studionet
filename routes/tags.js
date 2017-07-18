@@ -18,9 +18,10 @@ router.route('/')
 		// return only name and id associated with each tag
 		var query = [
 			'MATCH (t:tag) WITH t',
-			'OPTIONAL MATCH (c:contribution)-[r:TAGGED]->(t)',
-			'OPTIONAL MATCH (g:group)-[:TAGGED]->(t)',
-			'RETURN {name: t.name, createdBy: t.createdBy, contributionCount: count(r), id: id(t), group:ID(g), restricted: g.restricted }'
+			'RETURN {name: t.name, id: id(t)}'
+			//'OPTIONAL MATCH (c:contribution)-[r:TAGGED]->(t)',
+			//'OPTIONAL MATCH (g:group)-[:TAGGED]->(t)',
+			//'RETURN {name: t.name, createdBy: t.createdBy, contributionCount: count(r), id: id(t)}'
 		].join('\n');
 
 		db.query(query, function(error, result){

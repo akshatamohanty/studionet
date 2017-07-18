@@ -1,9 +1,11 @@
 angular.module('studionet')
-.controller('HomepageController', ['$scope', 'profile', 'spaces', 'contributions',
-                            function($scope, profile, spaces, contributions){
+.controller('HomepageController', ['$scope', 'profile', 'spaces', 'contributions', 'tags',
+                            function($scope, profile, spaces, contributions, tags){
 
           $scope.$emit('showBench');
           $scope.$emit('hideSearch');
+
+          $scope.tags = tags.tagsHash;
 
           // get user
           // user.follows - will give all the user subscriptions along with the personally assigned names
@@ -70,8 +72,7 @@ angular.module('studionet')
             var sp = $scope.spaces[space_id];
             var params = {};
 
-            var tags = sp.tags;
-            var tagString = tags.map(function(t){return t.id}).join(",");
+            var tagString = sp.tags.join(",");
             params.tags = tagString;
 
             if (sp.timed !== null)

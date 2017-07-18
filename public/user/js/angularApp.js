@@ -24,6 +24,18 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		    resolve: {
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
+				}],								//TODO: Resolve system data and user specific call-to-actions
+		    	posts: ['contributions', function(contributions){
+					return contributions.getAll();
+				}],
+				spacesPromise: ['spaces', function(spaces){
+					return spaces.getAll();
+				}],
+				tagsPromise: ['tags', function(tags){
+					return tags.getAll();
+				}],
+				usersPromise: ['users', function(users){
+					return users.getAll();
 				}]
 			}
 		})
@@ -36,19 +48,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.homepage', {
 			url: 'home',
 			templateUrl: '/user/components/homepage/homepage.html',
-			controller: 'HomepageController',
-		    resolve: {
-				//TODO: Resolve system data and user specific call-to-actions
-		    	posts: ['contributions', function(contributions){
-					return contributions.getAll();
-				}],
-				sp: ['spaces', function(spaces){
-					return spaces.getAll();
-				}],
-				tagsPromise: ['tags', function(tags){
-					return tags.getAll();
-				}]
-			}
+			controller: 'HomepageController'
 		})
 		//
 		//	Notifications - Popup  (http://studionet.nus.edu.sg/user/#/home/notifications)
@@ -88,15 +88,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		        dates: null,
 		        users: null
 		    },
-			controller: 'SearchResultsController',
-		    resolve: {
-				sp: ['spaces', function(spaces){
-					return spaces.getAll();
-				}],
-				tagsPromise: ['tags', function(tags){
-					return tags.getAll();
-				}]
-			}
+			controller: 'SearchResultsController'
 		})
 		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
 		//	This state is when the user is creating a new note

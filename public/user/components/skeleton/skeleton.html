@@ -107,23 +107,23 @@
                           <a style='float: right' ng-click='ex1=!ex1'>...</a>
                   </div>
                   <div class='folder-notes open'>
-                      <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node.title}}</div>
+                      <div class='post-box hover' style='font-size: 12px;' ng-repeat='node in user.contributions' ng-click='goToNode(node)' dnd-draggable='node'>{{node.title | shorten }}</div>
                   </div>
                 </div>
 
                 <md-divider></md-divider>
 
-                <div> Your Collections </div>
+                <div> Forks </div>
 
                 <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.forked" dnd-list='spaces[subs].posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
+                <div class='folder' ng-repeat="subs in user.curates" dnd-list='subs.my_posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
                   <div class='folder-title pointer'>
-                          {{spaces[subs].name}}  ({{ spaces[subs].posts.length }})
+                          {{ subs.name }}
                           <a style='float: right'>...</a>
                   </div>
                   <div ng-class='spaces[subs].open ? "folder-notes open" : "folder-notes close"'>
-                      <div class='post-box' ng-repeat='node in spaces[subs].posts track by $index' ng-click='goToNode(node)'>
-                          <div class='title'>{{ posts[node].title | shorten }}</div>
+                      <div class='post-box hover' ng-repeat='node in subs.my_posts' ng-click='goToNode(node)' dnd-draggable='node'>
+                          <div class='title' style='font-size: 12px;'>{{ posts[node].title | shorten }}</div>
                       </div>
                   </div>
                 </div>

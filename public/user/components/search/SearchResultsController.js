@@ -1,26 +1,32 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', '$state', '$stateParams', 'profile', 'tags', function($scope, $state, $stateParams, profile, tags){
+.controller('SearchResultsController', ['$scope', '$state', '$stateParams', 'profile', 'tags', 'spaces', '$mdToast', function($scope, $state, $stateParams, profile, tags, spaces, $mdToast){
 
 	var allTags = tags.tagsHash;
 
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
 
-	var tagParams = $stateParams.tags.split(",");
-	var dates = $stateParams.dates;
+	var tagParams = $stateParams.tags.split(",").map(function(t){return parseInt(t)});
+	var dates = $stateParams.dates ? $stateParams.dates.map(function(d){return parseInt(d) }) : [];
 	var users = $stateParams.users;
 
 
-	// TODO: Functionality to display the cards matching a query / tagspace
-	/*var tags = $stateParams.tags && $stateParams.tags.length > 0 ? $stateParams.tags.split(",") : null;
-	var dates = $stateParams.dates ? $stateParams.dates.split(",") : null;
-	var users = $stateParams.users ? $stateParams.users.split(",") : null;*/
-
-	if( tags || dates || users )
-		console.log(tags, dates, users);
+	if( tagParams || dates || users )
+		console.log("all ok")
+		// console.log(tags, dates, users);
 		//$scope.location = "/space/tags=" + tags.join(",") + (dates || users ? "?" : "") + (dates ? "dates=" + dates.join(",") + "&" : "") + (users ? "&users=" + users.join(",") : "");
 	else
 		$state.go('home.search');
+
+	// check if all tags are valid
+	for(var i=0; i < tagParams.length; i++){
+		var t = tagParams[i];
+		if(allTags[t] == undefined){
+			$state.go('home.search');
+			alert("Oops... looks like you've entered a wrong URL.");
+			return;
+		}
+	}
 
 	$scope.posts = [
 		{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
@@ -44,11 +50,30 @@ angular.module('studionet')
 	// update the location
 	$scope.location = "This space consists of posts which have the tags: " + tagParams.map(function(t){return allTags[t].name}).join(" and ");
 	if(dates !== null){
-		console.log("Dates", dates);
 		$scope.location += " and have been posted between " + (new Date( parseInt(dates[0]) )).toString().substr(0,10) + " and " + (new Date( parseInt(dates[1]) )).toString().substr(0,10)
 	}
 
+	// compute if the space exists 
+	var result = spaces.checkSpace(tagParams, dates);
 
+	if (result !== null){
+		// compute if user has subscribed to this space
+		var interested_spaces = profile.user.curates; 
+		interested_spaces = interested_spaces.concat(profile.user.follows);
+		for(var i=0; i < interested_spaces.length; i++){
+			if(interested_spaces[i].id == result.id)
+				$scope.spaceName = interested_spaces[i].name;
+		}
+
+		if ($scope.spaceName == undefined)	$scope.spaceName = "<not-saved>";
+	}
+	else{
+		if ($scope.spaceName == undefined)	$scope.spaceName = "<un-discovered>";
+	}
+
+	
+
+	// compute leaders based on the posts 
 	$scope.leaders = [
 		{name: "Harry Potter", handle: "@harry"},
 		{name: "Draco Malfoy", handle: "@malfoy"},
@@ -61,8 +86,33 @@ angular.module('studionet')
 	// people who have forked this space
 	$scope.forks = [ 2, 3, 4, 6, 7, 8, 9]
 
+
 	$scope.saveSpace = function(){
 		profile.user.curates.push(4123)
+	}
+
+	$scope.addNodeToSpace = function(item){
+
+		// check item creation date
+
+
+		// if item created is not within the dates, show an alert
+		
+
+		// if item is legally created in the time, show success modal
+
+
+		// if item isn't in the time frame, show failure alert
+		var toast = $mdToast.simple()
+		      .textContent('Successfully added to this space')
+		      .position("bottom right")
+
+		$mdToast.show(toast).then(function(response) {
+	      if ( response == 'ok' ) {
+	        alert('You clicked the \'UNDO\' action.');
+	      }
+	    });
+
 	}
 
 }]);

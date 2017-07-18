@@ -27,9 +27,9 @@
     <!-- results-->
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
-      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)'>
+      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)' dnd-list dnd-drop='addNodeToSpace(item)'>
         <md-card-title layout-align='center'>
-          <a ui-sref='home.note'>
+          <a ui-sref='home.node'>
             <md-card-title-text>
                 <span class="md-headline">+</span>
                 <span class="md-subhead">Create a new node</span>
@@ -57,18 +57,18 @@
   <div flex-gt-xs="20" layout-align="top">
 
     <h3 class='md-caption'>Space</h3>
-    <h1 class='md-title' ng-click='saveSpace()'>&lt;not-saved&gt;<i class='material-icons' style='font-size: 14px;'>download</i></h1>
-    
-
-    <md-divider></md-divider>
+    <h1 class='md-title' ng-click='saveSpace()'>{{spaceName}}</h1>
 
     <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
-    <div style='font-size: 10px;'>{{location}}</div>
+    <div style='font-size: 12px;'>{{location}}</div>
     
     <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
-    <div style='font-size: 10px; font-weight: 600;'>{{founder.name}}</div>
+    <div style='font-size: 12px;'>{{founder.name}}</div>
     
     <h6 class='md-caption' style='margin-bottom: 0px;'>Forked By</h6>
+    <div><img ng-repeat='fork in forks' src='http://placehold.it/30x30' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px;'></div>
+
+    <h6 class='md-caption' style='margin-bottom: 0px;'>Subscribed By</h6>
     <div><img ng-repeat='fork in forks' src='http://placehold.it/30x30' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px;'></div>
 
     <h6 class='md-caption' style='margin-bottom: 0px;'>Leaders</h6>

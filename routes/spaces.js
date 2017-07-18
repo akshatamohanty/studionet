@@ -16,7 +16,7 @@ router.route('/')
     
     var query = [
       'MATCH (s:space)-[:CONTAINS]->(t:tag)',
-      'WITH s, collect({id: ID(t), name: t.name}) as tags',
+      'WITH s, collect(ID(t)) as tags',
       'RETURN {id: id(s), timed: s.timed, tags: tags}'
     ].join('\n'); 
 
