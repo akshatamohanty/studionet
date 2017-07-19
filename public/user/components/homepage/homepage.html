@@ -2,15 +2,20 @@
     
     <!-- timed tags -->
     <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
+      <!-- heading -->
       <h3 class='container-heading'>
           Timed Spaces
           <span class='md-caption' style='float: right' ng-click='subs_expand=!subs_expand'>
             {{ subs_expand ? "Less" : "More"}}
           </span>
       </h3>
+
       <md-divider md-inset></md-divider>
+      
+      <!-- results -->
       <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat="space in user.follows | orderBy: '-getStatus(spaces[space.id].timed).time_left'" ng-if='spaces[space.id].timed.length>0' ng-style="getStatus(spaces[space.id].timed).style"> 
+         <div class='shortcut-div' ng-repeat="space in user.follows | orderBy: '-getStatus(spaces[space.id].timed).time_left'" 
+            ng-if='spaces[space.id].timed.length>0' ng-style="getStatus(spaces[space.id].timed).style"> 
             <a ui-sref={{getSpaceURL(space.id)}}>
               <div ng-mouseover="hover=true; status = getStatus(spaces[space.id].timed)" ng-mouseleave="hover=false">
                 <div style='padding: 12px; height: auto;' ng-hide='hover'> 
@@ -28,6 +33,7 @@
             </a>
          </div>
       </div>
+
     </md-card>
 
     <!-- subscriptions -->

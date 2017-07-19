@@ -92,19 +92,58 @@ router.route('/')
 			}
 			else{
 				console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
-				req.contributionId = result[0].id;
+        console.log(result);
+				//req.contributionId = result[0].id;
 				res.status(200);
 
         // broadcasting message
         req.app.get('socket').emit('node_created', result[0]);
 
-				res.send( result[0] );
+				res.send( result );
 				
         next();
 			}
 		}); 
 
 	}, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
+
+// route: /api/contributions/query
+router.route('/query')
+
+  // return all spaces
+  .post(auth.ensureAuthenticated, function(req, res){
+
+    console.log(req.body);
+    var tags = req.body.tags; 
+    var dates = req.body.dates;
+    
+    /*var query = [
+      'MATCH (s:space)',
+      'OPTIONAL MATCH (s)<-[:FOLLOWS]-(f:user)',
+      'WITH s, collect(ID(f)) as followers',
+      'WITH s, followers', 
+      'OPTIONAL MATCH (s)<-[:CURATES]-(c:user)',
+      'WITH s, followers, collect(ID(c)) as curators',
+      'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, curators: curators, followers: followers }'
+    ].join('\n'); 
+
+    var params = {
+      userIdParam : parseInt(req.user.id)
+    }
+
+    db.query(query, params, function(error, result){
+      if (error){
+        console.log('Error retrieving all spaces: ', error);
+      }
+      else{
+        res.send(result);
+      }
+    });*/
+
+    res.send("Returns all the posts");
+
+  })
+
 
 router.route('/questions')
   .get(auth.ensureAuthenticated, function(req, res){

@@ -67,19 +67,7 @@ angular.module('studionet')
 
           // gets the space url associated with the tag; 
           // shift this to service
-          $scope.getSpaceURL = function(space_id){
-
-            var sp = $scope.spaces[space_id];
-            var params = {};
-
-            var tagString = sp.tags.join(",");
-            params.tags = tagString;
-
-            if (sp.timed !== null)
-              params.dates=sp.timed;
-
-            return 'home.search-results(' + JSON.stringify(params) + ')';
-          }
+          $scope.getSpaceURL = spaces.getSpaceURL;
 
 
 

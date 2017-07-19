@@ -15,9 +15,13 @@ router.route('/')
   .get(auth.ensureAuthenticated, function(req, res){
     
     var query = [
-      'MATCH (s:space)-[:CONTAINS]->(t:tag)',
-      'WITH s, collect(ID(t)) as tags',
-      'RETURN {id: id(s), timed: s.timed, tags: tags}'
+      'MATCH (s:space)',
+      'OPTIONAL MATCH (s)<-[:FOLLOWS]-(f:user)',
+      'WITH s, collect(ID(f)) as followers',
+      'WITH s, followers', 
+      'OPTIONAL MATCH (s)<-[:CURATES]-(c:user)',
+      'WITH s, followers, collect(ID(c)) as curators',
+      'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, curators: curators, followers: followers }'
     ].join('\n'); 
 
     var params = {
@@ -36,6 +40,8 @@ router.route('/')
   })
 
   // create a new space
+  // properties with the space - the creator, created_at, unique_url, timed
+  // check that the user creating this space hasn't created more than 10 spaces today
   .post(auth.ensureAuthenticated, function(req, res){
 
     // Param setup
@@ -130,7 +136,7 @@ router.route('/')
 
 
 // route: /api/groups/:groupId
-router.route('/:groupId')
+/*router.route('/:groupId')
 
   // returns a particular group
   .get(auth.ensureAuthenticated, function(req, res){
@@ -260,7 +266,7 @@ router.route('/:groupId')
         // return the first item because query always returns an array but REST API expects a single object
         res.send(result[0]);
     })
-  });
+  });*/
 
 
 // route: /api/groups/:groupId/users
@@ -417,8 +423,6 @@ router.route('/:groupId/users')
     });
 
   });
-
-
 
 // route: /api/groups/:groupId/join
 router.route('/:groupId/join')

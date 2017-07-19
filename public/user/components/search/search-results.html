@@ -1,10 +1,11 @@
 <div layout="row" layout-xs='column' layout-align="top top" layout-fill layout-margin flex >
 
+  <!-- Section : Displaying the search results -->
   <div flex-gt-xs="80" layout="column" layout-align="top" style='overflow: auto;'>
     
     <div>
       <h3 class='md-caption'>Suggested Tags</h3>
-      <div layout="row" layout-margin>
+      <div layout="row">
         <md-chips layout='row' ng-repeat="item in ['architecture', 'design-ideas', 'roark', 'design']">
           <md-chip class="pointer" style='padding: 10px; border-radius:5px;'>{{item}}</md-chip>
         </md-chips>
@@ -13,31 +14,19 @@
 
     <md-divider></md-divider>
 
-    <!-- sorting and filters-->
-    <!-- <div>        
-      Sort By : <md-input-container>
-          <md-select ng-model="selectedItem" md-selected-text="getSelectedText()">
-            <md-optgroup label="items">
-              <md-option ng-value="item" ng-repeat="item in items">Sort By: {{item}}</md-option>
-            </md-optgroup>
-          </md-select>
-        </md-input-container>
-    </div>
- -->
     <!-- results-->
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
-      <md-card class='empty-card' md-theme="default" ng-click='showNewNode($event)' dnd-list dnd-drop='addNodeToSpace(item)'>
+      <!-- adding a new node in this space -->
+      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)'>
         <md-card-title layout-align='center'>
-          <a ui-sref='home.node'>
-            <md-card-title-text>
-                <span class="md-headline">+</span>
-                <span class="md-subhead">Create a new node</span>
-            </md-card-title-text>
-          </a>
+          <md-card-title-text>
+              <span class="md-headline">Add a node to this space</span>
+          </md-card-title-text>
         </md-card-title>
       </md-card>
 
+      <!-- the results when results exist-->
       <md-card class='pointer' ng-repeat='post in posts' dnd-draggable='post'> 
         <md-card-title>
           <md-card-title-text>
@@ -50,26 +39,41 @@
         </md-card-title>
       </md-card>
 
+      <!-- todo: message when results don't exist -->
+      <!-- <div></div> -->
+
     </div>
 
   </div>
 
+  <!-- Section : About the Space -->
   <div flex-gt-xs="20" layout-align="top">
 
     <h3 class='md-caption'>Space</h3>
-    <h1 class='md-title' ng-click='saveSpace()'>{{spaceName}}</h1>
+    <h1 class='md-title'>{{space_name}}</h1>
+    <md-button aria-label="menu" class="md-raised md-warn">
+      <md-tooltip md-direction="top" md-visible="tooltipVisible">--action--</md-tooltip>
+    </md-button>
 
     <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
-    <div style='font-size: 12px;'>{{location}}</div>
+    <div style='font-size: 12px;'>{{about_space}}</div>
     
-    <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
-    <div style='font-size: 12px;'>{{founder.name}}</div>
-    
-    <h6 class='md-caption' style='margin-bottom: 0px;'>Forked By</h6>
-    <div><img ng-repeat='fork in forks' src='http://placehold.it/30x30' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px;'></div>
+    <div ng-if='status > 0'>
 
-    <h6 class='md-caption' style='margin-bottom: 0px;'>Subscribed By</h6>
-    <div><img ng-repeat='fork in forks' src='http://placehold.it/30x30' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px;'></div>
+      <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
+      <div style='font-size: 12px;'><img src='{{users[founder].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+      
+      <div ng-if='curators.length > 0'>
+        <h6 class='md-caption' style='margin-bottom: 0px;'>Curators</h6>
+        <div><img ng-repeat='curator in curators' src='{{users[curator].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+      </div>
+
+      <div ng-if='followers.length > 0'>
+        <h6 class='md-caption' style='margin-bottom: 0px;'>Followers</h6>
+        <div><img ng-repeat='follower in followers' src='{{users[follower].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+      </div>
+
+    </div>
 
     <h6 class='md-caption' style='margin-bottom: 0px;'>Leaders</h6>
     <ul style='padding-left: 10px;'><li ng-repeat='leader in leaders' style='font-size: 12px;'><a ui-sref='home.profile-details({"address": leader.handle})'>{{leader.name}}</a></li></ul>

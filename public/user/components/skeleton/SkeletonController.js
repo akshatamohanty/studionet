@@ -11,10 +11,15 @@ angular.module('studionet')
           $scope.$on('showBench', function(){ $scope.showBench = true });
           $scope.$on('showSearch', function(){ $scope.searchActive = true });
 
+          // global references -- good practice???
           $scope.posts = contributions.contributionsHash; 
           $scope.spaces = spaces.spacesHash;
 
+          // user profile
           $scope.user = profile.user;
+
+          // subscribe to changes in user profile
+          profile.registerObserverCallback(function(){ console.log("updating user profile"); $scope.user = profile.user; });
 
           $scope.goTo = function(url){
             $state.go('home.search-results', { 'referer':'home.homepage', 'tags': url});
@@ -25,7 +30,7 @@ angular.module('studionet')
           }
 
           $scope.goToNode = function(node){
-            $state.go('home.node-details', { 'referer':'home.homepage', 'address': node })
+            $state.go('home.node-details', { 'referer':'home.homepage', 'address': node.id })
           };
 
 }]);
@@ -53,9 +58,9 @@ angular.module('studionet')
     });
 
     self.items = [
-      { name: "Note", icon: "note", direction: "bottom" },
-      { name: "Question", icon: "comment", direction: "top" },
-      { name: "Assignment", icon: "assignment", direction: "bottom" }
+      { name: "note", icon: "note", direction: "bottom" },
+      { name: "question", icon: "comment", direction: "top" },
+      { name: "assignment", icon: "assignment", direction: "bottom" }
     ];
 
     self.openDialog = function($event, item) {

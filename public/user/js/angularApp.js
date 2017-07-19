@@ -88,17 +88,29 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		        dates: null,
 		        users: null
 		    },
-			controller: 'SearchResultsController'
+			controller: 'SearchResultsController',
+			resolve: {
+				location: ['spaces', '$stateParams', function(spaces, $stateParams){
+					// get information about the space based on the route params
+					return spaces.getSpace($stateParams);  
+				}],
+				search_results: ['spaces', function(spaces){
+					// get search results for the space
+					return spaces.getResults();
+				}]
+			}
 		})
 		//	New Note - Note (http://studionet.nus.edu.sg/user/#/note)
 		//	This state is when the user is creating a new note
 		//
 		.state('home.node', {
-			url: 'new/:type',
+			url: 'new',
 			templateUrl: '/user/components/nodes/newnode.html',
 			controller: 'NewNodeController',
 			params:{
-				type: "note"
+				type: "note",
+				tags: [],
+				ref: null
 			}
 			/*resolve: {
 				userProfile: ['profile', function(profile){
@@ -132,12 +144,12 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			controller: 'NodeController',
 			params:{
 				address: null
-			}
-			/*resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
+			},
+			resolve: {
+				postDetails: ['contributions', '$stateParams', function(contributions, $stateParams){
+					return contributions.getContribution($stateParams.address);
 				}]
-			}*/
+			}
 		})
 		//	Profile - Abstract state
 		.state('home.profile', {

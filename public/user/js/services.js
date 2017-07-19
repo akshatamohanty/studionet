@@ -19,7 +19,7 @@ angular.module('studionet')
 		return o;
 	}])
 
-	.factory('contributions', ['$http', '$filter', function($http, $filter){
+	.factory('contributions', ['$http', '$filter', 'profile', function($http, $filter, profile){
 
 		var o = {
 			contributions: [],
@@ -42,6 +42,150 @@ angular.module('studionet')
 
 			});
 		};
+
+		o.getContribution = function(contribution_id){
+
+			return $http.get('/api/contributions/' + contribution_id).success(function(res){
+
+				var res = res.data;
+
+				// ------------- replace tag IDs with the actual tag
+				/*res.tags = res.tags.map(function(t){
+					return tags.tagsHash[t];
+				});*/
+				
+				// ------------- extract the images
+				var inlineImagePattern = new RegExp('src="studionet-inline-img-', "g");
+				res.body = res.body.replace(inlineImagePattern, 'src="../api/contributions/' + contribution_id + '/attachments?name=studionet-inline-img-');
+
+				return res;
+				// ------------- compute the reading time
+				/*function strip(html)
+				{
+				   var tmp = document.createElement("DIV");
+				   tmp.innerHTML = html;
+				   return tmp.textContent || tmp.innerText || "";
+				}
+				var t = ((res.body).split(" ").length / 200).toFixed(0); // number of words
+
+	            //var t =  parseInt((res.body.length / 300).toFixed(0)); 
+	            if(t == 0)
+	            	res.readingTime = "Very short read!";
+	            else if(t == 1)
+	            	res.readingTime = "1 minute read";
+	            else 
+	            	res.readingTime =  t + " minute read";*/
+
+
+			});	
+		}
+
+		// Data needs to be sent in FormData format
+		o.createContribution = function(new_contribution){
+
+			var inlineImages = extractImages(new_contribution);
+			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
+
+			var formData = new FormData();
+			formData.append('title', new_contribution.title);
+			formData.append('body', new_contribution.body);
+			formData.append('tags', new_contribution.tags);
+			formData.append('refType', new_contribution.refType);
+			formData.append('contentType', new_contribution.contentType);
+			formData.append('ref', new_contribution.ref);
+
+			new_contribution.attachments.map(function(file){	formData.append('attachments', file, file.name); 	})
+
+		    return $http({
+					method  : 'POST',
+					url     : '/api/contributions',
+					headers : { 'Content-Type': undefined, 'enctype':'multipart/form-data; charset=utf-8' },
+					processData: false,
+					data: formData
+		    })
+		    .success(function(res) {
+
+		    	// refresh profile
+		    	profile.getUser();
+
+		    	return res;
+
+		    })
+		    .error(function(error){
+				throw error;
+		    }) 
+		}
+
+
+		// ---- Updates a contribution
+		o.updateContribution = function(update_contribution){
+
+			var inlineImages = extractImages(update_contribution);
+			update_contribution.attachments = update_contribution.attachments.concat(inlineImages);
+
+			var formData = new FormData();
+			formData.append('title', update_contribution.title);
+			formData.append('body', update_contribution.body);
+			formData.append('tags', update_contribution.tags);
+			formData.append('contentType', update_contribution.contentType);
+			formData.append('ref', update_contribution.ref);
+
+			update_contribution.attachments.map(function(file){
+				formData.append('attachments', file, file.name);
+			})
+
+			return $http({
+				  method  : 'PUT',
+				  url     : '/api/contributions/'+ update_contribution.id,
+				  headers : { 'Content-Type': undefined, 'enctype':'multipart/form-data; charset=utf-8' },
+	      	      processData: false,
+	              data: formData
+				 })
+				.then(function(res) {
+
+					o.selectNode(update_contribution.id);
+
+					// send success
+					return res;  
+				})	
+		}
+
+		// ---- Deletes a contribution
+		// Confirmation Testing happens here
+		o.deleteContribition = function(contribution_id){
+
+			var r = confirm("Are you sure you want to delete your node? This action cannot be undone.");
+	        if (r == true) {
+
+	        	o.spinner.spin(document.getElementById('cy'));
+
+	        	o.removeAdditionalStyles();
+
+		        return $http({
+						method  : 'delete',
+						url     : '/api/contributions/' + contribution_id,
+						data    : {},  // pass in data as strings
+						headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						})
+			    .success(function(res) {
+
+					// remove node from graph
+					o.removeNode(contribution_id);
+					
+					// refresh profile
+					profile.getUser();
+
+
+			    })
+			    .error(function(error){
+			    	o.spinner.stop();
+					throw error;
+			    })	
+			}
+			else
+				console.log("Error Deleting");
+		}
+
 
 		return o;
 	}])
@@ -251,14 +395,13 @@ angular.module('studionet')
 	}])
 
 
-	.factory('spaces', ['$http', function($http){
+	.factory('spaces', ['$http', 'tags', 'profile', function($http, tags, profile){
 
 		var o ={
 			spaces: [],
 			spacesHash: [],
 		};
 
-		// ----------------- Observers of this service which re-run when this data is refreshed
 		var observerCallbacks = [];
 
 		// register an observer
@@ -274,11 +417,7 @@ angular.module('studionet')
 		};
 
 
-		// ----------------- Refreshes the spaces 
-		// spaces.spaces: All spaces and details
-		// 				
-		// spaces.getAll() : This service refreshes the above data 
-		// 
+		// ----------------- This service refreshes the above data 
 		o.getAll = function(){
 			return $http.get('/api/spaces/').success(function(data){
 
@@ -290,14 +429,141 @@ angular.module('studionet')
 			});
 		};
 
-		o.checkSpace = function(tArray, dates){
-			for(var i=0; i < o.spaces.length; i++){
-				if ( (JSON.stringify(o.spaces[i].tags.sort()) === JSON.stringify(tArray.sort())) && (JSON.stringify(o.spaces[i].timed.sort()) === JSON.stringify(dates.sort())) )
-					return o.spaces[i]; 
+		// ----------------- Utility function that returns the ui-sref path for a particular space ID
+		o.getSpaceURL = function(space_id){
+
+			var sp = o.spacesHash[space_id];
+			var tags = sp.tags; 
+			var dates = sp.timed;
+
+			var params = {};
+
+            var tagString =  tags.join(",");
+            params.tags = tagString;
+
+            if (dates.length > 0)
+              params.dates = dates.join(",");
+
+          	var final_path = 'home.search-results(' + JSON.stringify(params) + ')';
+
+            return final_path;
+        }
+
+        // ----------------- returns an object with information about the space based on the state params
+		o.getSpace = function($stateParams){
+
+
+			// get the tags and the dates from the route params
+			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
+			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];
+
+			var location = { status: -1 };
+
+			if( tArray.length == 0 && dArray.length == 0){
+				console.log("No parameters found; Return null location");
+				return location; 
 			}
 
-			return null;
+			// check if all tags are valid
+			var tagsMap = tags.tagsHash;
+			for(var i=0; i < tArray.length; i++){
+				if (tagsMap[tArray[i]] == undefined){
+					console.log("Invalid Paramaters")
+					return location;
+				}
 
+			}
+
+			// URL is not invalid
+			location.status = 0;
+			location.id = undefined;
+			location.name = "<un-curated>";
+			location.about = "This space is not curated with anyone yet."
+
+			// check if such a space exists
+			for (var i=0; i < o.spaces.length; i++){
+
+				var space = o.spaces[i];
+
+				if ( (JSON.stringify(space.tags.sort()) === JSON.stringify(tArray.sort())) && (JSON.stringify(space.timed.sort()) === JSON.stringify(dArray.sort())) ){
+						
+
+					// space exists
+					location.status = 1;
+
+					// assign the id of the space
+					location.id = space.id;
+
+					// assign a name to the location
+					location.name = "<un-named>";
+
+					// assign a status
+					location.about = "You have not saved or followed this space.";
+		
+					// the user's status with the space
+					var follows = false, curates = false;
+					if( space.curators.indexOf(profile.user.id) > -1){
+						location.name = profile.user.curates.filter(function(t){ return t.id == space.id; })[0].name;
+						location.status += 1;
+						curates = true;
+						location.about = "You curate this space";
+					}
+
+					if( space.followers.indexOf(profile.user.id) > -1){					
+						location.status += 1;
+						follows = true;
+						location.about = "You follow this space";
+					}
+
+					if( follows == true && curates == true){
+						location.status += 4;
+						location.about = "Bravo! You follow and curate this space!"
+					}
+
+					location.details = space;
+
+					return location; 
+				}
+
+
+			}
+
+			// no such space exists
+			return location;
+
+		}
+
+		o.getResults = function(){
+
+			// get all the posts for this query
+			/*return $http({
+						  method  : 'POST',
+						  url     : '/api/contributions/query',
+						  data    : { tags: [23, 4, 343], dates: [34, 23, 3]},  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+
+						});*/
+
+			return [
+					{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
+					{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
+					{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
+					{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
+					{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
+					{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
+					{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
+					{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"},
+					{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
+					{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
+					{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
+					{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
+					{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
+					{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
+					{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
+					{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"}
+				]
 		}
 
 		return o;

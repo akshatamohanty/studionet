@@ -4,10 +4,12 @@ angular.module('studionet')
                                 'profile', 'users', 'attachments', 'GraphService', 'tags', '$rootScope', '$stateParams', '$state',
                                 function($scope, $http, profile, users, attachments, GraphService, tags, $rootScope, $stateParams, $state){
 
-        
+
         $scope.node_id = $stateParams.address;
         if($scope.node_id == null)
-          $state.go('home.homepage')
+          $state.go('home.homepage');
+
+        $scope.post_details = $scope.$resolve.postDetails.data;
 
         //////// --------------  general declarations
         $scope.user = profile.user;
