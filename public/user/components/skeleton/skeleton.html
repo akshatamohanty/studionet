@@ -97,7 +97,7 @@
 
                 <md-divider></md-divider>
 
-                <div>Your Nodes</div>
+                <div class='text-center'>Your Nodes</div>
 
                 <!-- Shortcuts to user own notes -->
                 <div class='folder'>
@@ -113,19 +113,22 @@
 
                 <md-divider></md-divider>
 
-                <div> Forks </div>
+                <div class='text-center'> Forks </div>
 
                 <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.curates" dnd-list='subs.my_posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
+                <div class='folder' ng-repeat="subs in user.curates" dnd-list='subs.my_posts'>
+
                   <div class='folder-title pointer'>
                           {{ subs.name }}
                           <a style='float: right'>...</a>
                   </div>
-                  <div ng-class='spaces[subs].open ? "folder-notes open" : "folder-notes close"'>
-                      <div class='post-box hover' ng-repeat='node in subs.my_posts' ng-click='goToNode(node)' dnd-draggable='node'>
-                          <div class='title' style='font-size: 12px;'>{{ posts[node].title | shorten }}</div>
+                
+                  <div class='folder-notes open'>
+                      <div class='post-box hover' ng-repeat='node in [2, 3, 4, 5]' ng-click='goToNode(node)'>
+                          <div class='title' style='font-size: 12px;'>{{ node }}</div>
                       </div>
                   </div>
+                
                 </div>
 
               </md-content>

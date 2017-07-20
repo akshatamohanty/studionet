@@ -143,8 +143,6 @@ angular.module('studionet')
 				 })
 				.then(function(res) {
 
-					o.selectNode(update_contribution.id);
-
 					// send success
 					return res;  
 				})	
@@ -185,6 +183,7 @@ angular.module('studionet')
 			else
 				console.log("Error Deleting");
 		}
+
 
 
 		return o;
@@ -457,7 +456,7 @@ angular.module('studionet')
 			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
 			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];
 
-			var location = { status: -1 };
+			var location = { status: -1, tags: tArray };
 
 			if( tArray.length == 0 && dArray.length == 0){
 				console.log("No parameters found; Return null location");
@@ -477,8 +476,8 @@ angular.module('studionet')
 			// URL is not invalid
 			location.status = 0;
 			location.id = undefined;
-			location.name = "<un-curated>";
-			location.about = "This space is not curated with anyone yet."
+			location.name =  tArray.map(function(t_id){ return "#" + tags.tagsHash[t_id].name}).join(" ");
+			location.about = "This space is not forked by anyone yet."
 
 			// check if such a space exists
 			for (var i=0; i < o.spaces.length; i++){
@@ -533,37 +532,26 @@ angular.module('studionet')
 
 		}
 
-		o.getResults = function(){
+		o.getResults = function($stateParams){
+
+			// get the tags and the dates from the route params
+			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
+			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];
 
 			// get all the posts for this query
-			/*return $http({
+			return $http({
 						  method  : 'POST',
 						  url     : '/api/contributions/query',
-						  data    : { tags: [23, 4, 343], dates: [34, 23, 3]},  
+						  data    : { tags: tArray, dates: dArray },  
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
 
-						});*/
+								console.log("Results", data);
+								return data;
+						});
 
-			return [
-					{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
-					{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
-					{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
-					{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
-					{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
-					{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
-					{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
-					{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"},
-					{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
-					{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
-					{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
-					{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
-					{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
-					{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
-					{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
-					{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"}
-				]
+
 		}
 
 		return o;
@@ -651,6 +639,27 @@ angular.module('studionet')
 		o.showProfile = function(){
 
 		}
+
+		//
+		//
+		//	Allow user to tag a contribution
+		//
+		o.tagContribution = function(contribution_id, tag_array){
+
+			// get all the posts for this query
+			return $http({
+						  method  : 'POST',
+						  url     : '/api/contributions/' + contribution_id + '/tag',
+						  data    : { tags: tag_array },  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+
+								console.log("Results", data);
+								return data;
+						});
+		}
+
 
 		return o;
 	}])

@@ -18,7 +18,7 @@
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
       <!-- adding a new node in this space -->
-      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)'>
+      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)' ng-if='expired == false'>
         <md-card-title layout-align='center'>
           <md-card-title-text>
               <span class="md-headline">Add a node to this space</span>
@@ -49,7 +49,7 @@
   <!-- Section : About the Space -->
   <div flex-gt-xs="20" layout-align="top">
 
-    <h3 class='md-caption'>Space</h3>
+    <h3 class='md-caption'>Space <span ng-if='expired==true'>(Closed)</span> </h3>
     <h1 class='md-title'>{{space_name}}</h1>
     <md-button aria-label="menu" class="md-raised md-warn">
       <md-tooltip md-direction="top" md-visible="tooltipVisible">--action--</md-tooltip>

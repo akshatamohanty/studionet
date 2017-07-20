@@ -1,7 +1,7 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users',
-										function($scope, tags, $mdToast, $state, users){
-											console.log("im here")
+.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile',
+										function($scope, tags, $mdToast, $state, users, profile){
+
 
 	// ui-actions
 	// This state shows the workbench as well as the search bar
@@ -36,9 +36,14 @@ angular.module('studionet')
 	 */
 
 	// map the data to the page components 
+	var space_tags = $scope.$resolve.location.tags;
+
 	$scope.status = $scope.$resolve.location.status;
 	$scope.space_name = $scope.$resolve.location.name;
 	$scope.about_space = $scope.$resolve.location.about;
+	$scope.expired = false;
+
+	var space = $scope.$resolve.location.details;
 
 	// map these only if a space exists 
 	if($scope.status > 1){
@@ -48,11 +53,18 @@ angular.module('studionet')
 		// people who have forked this space
 		$scope.followers = $scope.$resolve.location.details.followers;
 		$scope.curators = $scope.$resolve.location.details.curators;
+
+		//http://localhost:3000/user/#/space?tags=407,426,4402&dates=1498273886030,1499273886030
+
+		$scope.expired = ( space.timed.length == 2 && ( space.timed[1] < (new Date()) ) ) ? true : false;
+
 	}
 
+	$scope.makeFork = function(){
+		
+		profile.bookmarkPost()
+	
 
-	$scope.saveSpaceToDrawer = function(){
-		profile.user.curates.push(4123)
 	}
 
 	/*
@@ -70,8 +82,7 @@ angular.module('studionet')
 
 	}	
 
-	$scope.posts = $scope.$resolve.search_results; 
-	console.log($scope.posts);
+	$scope.posts = $scope.$resolve.search_results.data; 
 
 	// compute the suggested tags
 
@@ -84,15 +95,23 @@ angular.module('studionet')
 
 	$scope.addNodeToSpace = function(item){
 
+		// todo: check if this item was created by the user
+		if( item.created_by !== profile.user.id ){
+
+			// todo: show dialog
+			
+
+			alert("You can only add your own nodes to spaces");
+			
+		}
+
+		// tag the node with the tags of the space
+		alert("tagging " + item.id + "with " + space_tags);
+		profile.tagContribution(item.id, space_tags); 
+
+	    console.log(item);
 		$scope.posts.push(item);
 
-		// check item creation date
-
-
-		// if item created is not within the dates, show an alert
-		
-
-		// if item is legally created in the time, show success modal
 
 
 		// if item isn't in the time frame, show failure alert

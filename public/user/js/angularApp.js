@@ -91,12 +91,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			controller: 'SearchResultsController',
 			resolve: {
 				location: ['spaces', '$stateParams', function(spaces, $stateParams){
+
 					// get information about the space based on the route params
 					return spaces.getSpace($stateParams);  
 				}],
-				search_results: ['spaces', function(spaces){
+				search_results: ['spaces', '$stateParams', function(spaces, $stateParams){
 					// get search results for the space
-					return spaces.getResults();
+					return spaces.getResults($stateParams);
 				}]
 			}
 		})
@@ -243,7 +244,3 @@ app.filter('shorten', [function() {
 }])
 
 
-// variables in rootScope
-app.run(function($rootScope) {
-    // general variables
-})

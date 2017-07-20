@@ -113,22 +113,21 @@ router.route('/query')
   // return all spaces
   .post(auth.ensureAuthenticated, function(req, res){
 
-    console.log(req.body);
     var tags = req.body.tags; 
     var dates = req.body.dates;
-    
-    /*var query = [
-      'MATCH (s:space)',
-      'OPTIONAL MATCH (s)<-[:FOLLOWS]-(f:user)',
-      'WITH s, collect(ID(f)) as followers',
-      'WITH s, followers', 
-      'OPTIONAL MATCH (s)<-[:CURATES]-(c:user)',
-      'WITH s, followers, collect(ID(c)) as curators',
-      'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, curators: curators, followers: followers }'
-    ].join('\n'); 
+
+    var query =  "WITH {tagsParam} as tags \
+                  MATCH (c:contribution)-[:TAGGED]->(t:tag)\
+                  WHERE ID(t) in tags\
+                  WITH c, count(*) as c1, size(tags) as c2\
+                  WHERE c1 = c2 \
+                  MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0 \
+                  WITH c, collect ({ id: ID(t), tagged_by: tg.by_users }) as tags\
+                  RETURN ID(c) as id, c.createdBy as created_by, c.dateCreated as created_at, c.contentType as contentType, c.title as title, c.rating as rating, c.views as views, tags as tags"
 
     var params = {
-      userIdParam : parseInt(req.user.id)
+      tagsParam : tags,
+      datesParam : dates
     }
 
     db.query(query, params, function(error, result){
@@ -138,12 +137,9 @@ router.route('/query')
       else{
         res.send(result);
       }
-    });*/
-
-    res.send("Returns all the posts");
-
-  })
-
+    });
+  
+  });
 
 router.route('/questions')
   .get(auth.ensureAuthenticated, function(req, res){
@@ -759,6 +755,84 @@ router.route('/:contributionId/bookmark')
         
         // sending the contribution data
         res.send(result[0]);
+      
+      }
+    })
+  })
+  
+  .delete(auth.ensureAuthenticated, function(req, res) {
+
+    var query = [
+      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+      'MATCH (u:user) WHERE ID(u)={userIdParam}',
+      'MATCH p=(u)-[r:BOOKMARKED]->(c)',
+      'DELETE r',
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+      contributionIdParam: parseInt(req.params.contributionId),
+    };
+
+    db.query(query, params, function(error,result){
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log('[SUCCESS] Successfully deleted bookmark for contribution id ' + req.params.contributionId);
+        
+        // broadcasting message
+        
+        // sending the contribution data
+        res.send(result[0]);
+      
+      }
+    })
+
+  });
+
+
+// route: /api/contributions/:contributionId/tag
+router.route('/:contributionId/tag')
+  .post(auth.ensureAuthenticated, function(req, res) {
+
+    //  for each tag in the array
+    //  if contribution tag relationship exists, 
+    //      add user_id to user_array
+    //  else
+    //      create relationship 
+    //      add user_id to user_array
+    //         
+
+    var query = [
+      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+      'MATCH (t:tag) WHERE ID(t) in {tagsParam}',
+      'MERGE (c)-[td:TAGGED]->(t)',
+      'ON MATCH',
+      'SET td.by_users = td.by_users + {userIdParam}',
+      'ON CREATE',
+      'SET td.by_users=[{userIdParam}]',
+      'WITH c',
+      'MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0',
+      'WITH c, COLLECT(distinct { id: ID(t), tagged_by: tg.by_users }) as tags',
+      'RETURN tags'
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+      contributionIdParam: parseInt(req.params.contributionId),
+      tagsParam: req.body.tags
+    };
+
+    db.query(query, params, function(error,result){
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log('[SUCCESS] Successfully tagged contribution id ' + req.params.contributionId);
+        
+        // sending the contribution data
+        res.send(result);
       
       }
     })
