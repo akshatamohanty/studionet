@@ -19,6 +19,45 @@ angular.module('studionet')
 		return o;
 	}])
 
+	//
+	//	functions to help with the navigation
+	//
+	.factory('routerUtils', ['$state', 'spaces', function($state, spaces){
+
+		var fn = {};
+
+		fn.goToSpace = function(space_id){
+			var space = spaces.spacesHash[space_id];
+			$state.go('home.search-results', {tags: space.tags.join(","), dates: space.timed.join(",") });
+		}
+
+		fn.goToSpaceWithArgs = function(tags, dates){
+
+			dates = dates.map(function(dateString){ return new Date(dateString).getTime() });
+			console.log(dates);
+
+			$state.go('home.search-results', {tags: tags.join(","), dates: dates.join(",") });
+		}
+
+		fn.goToProfile = function(url){
+			$state.go('home.profile-details', { 'referer':'home.homepage', 'address': 1});
+		}
+
+		fn.goToNode = function(node_id){
+			
+			if(node_id == null)
+				return;
+
+			$state.go('home.node-details', { 'referer':'home.homepage', 'address': node_id })
+		};
+
+		fn.goToSearch = function(){
+			$state.go('home.search');
+		};
+
+		return fn;
+	}])
+
 	.factory('contributions', ['$http', '$filter', 'profile', function($http, $filter, profile){
 
 		var o = {
@@ -44,6 +83,10 @@ angular.module('studionet')
 		};
 
 		o.getContribution = function(contribution_id){
+
+			if(contribution_id == null){
+				console.log("Contribution Id is null");
+			}
 
 			return $http.get('/api/contributions/' + contribution_id).success(function(res){
 
@@ -308,6 +351,21 @@ angular.module('studionet')
 			});
 		};
 
+		o.createTag = function(new_tag){
+			
+			// post request to create the tag
+			return $http.post('/api/tags', {tags: new_tag}).success(function(data){
+				
+				console.log(data);
+
+				o.getAll();
+				
+			}).error(function(err) {
+				console.log(err);
+			});;
+			
+		}
+
 		return o;
 	}])
 
@@ -456,7 +514,7 @@ angular.module('studionet')
 			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
 			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];
 
-			var location = { status: -1, tags: tArray };
+			var location = { status: -1, tags: tArray, dates: dArray };
 
 			if( tArray.length == 0 && dArray.length == 0){
 				console.log("No parameters found; Return null location");
@@ -654,9 +712,7 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-
-								console.log("Results", data);
-								return data;
+							return data;
 						});
 		}
 

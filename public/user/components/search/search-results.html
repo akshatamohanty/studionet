@@ -26,8 +26,16 @@
         </md-card-title>
       </md-card>
 
+      <md-card class='empty-card' md-theme="default" ng-if='expired == true'>
+        <md-card-title layout-align='center'>
+          <md-card-title-text>
+              <span class="md-headline">Space Locked!</span>
+          </md-card-title-text>
+        </md-card-title>
+      </md-card>
+
       <!-- the results when results exist-->
-      <md-card class='pointer' ng-repeat='post in posts' dnd-draggable='post'> 
+      <md-card class='pointer' ng-repeat='post in posts' dnd-draggable='post' ng-click='goToNode(post.id)'> 
         <md-card-title>
           <md-card-title-text>
             <span class="md-headline">{{post.title}}</span>
@@ -49,30 +57,48 @@
   <!-- Section : About the Space -->
   <div flex-gt-xs="20" layout-align="top">
 
-    <h3 class='md-caption'>Space <span ng-if='expired==true'>(Closed)</span> </h3>
-    <h1 class='md-title'>{{space_name}}</h1>
-    <md-button aria-label="menu" class="md-raised md-warn">
-      <md-tooltip md-direction="top" md-visible="tooltipVisible">--action--</md-tooltip>
-    </md-button>
+    <!-- the space is not saved yet -->
+    <div ng-if='status==0'>
+        <h3 class='md-caption'>
+            <span ng-if='_dates.length == 0'>Search Results</span>
+            <span ng-if='_dates.length > 0'>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
+        </h3>
+        <h1 class='md-title'>{{space_name}}</h1>
+        <md-button aria-label="menu" class="md-raised md-warn">
+          Save
+        </md-button>
+    </div>
 
-    <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
-    <div style='font-size: 12px;'>{{about_space}}</div>
-    
+    <!-- the space is saved yet -->
     <div ng-if='status > 0'>
+      <h3 class='md-caption'>
+          <span ng-if='_dates.length > 0' ng-class=' expired ? "{color: red}" : "" '>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
+      </h3>
+      <h1 class='md-title'>{{space_name}}</h1>
+      <md-button aria-label="menu" class="md-raised md-warn">
+        Something
+        <md-tooltip md-direction="top" md-visible="tooltipVisible">--action--</md-tooltip>
+      </md-button>
 
-      <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
-      <div style='font-size: 12px;'><img src='{{users[founder].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+      <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
+      <div style='font-size: 12px;'>{{about_space}}</div>
       
-      <div ng-if='curators.length > 0'>
-        <h6 class='md-caption' style='margin-bottom: 0px;'>Curators</h6>
-        <div><img ng-repeat='curator in curators' src='{{users[curator].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
-      </div>
+      <div>
 
-      <div ng-if='followers.length > 0'>
-        <h6 class='md-caption' style='margin-bottom: 0px;'>Followers</h6>
-        <div><img ng-repeat='follower in followers' src='{{users[follower].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
-      </div>
+        <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
+        <div style='font-size: 12px;'><img src='{{users[founder].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+        
+        <div ng-if='curators.length > 0'>
+          <h6 class='md-caption' style='margin-bottom: 0px;'>Curators</h6>
+          <div><img ng-repeat='curator in curators' src='{{users[curator].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+        </div>
 
+        <div ng-if='followers.length > 0'>
+          <h6 class='md-caption' style='margin-bottom: 0px;'>Followers</h6>
+          <div><img ng-repeat='follower in followers' src='{{users[follower].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
+        </div>
+
+      </div>
     </div>
 
     <h6 class='md-caption' style='margin-bottom: 0px;'>Leaders</h6>

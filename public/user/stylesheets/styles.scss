@@ -57,7 +57,7 @@ a:hover{
   }
 
 }
-
+/* 
 md-chips-wrap{
   background-color: #E8E8E8;
 }
@@ -72,6 +72,10 @@ md-chips-wrap{
 
 .md-chips .md-chip-input-container input{
   width: 100%;
+} */
+
+.md-datepicker-input-container{
+  display: none;
 }
 
 md-content{
@@ -83,3 +87,4 @@ md-content{
 @import 'homepage';
 @import 'spaces';
 @import 'newnode';
+@import 'chips';

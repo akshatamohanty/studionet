@@ -7,6 +7,7 @@ var db = require('seraph')({
 	pass: process.env.DB_PASS
 });
 
+
 // route: /api/tags/
 router.route('/')
 
@@ -32,6 +33,38 @@ router.route('/')
 		});
 
 	})
+
+	// 
+	// create a new tag
+	// 
+	.post(auth.ensureAuthenticated, function(req, res){
+
+		// return only name and id associated with each tag
+		var query = [
+			'MATCH (u:user) WHERE ID(u)={userIdParam}',
+			'WITH u',
+			'MERGE (t:tag {name: {tagnameParam} })',
+			'ON CREATE SET t.name={tagnameParam}, t.createdAt={dateCreatedParam}, t.createdBy = {userIdParam}',
+			'MERGE (t)<-[td:CREATED]-(u)',
+			'ON CREATE SET td.createdAt = {dateCreatedParam}',
+			'RETURN t'
+		].join('\n');
+
+		var params = {
+			tagnameParam : req.body.tags,
+			userIdParam: parseInt(req.user.id),
+			dateCreatedParam: Date.now()
+		}
+
+		db.query(query, params, function(error, result){
+			if (error)
+				console.log('Error creating tag: ', error);
+			else
+				res.send(result);
+		});
+
+	});
+
 
 
 module.exports = router;

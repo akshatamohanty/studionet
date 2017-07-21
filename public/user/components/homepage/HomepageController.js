@@ -67,7 +67,7 @@ angular.module('studionet')
 
           // gets the space url associated with the tag; 
           // shift this to service
-          $scope.getSpaceURL = spaces.getSpaceURL;
+          
 
 
 

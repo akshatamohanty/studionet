@@ -16,8 +16,37 @@
       </div>
 
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="70">
-        <md-chips ng-model="search.query"  ng-show='searchActive'  readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+      <div show-gt-sm flex="70" ng-controller='CustomInputDemoCtrl as ctrl'>
+        
+        <div layout="row">
+
+          <md-chips flex='70' ng-model="query.tags" md-autocomplete-snap
+                    md-transform-chip="ctrl.transformChip($chip)"
+                    md-require-match="true">
+            
+            <md-autocomplete
+                md-selected-item="ctrl.selectedItem"
+                md-search-text="ctrl.searchText"
+                md-items="item in ctrl.querySearch(ctrl.searchText)"
+                md-item-text="item.name"
+                placeholder="Search for a tag...">
+              <span md-highlight-text="ctrl.searchText" flex>{{item.name}}</span>
+            </md-autocomplete>
+
+            <md-chip-template>
+              <strong>#{{$chip.name}}</strong>
+            </md-chip-template>
+
+          </md-chips>
+
+          <div flex='30'>
+            <md-datepicker ng-model="query.dates[0]"></md-datepicker>
+            <md-datepicker md-min-date="query.dates[0]" ng-model="query.dates[1]" md-placeholder="Enter date"></md-datepicker>
+            <md-button class='raised' ng-click='goToSpaceWithArgs(query)' style='display: inline; color: black' ng-disabled="query.tags.length==0">S</md-button>
+          </div>
+
+        </div>
+      
       </div>
 
 
@@ -107,7 +136,7 @@
                           <a style='float: right' ng-click='ex1=!ex1'>...</a>
                   </div>
                   <div class='folder-notes open'>
-                      <div class='post-box hover' style='font-size: 12px;' ng-repeat='node in user.contributions' ng-click='goToNode(node)' dnd-draggable='node'>{{node.title | shorten }}</div>
+                      <div class='post-box hover' style='font-size: 12px;' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>{{node.title | shorten }}</div>
                   </div>
                 </div>
 
@@ -118,7 +147,7 @@
                 <!-- Shortcuts to user-saved notes -->
                 <div class='folder' ng-repeat="subs in user.curates" dnd-list='subs.my_posts'>
 
-                  <div class='folder-title pointer'>
+                  <div class='folder-title pointer' ng-click='goToSpace(subs.id)'>
                           {{ subs.name }}
                           <a style='float: right'>...</a>
                   </div>

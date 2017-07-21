@@ -116,9 +116,15 @@ router.route('/query')
     var tags = req.body.tags; 
     var dates = req.body.dates;
 
+    // todo - fix this; make it full proof
+    if (dates.length == 0){
+      dates[0] = 978278400000; //Mon Jan 01 2001 00:00:00 GMT+0800 (Malay Peninsula Standard Time)
+      dates[1] = 2524579200000;
+    }
+
     var query =  "WITH {tagsParam} as tags \
                   MATCH (c:contribution)-[:TAGGED]->(t:tag)\
-                  WHERE ID(t) in tags\
+                  WHERE ID(t) in tags and c.dateCreated > {startDateParam} and c.dateCreated < {endDateParam}\
                   WITH c, count(*) as c1, size(tags) as c2\
                   WHERE c1 = c2 \
                   MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0 \
@@ -127,7 +133,8 @@ router.route('/query')
 
     var params = {
       tagsParam : tags,
-      datesParam : dates
+      startDateParam : dates[0],
+      endDateParam: dates[1]
     }
 
     db.query(query, params, function(error, result){

@@ -1,13 +1,13 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile',
-										function($scope, tags, $mdToast, $state, users, profile){
+.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile', 'routerUtils',
+										function($scope, tags, $mdToast, $state, users, profile, routerUtils){
 
 
 	// ui-actions
 	// This state shows the workbench as well as the search bar
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
-
+	
 	// do i need these?
 	var allTags = tags.tagsHash;
 	$scope.users = users.usersHash;
@@ -18,8 +18,9 @@ angular.module('studionet')
 		//todo: display an error message
 		
 
-		//navigate away to the search page
-		$state.go('home.search');
+		//navigate to previous page
+		history.back();
+		
 	}
 
 
@@ -37,6 +38,9 @@ angular.module('studionet')
 
 	// map the data to the page components 
 	var space_tags = $scope.$resolve.location.tags;
+	var space_dates = $scope.$resolve.location.dates;
+	$scope._tags = space_tags;
+	$scope._dates = space_dates;
 
 	$scope.status = $scope.$resolve.location.status;
 	$scope.space_name = $scope.$resolve.location.name;
@@ -99,31 +103,54 @@ angular.module('studionet')
 		if( item.created_by !== profile.user.id ){
 
 			// todo: show dialog
-			
 
 			alert("You can only add your own nodes to spaces");
 			
 		}
 
+		// check if the item is already present in the results 
+		// return if it does
+		for(var i=0; i < $scope.posts.length; i++){
+			if( $scope.posts[i].id == item.id ){
+					var toast = $mdToast.simple()
+						      .textContent('Oops... This post already exists here!')
+						      .position("bottom right")
+
+					$mdToast.show(toast);	
+					return;
+			}
+
+		}
+
 		// tag the node with the tags of the space
-		alert("tagging " + item.id + "with " + space_tags);
-		profile.tagContribution(item.id, space_tags); 
+		profile.tagContribution(item.id, space_tags)
+				.success(function(data){
 
-	    console.log(item);
-		$scope.posts.push(item);
+	   					item.tags = data; 
+
+	   					// refresh the post results
+						$scope.posts.push(item);
+				
+						// if item isn't in the time frame, show failure alert
+						var toast = $mdToast.simple()
+						      .textContent('Successfully added to this space')
+						      .position("bottom right")
+
+						$mdToast.show(toast);
+				})
+				.error(function(){
+
+						var toast = $mdToast.simple()
+						      .textContent('Hmm.... Something went wrong')
+						      .position("bottom right")
+
+						$mdToast.show(toast);
+				
+				}) 
 
 
 
-		// if item isn't in the time frame, show failure alert
-		var toast = $mdToast.simple()
-		      .textContent('Successfully added to this space')
-		      .position("bottom right")
 
-		$mdToast.show(toast).then(function(response) {
-	      if ( response == 'ok' ) {
-	        alert('You clicked the \'UNDO\' action.');
-	      }
-	    });
 
 	}
 

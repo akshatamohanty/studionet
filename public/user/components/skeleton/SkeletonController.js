@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces', '$state',
-                               function($scope, profile, contributions, spaces, $state){
+.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', 
+                               function($scope, profile, contributions, spaces, routerUtils, tags){
 
           $scope.showBench = true;
           $scope.searchActive = false;
@@ -21,19 +21,87 @@ angular.module('studionet')
           // subscribe to changes in user profile
           profile.registerObserverCallback(function(){ console.log("updating user profile"); $scope.user = profile.user; });
 
-          $scope.goTo = function(url){
-            $state.go('home.search-results', { 'referer':'home.homepage', 'tags': url});
-          }
+          $scope.goToSpace = routerUtils.goToSpace;
+          $scope.goToProfile = routerUtils.goToProfile;
+          $scope.goToNode = routerUtils.goToNode;
+          $scope.goToSearch = routerUtils.goToSearch;
+          $scope.getSpaceURL = spaces.getSpaceURL;
 
-          $scope.goToProfile = function(url){
-            $state.go('home.profile-details', { 'referer':'home.homepage', 'address': 1});
-          }
+          $scope.goToSpaceWithArgs = function(query){
 
-          $scope.goToNode = function(node){
-            $state.go('home.node-details', { 'referer':'home.homepage', 'address': node.id })
-          };
+            console.log(query);
+
+            // send only the tag ids 
+            routerUtils.goToSpaceWithArgs( query.tags.map(function(t){ return t.id }), query.dates );
+          } 
+
+          // search functionality
+          $scope.query = {tags: [], dates: []};
+
+          $scope.createTag = tags.createTag;
 
 }]);
+
+
+angular.module('studionet')
+      .controller('CustomInputDemoCtrl', function DemoCtrl ($timeout, $q, tags) {
+
+          var self = this;
+
+          self.readonly = false;
+          self.selectedItem = null;
+          self.searchText = null;
+          self.querySearch = querySearch;
+          self.vegetables = loadVegetables();
+          self.selectedVegetables = [];
+          self.numberChips = [];
+          self.numberChips2 = [];
+          self.numberBuffer = '';
+          self.autocompleteDemoRequireMatch = true;
+          self.transformChip = transformChip;
+
+          /**
+           * Return the proper object when the append is called.
+           */
+          function transformChip(chip) {
+            // If it is an object, it's already a known chip
+            if (angular.isObject(chip)) {
+              return chip;
+            }
+
+            // Otherwise, create a new one
+            return { name: chip, type: 'new' }
+          }
+
+          /**
+           * Search for vegetables.
+           */
+          function querySearch (query) {
+            var results = query ? self.vegetables.filter(createFilterFor(query)) : [];
+            return results;
+          }
+
+          /**
+           * Create filter function for a query string
+           */
+          function createFilterFor(query) {
+            var lowercaseQuery = angular.lowercase(query);
+
+            return function filterFn(vegetable) {
+              return (vegetable._lowername.indexOf(lowercaseQuery) === 0);
+            };
+
+          }
+
+          function loadVegetables() {
+            var veggies = tags.tags;
+
+            return veggies.map(function (veg) {
+              veg._lowername = veg.name.toLowerCase();
+              return veg;
+            });
+          }
+});
 
 
 // Controls for the new node
