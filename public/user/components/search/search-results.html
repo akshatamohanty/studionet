@@ -64,21 +64,20 @@
             <span ng-if='_dates.length > 0'>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
         </h3>
         <h1 class='md-title'>{{space_name}}</h1>
-        <md-button aria-label="menu" class="md-raised md-warn">
+        <md-button aria-label="menu" class="md-raised md-warn" ng-click='saveSpace()'>
           Save
         </md-button>
     </div>
 
-    <!-- the space is saved yet -->
+    <!-- the space is saved -->
     <div ng-if='status > 0'>
       <h3 class='md-caption'>
           <span ng-if='_dates.length > 0' ng-class=' expired ? "{color: red}" : "" '>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
       </h3>
       <h1 class='md-title'>{{space_name}}</h1>
-      <md-button aria-label="menu" class="md-raised md-warn">
-        Something
-        <md-tooltip md-direction="top" md-visible="tooltipVisible">--action--</md-tooltip>
-      </md-button>
+      
+      <!-- button to fork -->
+      <!-- button to subscribe -->
 
       <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
       <div style='font-size: 12px;'>{{about_space}}</div>

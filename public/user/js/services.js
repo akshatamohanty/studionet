@@ -612,6 +612,23 @@ angular.module('studionet')
 
 		}
 
+		o.createSpace = function(tags, dates){
+
+			console.log("im here", tags, dates);
+
+			return $http({
+					  method  : 'POST',
+					  url     : '/api/spaces/',
+					  data    : { tags: tags, dates: dates },  
+					  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+					 })
+					.success(function(data) {
+
+							console.log("Results", data);
+							return data;
+					});
+		}
+
 		return o;
 
 

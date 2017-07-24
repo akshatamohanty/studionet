@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile', 'routerUtils',
-										function($scope, tags, $mdToast, $state, users, profile, routerUtils){
+.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile', 'routerUtils', 'spaces',
+										function($scope, tags, $mdToast, $state, users, profile, routerUtils, spaces){
 
 
 	// ui-actions
@@ -64,6 +64,10 @@ angular.module('studionet')
 
 	}
 
+	$scope.saveSpace = function(){
+		spaces.createSpace(space_tags, space_dates);
+	}
+
 	$scope.makeFork = function(){
 		
 		profile.bookmarkPost()
@@ -71,14 +75,11 @@ angular.module('studionet')
 
 	}
 
-	/*
-	 *  Dealing with the space results
-	 *
-	 *
-	 *
-	 *
-	 * 
-	 */
+
+	// Dealing with search results
+	// 
+	// 
+	// 
 	
 	if( $scope.$resolve.search_results.length == 0 ){
 
@@ -89,8 +90,14 @@ angular.module('studionet')
 	$scope.posts = $scope.$resolve.search_results.data; 
 
 	// compute the suggested tags
+	// 
+	// 
+	// 
 
 	// compute leaders based on the posts 
+	// 
+	// 
+	// 
 	$scope.leaders = [
 		{name: "Harry Potter", handle: "@harry"},
 		{name: "Draco Malfoy", handle: "@malfoy"},
@@ -147,10 +154,6 @@ angular.module('studionet')
 						$mdToast.show(toast);
 				
 				}) 
-
-
-
-
 
 	}
 
