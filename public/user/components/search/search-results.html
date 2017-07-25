@@ -3,21 +3,21 @@
   <!-- Section : Displaying the search results -->
   <div flex-gt-xs="80" layout="column" layout-align="top" style='overflow: auto;'>
     
+    <!-- suggestions to add the next tags -->
     <div>
       <h3 class='md-caption'>Suggested Tags</h3>
       <div layout="row">
-        <md-chips layout='row' ng-repeat="item in ['architecture', 'design-ideas', 'roark', 'design']">
+        <md-chips layout='row' ng-repeat="item in suggested_tags">
           <md-chip class="pointer" style='padding: 10px; border-radius:5px;'>{{item}}</md-chip>
         </md-chips>
       </div>
     </div>
 
-    <md-divider></md-divider>
 
     <!-- results-->
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
-      <!-- adding a new node in this space -->
+      <!-- adding a new node in this space; hidden if timed space is expired -->
       <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)' ng-if='expired == false'>
         <md-card-title layout-align='center'>
           <md-card-title-text>
@@ -26,10 +26,11 @@
         </md-card-title>
       </md-card>
 
+      <!-- expired message container -->
       <md-card class='empty-card' md-theme="default" ng-if='expired == true'>
         <md-card-title layout-align='center'>
           <md-card-title-text>
-              <span class="md-headline">Space Locked!</span>
+              <span class="md-headline">Expired</span>
           </md-card-title-text>
         </md-card-title>
       </md-card>
@@ -55,54 +56,9 @@
   </div>
 
   <!-- Section : About the Space -->
-  <div flex-gt-xs="20" layout-align="top">
-
-    <!-- the space is not saved yet -->
-    <div ng-if='status==0'>
-        <h3 class='md-caption'>
-            <span ng-if='_dates.length == 0'>Search Results</span>
-            <span ng-if='_dates.length > 0'>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
-        </h3>
-        <h1 class='md-title'>{{space_name}}</h1>
-        <md-button aria-label="menu" class="md-raised md-warn" ng-click='saveSpace()'>
-          Save
-        </md-button>
-    </div>
-
-    <!-- the space is saved -->
-    <div ng-if='status > 0'>
-      <h3 class='md-caption'>
-          <span ng-if='_dates.length > 0' ng-class=' expired ? "{color: red}" : "" '>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
-      </h3>
-      <h1 class='md-title'>{{space_name}}</h1>
-      
-      <!-- button to fork -->
-      <!-- button to subscribe -->
-
-      <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
-      <div style='font-size: 12px;'>{{about_space}}</div>
-      
-      <div>
-
-        <h6 class='md-caption' style='margin-bottom: 0px;'>Founder</h6>
-        <div style='font-size: 12px;'><img src='{{users[founder].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
-        
-        <div ng-if='curators.length > 0'>
-          <h6 class='md-caption' style='margin-bottom: 0px;'>Curators</h6>
-          <div><img ng-repeat='curator in curators' src='{{users[curator].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
-        </div>
-
-        <div ng-if='followers.length > 0'>
-          <h6 class='md-caption' style='margin-bottom: 0px;'>Followers</h6>
-          <div><img ng-repeat='follower in followers' src='{{users[follower].avatar}}' style='border-radius: 50%; display: inline; margin-right: 2px; margin-top: 5px; width: 30px; height: 30px'></div>
-        </div>
-
-      </div>
-    </div>
-
-    <h6 class='md-caption' style='margin-bottom: 0px;'>Leaders</h6>
-    <ul style='padding-left: 10px;'><li ng-repeat='leader in leaders' style='font-size: 12px;'><a ui-sref='home.profile-details({"address": leader.handle})'>{{leader.name}}</a></li></ul>
-
+  <div flex-gt-xs="20" layout-align="top">  
+    <ng-include src="'components/search/space_sidebar.html'"></ng-include>
   </div>
+
 
 </div>

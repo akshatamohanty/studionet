@@ -1,17 +1,8 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', 'tags', '$mdToast', '$state', 'users', 'profile', 'routerUtils', 'spaces',
-										function($scope, tags, $mdToast, $state, users, profile, routerUtils, spaces){
+.controller('SearchResultsController', ['$scope', '$mdToast', '$mdDialog', 'routerUtils', 'tags', 'users', 'profile', 'spaces',
+										function($scope, $mdToast, $mdDialog, routerUtils, tags, users, profile, spaces ){
 
-
-	// ui-actions
-	// This state shows the workbench as well as the search bar
-	$scope.$emit('showBench');
-	$scope.$emit('showSearch');
 	
-	// do i need these?
-	var allTags = tags.tagsHash;
-	$scope.users = users.usersHash;
-
 	// error handling - if URL is not valid, return to search page
 	if( $scope.$resolve.location.status == -1 ){
 
@@ -24,31 +15,39 @@ angular.module('studionet')
 	}
 
 
-	/*
-	 *		$scope.$resolve.location - contains data about the current space
-	 *		location.status - Gives the status based on the following cases
-	 *		Case: URL is invalid  | -1
-	 *		Case: URL is valid but there is no space associated with it | 0
-	 * 		Case: URL is valid and there is a space associated with it, but the user has not followed / curated it | 1
-	 * 		Case: URL is valid and there is a space associated with it, the user has followed it | 2
-	 * 		Case: URL is valid and there is a space associated with it, the user has curated it | 3
-	 *   	Case: URL is valid and there is a space associated with it, the user has curated as well as followed it | 4 
-	 * 			
-	 */
+	// -------------- 
+	// ui-actions - This state shows the workbench as well as the search bar
+	$scope.$emit('showBench');
+	$scope.$emit('showSearch');
 
-	// map the data to the page components 
-	var space_tags = $scope.$resolve.location.tags;
-	var space_dates = $scope.$resolve.location.dates;
-	$scope._tags = space_tags;
-	$scope._dates = space_dates;
+	
+	// --------------- general functions
+	$scope.getTagString = function(id){ return tags.tagsHash[id].name };
+	$scope.getAvatar = function(user_id){ return "url(" + users.usersHash[user_id].avatar + ")"};
 
+
+	// ----------------- location data mapping
+
+	//	$scope.$resolve.location - contains data about the current space
+	//	location.status - Gives the status based on the following cases
+	//  Case: URL is invalid  | -1
+	//	Case: URL is valid but there is no space associated with it | 0
+	// 	Case: URL is valid and there is a space associated with it, but the user has not followed / curated it | 1
+	//  Case: URL is valid and there is a space associated with it, the user has followed it | 2
+	// 	Case: URL is valid and there is a space associated with it, the user has curated it | 3
+	//  Case: URL is valid and there is a space associated with it, the user has curated as well as followed it | 4 
+	//
+	// 	map the data to the page components 
+	
+	$scope._tags = $scope.$resolve.location.tags;
+	$scope._dates = $scope.$resolve.location.dates;
 	$scope.status = $scope.$resolve.location.status;
 	$scope.space_name = $scope.$resolve.location.name;
 	$scope.about_space = $scope.$resolve.location.about;
 	$scope.expired = false;
 
 	var space = $scope.$resolve.location.details;
-
+	
 	// map these only if a space exists 
 	if($scope.status > 1){
 		// person who first saved this space
@@ -64,23 +63,8 @@ angular.module('studionet')
 
 	}
 
-	$scope.saveSpace = function(){
-		spaces.createSpace(space_tags, space_dates);
-	}
+	// ------------- Dealing with search results
 
-	$scope.makeFork = function(){
-		
-		profile.bookmarkPost()
-	
-
-	}
-
-
-	// Dealing with search results
-	// 
-	// 
-	// 
-	
 	if( $scope.$resolve.search_results.length == 0 ){
 
 		// todo: display a no results message
@@ -92,18 +76,18 @@ angular.module('studionet')
 	// compute the suggested tags
 	// 
 	// 
-	// 
 
 	// compute leaders based on the posts 
 	// 
 	// 
-	// 
-	$scope.leaders = [
-		{name: "Harry Potter", handle: "@harry"},
-		{name: "Draco Malfoy", handle: "@malfoy"},
-		{name: "Ron Weasley", handle: "@weasley"}
-	]
 
+
+
+	// ------------- location based functions
+
+	//
+	//	tags a contribution with the tags of the space
+	//
 	$scope.addNodeToSpace = function(item){
 
 		// todo: check if this item was created by the user
@@ -130,7 +114,7 @@ angular.module('studionet')
 		}
 
 		// tag the node with the tags of the space
-		profile.tagContribution(item.id, space_tags)
+		profile.tagContribution(item.id, $scope._tags)
 				.success(function(data){
 
 	   					item.tags = data; 
@@ -155,6 +139,46 @@ angular.module('studionet')
 				
 				}) 
 
+	}
+
+	$scope.fork = function(){
+
+	    // Appending dialog to document.body to cover sidenav in docs app
+	    var confirm = $mdDialog.prompt()
+	      .title('What do you want to name your collection?')
+	      //.textContent('Bowser is a common name.')
+	      .placeholder('text')
+	      .ariaLabel('text')
+	      .initialValue( $scope._tags.map(function(t){ return "#" + $scope.getTagString(t) }).join(" ") )
+	      .ok('Create')
+	      .cancel('Cancel');
+
+	    $mdDialog.show(confirm).then(function(result) {
+	      
+	      // create the space if space doesn't exist
+
+	      // fork it for the user
+	      spaces.createSpace($scope._tags, $scope._dates).then(function(){
+
+	      		// fork the space
+
+		      }, function(){
+
+		      		// todo: show error alert
+
+		      })
+
+	    
+	    }, function() {
+	      
+	    	//$scope.status = 'You didn\'t name your dog.';
+	    
+	    });
+
+	}
+
+	$scope.subscribe = function(){
+		alert("subscription doens't work yet")
 	}
 
 }]);

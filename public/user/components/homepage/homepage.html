@@ -39,7 +39,7 @@
     <!-- subscriptions -->
     <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
       <h3 class='container-heading'>
-          All Subscriptions
+          Your Subscriptions
           <span class='md-caption' style='float: right' ng-click='subs_expand=!subs_expand'>
             {{ subs_expand ? "Less" : "More"}}
           </span>
@@ -47,6 +47,30 @@
       <md-divider md-inset></md-divider>
       <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
          <div class='shortcut-div' ng-repeat='space in user.follows'>
+            <a ui-sref={{getSpaceURL(space.id)}}>
+              <div style='margin: 12px; height: auto;'> 
+                <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
+                <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name}}</div>
+                <div style='font-size: 10px;margin: 0px;'>
+                    <span ng-repeat="tag in spaces[space.id].tags">#{{tags[tag].name | shorten }} </span>
+                </div>
+              </div> 
+            </a>
+         </div>
+      </div>
+    </md-card>
+
+    <!-- forks -->
+    <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
+      <h3 class='container-heading'>
+          Your forks
+          <span class='md-caption' style='float: right' ng-click='subs_expand=!subs_expand'>
+            {{ subs_expand ? "Less" : "More"}}
+          </span>
+      </h3>
+      <md-divider md-inset></md-divider>
+      <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
+         <div class='shortcut-div' ng-repeat='space in user.forked'>
             <a ui-sref={{getSpaceURL(space.id)}}>
               <div style='margin: 12px; height: auto;'> 
                 <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>

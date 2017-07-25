@@ -19,7 +19,7 @@ router.route('/')
       'OPTIONAL MATCH (s)<-[:FOLLOWS]-(f:user)',
       'WITH s, collect(ID(f)) as followers',
       'WITH s, followers', 
-      'OPTIONAL MATCH (s)<-[:CURATES]-(c:user)',
+      'OPTIONAL MATCH (s)<-[:FORKED]-(c:user)',
       'WITH s, followers, collect(ID(c)) as curators',
       'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, curators: curators, followers: followers }'
     ].join('\n'); 
@@ -44,8 +44,12 @@ router.route('/')
   // check that the user creating this space hasn't created more than 10 spaces today
   .post(auth.ensureAuthenticated, function(req, res){
 
-      console.log(req.body);
+      // sort the tags
+      var _tags = req.body.tags.map(function(t){
+        return parseInt(t);
+      }).sort(function(a,b){ return a > b });
 
+      console.log(_tags);
 
       // Check for existing spaces with same tag connections and timed value
       // If space exists, return without doing anything
@@ -53,35 +57,100 @@ router.route('/')
 
       //  tags: [ 3828, 4154 ],
       //  dates: [ 1497369600000, 1498579200000 ]
-      var query = "MATCH (s:space)-[c:CONTAINS]->(t:tag) WHERE s.timed={datesParam}\
-        WITH s, count(c) as total_tags\
-        WITH s, total_tags\
-        MATCH (s)-[:CONTAINS]->(mg:tag) WHERE ID(mg) in {tagsParam}\
-        WITH s, total_tags, COUNT(mg) as matched_tags\
-        RETURN \
-        CASE COUNT(s)\
-        WHEN 0\
-        THEN CREATE (s:space {created_by: {userIdParam}, created_at: {now}, tags: {tagsParam}, timed: {datesParam}})-[:CONTAINS]->(t:tag) WHERE ID(t) in {tagsParam}\
-        ELSE 'already exists' END as results";
+      //  todo: the relationship between the creator and space is created even if it already exists
+      var query = [ "MATCH (u:user) WHERE ID(u) = {userIdParam}  ",
+                  "WITH u ",
+                  "MERGE (s:space {timed: {datesParam}, tags: {tagsParam} }) ",
+                  "ON CREATE SET s.created_by=0, s.created_at=timestamp()  ",
+                  "WITH s, u ",
+                  "UNWIND {tagsParam} as tag_id ",
+                  "MATCH (t:tag) WHERE ID(t)=tag_id ",
+                  "MERGE (s)-[:CONTAINS]->(t) ",
+                  "WITH s, u ",
+                  "MERGE (u)-[:CREATED {time: timestamp()}]-(s) "  ,
+                  "RETURN s" ].join(" ");
 
       var params = {
-        tagsParam : req.body.tags,
+        tagsParam : _tags,
         datesParam : req.body.dates,
         userIdParam : parseInt(req.user.id),
-        now: new Date()
       }
 
-      /*db.query(query, params, function(error, result){
+      db.query(query, params, function(error, result){
         if (error){
           console.log('Error retrieving all spaces: ', error);
         }
         else{
           res.send(result);
         }
-      });*/
+      });
+
+  });
+
+/*// route: /api/spaces/:spaceId
+router.route('/:spaceId/fork')
+
+  // return all spaces
+  .get(auth.ensureAuthenticated, function(req, res){
+
+      var query = [ 
+                    "MATCH (u:user) WHERE ID(u) = {userIdParam}",
+                    "WITH u",
+                    "MATCH (s:space) WHERE ID(s) = {spaceIdParam}",
+                    "MERGE (u)-[f:FORKED]->(s)",
+                    "ON CREATE SET f.name={nameParam}, f.time=timestamp()",
+                    "RETURN s" 
+                  ].join(" ");
+
+      var params = {
+        nameParam: req.body.name,
+        spaceIdParam : req.query.spaceId,
+        userIdParam : parseInt(req.user.id),
+      }
+
+      db.query(query, params, function(error, result){
+        if (error){
+          console.log('Error forking the space: ', error);
+        }
+        else{
+          res.send(result);
+        }
+      });
+      
 
   });
 
 
+// route: /api/spaces/:spaceId
+router.route('/:spaceId/subscribe')
+
+  // return all spaces
+  .get(auth.ensureAuthenticated, function(req, res){
+
+      var query = [ 
+                    "MATCH (u:user) WHERE ID(u) = {userIdParam}",
+                    "WITH u",
+                    "MATCH (s:space) WHERE ID(s) = {spaceIdParam}",
+                    "MERGE (u)-[f:FOLLOWS]->(s)",
+                    "ON CREATE SET f.name={nameParam}, f.time=timestamp()",
+                    "RETURN s" 
+                  ].join(" ");
+
+      var params = {
+        nameParam: req.body.name,
+        spaceIdParam : req.query.spaceId,
+        userIdParam : parseInt(req.user.id),
+      }
+
+      db.query(query, params, function(error, result){
+        if (error){
+          console.log('Error forking the space: ', error);
+        }
+        else{
+          res.send(result);
+        }
+      });
+    
+  });*/
 
 module.exports = router;

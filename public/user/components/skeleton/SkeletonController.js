@@ -42,7 +42,7 @@ angular.module('studionet')
 
 }]);
 
-
+// search bar
 angular.module('studionet')
       .controller('CustomInputDemoCtrl', function DemoCtrl ($timeout, $q, tags) {
 
@@ -104,7 +104,7 @@ angular.module('studionet')
 });
 
 
-// Controls for the new node
+// Controls for the new node button
 angular.module('studionet')
   .controller('FabCtrl', function($scope, $mdDialog, $timeout) {
     var self = this;

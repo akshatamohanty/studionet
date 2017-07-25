@@ -72,12 +72,16 @@
       </div>
 
     </div>
+
   </md-toolbar>
 
+
+  <!-- main body container -->
   <div id='app-body' layout="row" layout-fill>
 
       <!-- workbench -->
       <div id='workbench-container' ng-class='showBench?"expand":"compress"'>
+
           <div id='workbench' ng-controller="FabCtrl as demo" layout='column' layout-fill>
 
               <!-- New Node Creation -->
@@ -145,7 +149,7 @@
                 <div class='text-center'> Forks </div>
 
                 <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.curates" dnd-list='subs.my_posts'>
+                <div class='folder' ng-repeat="subs in user.forked" dnd-list='subs.my_posts'>
 
                   <div class='folder-title pointer' ng-click='goToSpace(subs.id)'>
                           {{ subs.name }}
@@ -153,7 +157,7 @@
                   </div>
                 
                   <div class='folder-notes open'>
-                      <div class='post-box hover' ng-repeat='node in [2, 3, 4, 5]' ng-click='goToNode(node)'>
+                      <div class='post-box hover' ng-repeat='node in subs.posts' ng-click='goToNode(node)'>
                           <div class='title' style='font-size: 12px;'>{{ node }}</div>
                       </div>
                   </div>

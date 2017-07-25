@@ -34,7 +34,6 @@ angular.module('studionet')
 		fn.goToSpaceWithArgs = function(tags, dates){
 
 			dates = dates.map(function(dateString){ return new Date(dateString).getTime() });
-			console.log(dates);
 
 			$state.go('home.search-results', {tags: tags.join(","), dates: dates.join(",") });
 		}
@@ -534,8 +533,8 @@ angular.module('studionet')
 			// URL is not invalid
 			location.status = 0;
 			location.id = undefined;
-			location.name =  tArray.map(function(t_id){ return "#" + tags.tagsHash[t_id].name}).join(" ");
-			location.about = "This space is not forked by anyone yet."
+			location.name =  "...";
+			location.about = "This space hasn't been saved by anyone yet."
 
 			// check if such a space exists
 			for (var i=0; i < o.spaces.length; i++){
@@ -552,7 +551,7 @@ angular.module('studionet')
 					location.id = space.id;
 
 					// assign a name to the location
-					location.name = "<un-named>";
+					location.name = "...";
 
 					// assign a status
 					location.about = "You have not saved or followed this space.";
@@ -605,7 +604,6 @@ angular.module('studionet')
 						 })
 						.success(function(data) {
 
-								console.log("Results", data);
 								return data;
 						});
 
@@ -614,17 +612,13 @@ angular.module('studionet')
 
 		o.createSpace = function(tags, dates){
 
-			console.log("im here", tags, dates);
-
-			return $http({
-					  method  : 'POST',
-					  url     : '/api/spaces/',
-					  data    : { tags: tags, dates: dates },  
-					  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
-					 })
-					.success(function(data) {
+			return $http.post('/api/spaces', { tags: tags, dates: dates } ).success(function(data){ 
 
 							console.log("Results", data);
+
+							// refresh the spaces
+							o.getAll();
+
 							return data;
 					});
 		}

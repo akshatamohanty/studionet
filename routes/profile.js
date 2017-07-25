@@ -22,8 +22,8 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
     'WITH u',
     'OPTIONAL MATCH (u)-[f:FOLLOWS]->(s:space)',
     'WITH collect({id: id(s), name: f.name}) as follows, u',
-    'OPTIONAL MATCH (u)-[c:CURATES]->(s:space)',
-    'WITH follows, collect({id: id(s), name: c.name}) as spaces, u',
+    'OPTIONAL MATCH (u)-[c:FORKED]->(s:space)',
+    'WITH follows, collect({id: id(s), name: c.name, posts: c.posts}) as spaces, u',
     //'OPTIONAL MATCH p1=(g:group)-[r:MEMBER]->(u)',
     //'WITH collect({id: id(g), role: r.role, joinedOn: r.joinedOn}) as groups, u',
     'OPTIONAL MATCH p2=(c:contribution)<-[r1:CREATED]-(u)',
@@ -45,7 +45,7 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
               id: id(u),\
               contributions: contributions,\
               follows: follows,\
-              curates: spaces\
+              forked: spaces\
     }'
   ].join('\n');
 
