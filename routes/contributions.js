@@ -805,7 +805,7 @@ router.route('/:contributionId/tag')
 
     //  for each tag in the array
     //  if contribution tag relationship exists, 
-    //      add user_id to user_array
+    //      add user_id to user_array if user doesn't already exist
     //  else
     //      create relationship 
     //      add user_id to user_array
@@ -815,10 +815,13 @@ router.route('/:contributionId/tag')
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
       'MATCH (t:tag) WHERE ID(t) in {tagsParam}',
       'MERGE (c)-[td:TAGGED]->(t)',
-      'ON MATCH',
-      'SET td.by_users = td.by_users + {userIdParam}',
-      'ON CREATE',
-      'SET td.by_users=[{userIdParam}]',
+      'FOREACH(x in CASE WHEN {userIdParam} in td.by_users THEN [] ELSE [1] END | ',
+      '   SET td.by_users = coalesce(td.by_users,[]) + {userIdParam}',
+      ')',
+      //'ON MATCH',
+      //'SET td.by_users = td.by_users + {userIdParam}',
+      //'ON CREATE',
+      //'SET td.by_users=[{userIdParam}]',
       'WITH c',
       'MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0',
       'WITH c, COLLECT(distinct { id: ID(t), tagged_by: tg.by_users }) as tags',

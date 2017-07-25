@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', 
-                               function($scope, profile, contributions, spaces, routerUtils, tags){
+.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags',
+                               function($scope, $mdToast, profile, contributions, spaces, routerUtils, tags){
 
           $scope.showBench = true;
           $scope.searchActive = false;
@@ -41,7 +41,42 @@ angular.module('studionet')
           $scope.createTag = tags.createTag;
 
           $scope.addNodeToFork = function(item, space){
-            console.log(space, item);
+
+              var _tags = $scope.spaces[space.id].tags;
+              var spaceId = $scope.spaces[space.id].id;
+
+              profile.tagContribution(item.id, _tags)
+                      .success(function(data){
+
+                          // add the contribution to the users fork
+                          spaces.addToFork(spaceId, item.id).then(function(){
+                              
+                              // if item isn't in the time frame, show failure alert
+                              var toast = $mdToast.simple()
+                                    .textContent('Successfully added to your fork')
+                                    .position("bottom right")
+
+                              $mdToast.show(toast);
+
+                          }, function(){
+
+                                var toast = $mdToast.simple()
+                                      .textContent('Hmm.... Something went wrong')
+                                      .position("bottom right")
+
+                                $mdToast.show(toast);
+                          });
+                      })
+                      .error(function(){
+
+                          var toast = $mdToast.simple()
+                                .textContent('Hmm.... Something went wrong')
+                                .position("bottom right")
+
+                          $mdToast.show(toast);
+                      
+                      }) 
+
           }
 
 }]);

@@ -634,18 +634,18 @@ angular.module('studionet')
 					});
 		}
 
-		o.addToFork = function(space_id, contribution){
-			console.log("add to fork", o.spacesHash[space_id], contribution);
-			/*return $http({
+		o.addToFork = function(space_id, contribution_id){
+			return $http({
 						  method  : 'POST',
-						  url     : '/api/spaces/' + space_id '/query',
-						  data    : { space_id: space_id, contribution: contribution },  
+						  url     : '/api/spaces/' + space_id + '/add',
+						  data    : { contribution: contribution_id },  
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-
+								console.log("added to fork", data);
+								profile.getUser();
 								return data;
-						});*/
+						});
 
 		}
 

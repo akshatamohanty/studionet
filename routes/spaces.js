@@ -153,4 +153,38 @@ router.route('/:spaceId/subscribe')
     
   });
 
+  // route: /api/spaces/:spaceId
+  router.route('/:spaceId/add')
+
+    // return all spaces
+    .post(auth.ensureAuthenticated, function(req, res){
+        var query = [ 
+                      "MATCH (u:user) WHERE ID(u) = {userIdParam}",
+                      "WITH u",
+                      "MATCH (s:space) WHERE ID(s) = {spaceIdParam}",
+                      "MERGE (u)-[f:FORKED]->(s)",
+                      'FOREACH(x in CASE WHEN {contributionIdParam} in f.posts THEN [] ELSE [1] END | ',
+                      '   SET f.posts = coalesce(f.posts,[]) + {contributionIdParam}',
+                      ')',
+                      "RETURN s" 
+                    ].join(" ");
+
+        var params = {
+          contributionIdParam: parseInt(req.body.contribution),
+          spaceIdParam : parseInt(req.params.spaceId),
+          userIdParam : parseInt(req.user.id),
+        }
+
+        db.query(query, params, function(error, result){
+          if (error){
+            console.log('Error forking the space: ', error);
+          }
+          else{
+            res.send(result);
+          }
+        });
+        
+
+    });
+
 module.exports = router;

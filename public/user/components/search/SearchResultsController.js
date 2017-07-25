@@ -167,7 +167,7 @@ angular.module('studionet')
 			      		var space_id = data.data[0].id;
 
 			      		// fork the space
-			      		spaces.forkSpace({name: result, space: data}).success(function(){
+			      		spaces.forkSpace({name: result, space: space_id}).success(function(){
 			      			var toast = $mdToast.simple()
 						      .textContent('Successfully forked this space!')
 						      .position("bottom left")
@@ -177,7 +177,11 @@ angular.module('studionet')
 
 				      }, function(){
 
-				      		// todo: show error alert
+				      		var toast = $mdToast.simple()
+						      .textContent('Oops...something went wrong! Please try again.')
+						      .position("bottom left")
+
+							$mdToast.show(toast);
 
 				      })
 
