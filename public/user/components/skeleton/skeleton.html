@@ -149,7 +149,7 @@
                 <div class='text-center'> Forks </div>
 
                 <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.forked" dnd-list='subs.my_posts'>
+                <div class='folder' ng-repeat="subs in user.forked" dnd-list='subs.my_posts' dnd-drop='addNodeToFork(item, subs)'>
 
                   <div class='folder-title pointer' ng-click='goToSpace(subs.id)'>
                           {{ subs.name }}

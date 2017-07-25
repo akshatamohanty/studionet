@@ -14,7 +14,7 @@
       
       <!-- results -->
       <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat="space in user.follows | orderBy: '-getStatus(spaces[space.id].timed).time_left'" 
+         <div class='shortcut-div' ng-repeat="space in user.forked | orderBy: '-getStatus(spaces[space.id].timed).time_left'" 
             ng-if='spaces[space.id].timed.length>0' ng-style="getStatus(spaces[space.id].timed).style"> 
             <a ui-sref={{getSpaceURL(space.id)}}>
               <div ng-mouseover="hover=true; status = getStatus(spaces[space.id].timed)" ng-mouseleave="hover=false">
@@ -37,7 +37,7 @@
     </md-card>
 
     <!-- subscriptions -->
-    <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
+    <!-- <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">
       <h3 class='container-heading'>
           Your Subscriptions
           <span class='md-caption' style='float: right' ng-click='subs_expand=!subs_expand'>
@@ -58,7 +58,7 @@
             </a>
          </div>
       </div>
-    </md-card>
+    </md-card> -->
 
     <!-- forks -->
     <md-card class='shortcut-container swipe-down swipe-up' ng-hide='searchMode' md-theme="default">

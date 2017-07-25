@@ -513,6 +513,7 @@ angular.module('studionet')
 			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
 			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];
 
+
 			var location = { status: -1, tags: tArray, dates: dArray };
 
 			if( tArray.length == 0 && dArray.length == 0){
@@ -539,7 +540,7 @@ angular.module('studionet')
 			// check if such a space exists
 			for (var i=0; i < o.spaces.length; i++){
 
-				var space = o.spaces[i];
+				var space = o.spaces[i]; 
 
 				if ( (JSON.stringify(space.tags.sort()) === JSON.stringify(tArray.sort())) && (JSON.stringify(space.timed.sort()) === JSON.stringify(dArray.sort())) ){
 						
@@ -555,29 +556,27 @@ angular.module('studionet')
 
 					// assign a status
 					location.about = "You have not saved or followed this space.";
-		
 					// the user's status with the space
-					var follows = false, curates = false;
-					if( space.curators.indexOf(profile.user.id) > -1){
-						location.name = profile.user.curates.filter(function(t){ return t.id == space.id; })[0].name;
-						location.status += 1;
-						curates = true;
-						location.about = "You curate this space";
+					var follows = false, forked = false;
+					if( space.forkers.indexOf(profile.user.id) > -1){
+						location.name = profile.user.forked.filter(function(t){ return t.id == space.id; })[0].name;
+						location.status = 3;
+						forked = true;
+						location.about = "You've forked this space";
 					}
 
 					if( space.followers.indexOf(profile.user.id) > -1){					
-						location.status += 1;
+						location.status = 2;
 						follows = true;
 						location.about = "You follow this space";
 					}
 
-					if( follows == true && curates == true){
-						location.status += 4;
-						location.about = "Bravo! You follow and curate this space!"
+					if( follows == true && forked == true){
+						location.status = 4;
+						location.about = "Bravo! You follow and forked this space!"
 					}
 
 					location.details = space;
-
 					return location; 
 				}
 
@@ -603,10 +602,9 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-
+								console.log(data);
 								return data;
 						});
-
 
 		}
 
@@ -621,6 +619,34 @@ angular.module('studionet')
 
 							return data;
 					});
+		}
+
+		o.forkSpace = function(data){
+			return $http.post('/api/spaces/' + data.space + '/fork', { name: data.name } ).success(function(data){ 
+
+							console.log("Results", data);
+
+							// refresh the spaces
+							o.getAll();
+							profile.getUser();
+
+							return data;
+					});
+		}
+
+		o.addToFork = function(space_id, contribution){
+			console.log("add to fork", o.spacesHash[space_id], contribution);
+			/*return $http({
+						  method  : 'POST',
+						  url     : '/api/spaces/' + space_id '/query',
+						  data    : { space_id: space_id, contribution: contribution },  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+
+								return data;
+						});*/
+
 		}
 
 		return o;

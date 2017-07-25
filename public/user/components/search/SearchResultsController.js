@@ -22,8 +22,8 @@ angular.module('studionet')
 
 	
 	// --------------- general functions
-	$scope.getTagString = function(id){ return tags.tagsHash[id].name };
-	$scope.getAvatar = function(user_id){ return "url(" + users.usersHash[user_id].avatar + ")"};
+	$scope.getTagString = function(id){ return tags.tagsHash[id] };
+	$scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
 
 
 	// ----------------- location data mapping
@@ -49,9 +49,9 @@ angular.module('studionet')
 	var space = $scope.$resolve.location.details;
 	
 	// map these only if a space exists 
-	if($scope.status > 1){
+	if($scope.status > 0){
 		// person who first saved this space
-		$scope.founder = $scope.$resolve.location.details.by;
+		$scope.founder = $scope.$resolve.location.details.by; 
 
 		// people who have forked this space
 		$scope.followers = $scope.$resolve.location.details.followers;
@@ -149,32 +149,56 @@ angular.module('studionet')
 	      //.textContent('Bowser is a common name.')
 	      .placeholder('text')
 	      .ariaLabel('text')
-	      .initialValue( $scope._tags.map(function(t){ return "#" + $scope.getTagString(t) }).join(" ") )
+	      .initialValue( $scope._tags.map(function(t){ return $scope.getTagString(t).name }).join("_").replace(" ", "-") )
 	      .ok('Create')
 	      .cancel('Cancel');
 
 	    $mdDialog.show(confirm).then(function(result) {
-	      
-	      // create the space if space doesn't exist
 
-	      // fork it for the user
-	      spaces.createSpace($scope._tags, $scope._dates).then(function(){
+	    	// there is an existing space
+	    	if ($scope.status > 0){
+	    		// creating fork to existing space
+	    		spaces.forkSpace({name: result, space: space.id})
+	    	}
+	    	else{
+	    			// create the space if space doesn't exist
+			      	spaces.createSpace($scope._tags, $scope._dates).then(function(data){
 
-	      		// fork the space
+			      		var space_id = data.data[0].id;
 
-		      }, function(){
+			      		// fork the space
+			      		spaces.forkSpace({name: result, space: data}).success(function(){
+			      			var toast = $mdToast.simple()
+						      .textContent('Successfully forked this space!')
+						      .position("bottom left")
 
-		      		// todo: show error alert
+							$mdToast.show(toast);
+			      		})
 
-		      })
+				      }, function(){
 
-	    
+				      		// todo: show error alert
+
+				      })
+
+			    
+
+
+	    	}
 	    }, function() {
-	      
-	    	//$scope.status = 'You didn\'t name your dog.';
-	    
-	    });
+			
+	    	// canceled fork creation
+			//$scope.status = 'You didn\'t name your dog.';
+				    
+		});
 
+	      
+
+
+	}
+
+	$scope.addNodeToFork = function(){
+		 
 	}
 
 	$scope.subscribe = function(){

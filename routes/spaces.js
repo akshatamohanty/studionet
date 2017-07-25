@@ -20,8 +20,8 @@ router.route('/')
       'WITH s, collect(ID(f)) as followers',
       'WITH s, followers', 
       'OPTIONAL MATCH (s)<-[:FORKED]-(c:user)',
-      'WITH s, followers, collect(ID(c)) as curators',
-      'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, curators: curators, followers: followers }'
+      'WITH s, followers, collect(ID(c)) as forkers',
+      'RETURN {id: id(s), timed: s.timed, tags: s.tags, by: s.created_by, forkers: forkers, followers: followers }'
     ].join('\n'); 
 
     var params = {
@@ -87,12 +87,12 @@ router.route('/')
 
   });
 
-/*// route: /api/spaces/:spaceId
+// route: /api/spaces/:spaceId
 router.route('/:spaceId/fork')
 
   // return all spaces
-  .get(auth.ensureAuthenticated, function(req, res){
-
+  .post(auth.ensureAuthenticated, function(req, res){
+      console.log(req.body, req.params)
       var query = [ 
                     "MATCH (u:user) WHERE ID(u) = {userIdParam}",
                     "WITH u",
@@ -104,7 +104,7 @@ router.route('/:spaceId/fork')
 
       var params = {
         nameParam: req.body.name,
-        spaceIdParam : req.query.spaceId,
+        spaceIdParam : parseInt(req.params.spaceId),
         userIdParam : parseInt(req.user.id),
       }
 
@@ -151,6 +151,6 @@ router.route('/:spaceId/subscribe')
         }
       });
     
-  });*/
+  });
 
 module.exports = router;

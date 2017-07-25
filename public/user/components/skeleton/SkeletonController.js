@@ -40,6 +40,10 @@ angular.module('studionet')
 
           $scope.createTag = tags.createTag;
 
+          $scope.addNodeToFork = function(item, space){
+            console.log(space, item);
+          }
+
 }]);
 
 // search bar
