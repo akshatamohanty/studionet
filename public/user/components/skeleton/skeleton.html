@@ -1,9 +1,9 @@
-<div layout="column" class="relative" layout-fill role="main" ng-cloak>
+<div layout="column" class="relative" role="main" ng-cloak>
   
   <!-- toolbar -->
   <md-toolbar class="scroll-shrink" id="toolbar">
     
-    <div class="md-toolbar-tools" layout-margin layout-padding layout-fill layout-align='top center'>
+    <div class="md-toolbar-tools" layout-align='top center'>
       
       <!-- Show / Hide Workbench control -->
       <div flex="5">
@@ -42,7 +42,7 @@
           <div flex='30'>
             <md-datepicker ng-model="query.dates[0]"></md-datepicker>
             <md-datepicker md-min-date="query.dates[0]" ng-model="query.dates[1]" md-placeholder="Enter date"></md-datepicker>
-            <md-button class='raised' ng-click='goToSpaceWithArgs(query)' style='display: inline; color: black' ng-disabled="query.tags.length==0">S</md-button>
+            <md-button class='raised' ng-click='goToSpaceWithArgs(query)' style='display: inline; color: black' ng-disabled="query.tags.length==0">Search</md-button>
           </div>
 
         </div>
@@ -77,97 +77,12 @@
 
 
   <!-- main body container -->
-  <div id='app-body' layout="row" layout-fill>
+  <div id='app-body' layout="row">
 
       <!-- workbench -->
-      <div id='workbench-container' ng-class='showBench?"expand":"compress"'>
-
-          <div id='workbench' ng-controller="FabCtrl as demo" layout='column' layout-fill>
-
-              <!-- New Node Creation -->
-              <md-toolbar layout="column" style='padding-top: 20px; '>
-                
-                <!-- Profile Short Details -->
-                <div layout='column' layout-align='top center'>
-                  <a ui-sref='home.profile' style='margin: 0 auto; display: block;'>
-                    <!-- <user-avatar></user-avatar> -->
-                    <img src={{user.avatar}} style='width: 100px; height: 100px;'>
-                    <h3 class='md-body-2' style='margin: 0px;'>{{user.name}}</h3>
-                    <h4 class='md-caption' style='margin: 0px;'>Level: {{user.level}}</h4>
-                    <h4 class='md-caption' style='margin: 0px; margin-bottom: 15px;'>@{{user.name | lowercase | removeSpaces}}</h4>
-                  </a>
-                </div>
-
-                <md-divider></md-divider>
-
-                <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
-                                   class="md-scale" ng-class="{ 'md-hover-full': demo.hover }"
-                                   ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
-                  <md-fab-trigger>
-                    <md-button aria-label="menu" class="md-fab md-warn">
-                      <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                      <i class="material-icons" style='line-height: 56px;'>create</i>
-                    </md-button>
-                  </md-fab-trigger>
-
-                  <md-fab-actions>
-                    <div ng-repeat="item in demo.items">
-                      <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
-                        <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
-                                    md-autohide="false">
-                          {{item.name}}
-                        </md-tooltip>
-
-                        <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
-                      </md-button>
-                    </div>
-                  </md-fab-actions>
-                </md-fab-speed-dial>
-
-              </md-toolbar>
-
-              <md-content>
-
-                <md-divider></md-divider>
-
-                <div class='text-center'>Your Nodes</div>
-
-                <!-- Shortcuts to user own notes -->
-                <div class='folder'>
-                  <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>
-                          @{{user.name | lowercase | removeSpaces}}
-
-                          <a style='float: right' ng-click='ex1=!ex1'>...</a>
-                  </div>
-                  <div class='folder-notes open'>
-                      <div class='post-box hover' style='font-size: 12px;' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>{{node.title | shorten }}</div>
-                  </div>
-                </div>
-
-                <md-divider></md-divider>
-
-                <div class='text-center'> Forks </div>
-
-                <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.forked" dnd-list='subs.my_posts' dnd-drop='addNodeToFork(item, subs)'>
-
-                  <div class='folder-title pointer' ng-click='goToSpace(subs.id)'>
-                          {{ subs.name }}
-                          <a style='float: right'>...</a>
-                  </div>
-                
-                  <div class='folder-notes open'>
-                      <div class='post-box hover' ng-repeat='node in subs.posts' ng-click='goToNode(node)'>
-                          <div class='title' style='font-size: 12px;'>{{ node }}</div>
-                      </div>
-                  </div>
-                
-                </div>
-
-              </md-content>
-
-
-          </div>
+      <!-- this slides in and out depending on the showBench value -->
+      <div id='workbench-container' ng-class='showBench ? "expand": "compress" '>
+        <ng-include src="'./components/skeleton/workbench.html'" id='workbench' ng-controller="WorkbenchCtrl as bench"></ng-include>
       </div>
       
       <!-- states -->

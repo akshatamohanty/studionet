@@ -40,44 +40,6 @@ angular.module('studionet')
 
           $scope.createTag = tags.createTag;
 
-          $scope.addNodeToFork = function(item, space){
-
-              var _tags = $scope.spaces[space.id].tags;
-              var spaceId = $scope.spaces[space.id].id;
-
-              profile.tagContribution(item.id, _tags)
-                      .success(function(data){
-
-                          // add the contribution to the users fork
-                          spaces.addToFork(spaceId, item.id).then(function(){
-                              
-                              // if item isn't in the time frame, show failure alert
-                              var toast = $mdToast.simple()
-                                    .textContent('Successfully added to your fork')
-                                    .position("bottom right")
-
-                              $mdToast.show(toast);
-
-                          }, function(){
-
-                                var toast = $mdToast.simple()
-                                      .textContent('Hmm.... Something went wrong')
-                                      .position("bottom right")
-
-                                $mdToast.show(toast);
-                          });
-                      })
-                      .error(function(){
-
-                          var toast = $mdToast.simple()
-                                .textContent('Hmm.... Something went wrong')
-                                .position("bottom right")
-
-                          $mdToast.show(toast);
-                      
-                      }) 
-
-          }
 
 }]);
 
@@ -145,7 +107,7 @@ angular.module('studionet')
 
 // Controls for the new node button
 angular.module('studionet')
-  .controller('FabCtrl', function($scope, $mdDialog, $timeout) {
+  .controller('WorkbenchCtrl', function($scope, $mdDialog, $timeout) {
     var self = this;
 
     self.hidden = false;
@@ -154,7 +116,7 @@ angular.module('studionet')
 
     // On opening, add a delayed property which shows tooltips after the speed dial has opened
     // so that they have the proper position; if closing, immediately hide the tooltips
-    $scope.$watch('demo.isOpen', function(isOpen) {
+    $scope.$watch('bench.isOpen', function(isOpen) {
       if (isOpen) {
         $timeout(function() {
           $scope.tooltipVisible = self.isOpen;
@@ -191,5 +153,48 @@ angular.module('studionet')
         targetEvent: $event
       });
     };
+
+
+    $scope.addNodeToFork = function(item, space){
+
+        var _tags = $scope.spaces[space.id].tags;
+        var spaceId = $scope.spaces[space.id].id;
+
+        profile.tagContribution(item.id, _tags)
+                .success(function(data){
+
+                    // add the contribution to the users fork
+                    spaces.addToFork(spaceId, item.id).then(function(){
+                        
+                        // if item isn't in the time frame, show failure alert
+                        var toast = $mdToast.simple()
+                              .textContent('Successfully added to your fork')
+                              .position("bottom right")
+
+                        $mdToast.show(toast);
+
+                    }, function(){
+
+                          var toast = $mdToast.simple()
+                                .textContent('Hmm.... Something went wrong')
+                                .position("bottom right")
+
+                          $mdToast.show(toast);
+                    });
+                })
+                .error(function(){
+
+                    var toast = $mdToast.simple()
+                          .textContent('Hmm.... Something went wrong')
+                          .position("bottom right")
+
+                    $mdToast.show(toast);
+                
+                }) 
+
+    }
+
+
+
   });
 

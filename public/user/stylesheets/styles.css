@@ -1,8 +1,13 @@
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans|Raleway");
 html, body {
   background-color: #E8E8E8;
   height: 100%;
   width: 100%;
-  overflow: auto; }
+  overflow: auto;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: 16px;
+  font-family: "Noto Sans", sans-serif; }
 
 ::-webkit-scrollbar {
   width: 2px; }
@@ -21,45 +26,86 @@ a:hover {
   color: inherit;
   text-decoration: none; }
 
-#toolbar {
-  position: fixed;
-  top: 0px;
-  z-index: 5;
-  height: 60px;
-  background-color: #525264; }
+h1, h2, h3, h4, h5, h6 {
+  padding: 2px;
+  margin: 2px;
+  font-family: "Raleway", sans-serif; }
+
+.header {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Raleway", sans-serif;
+  line-height: 18px;
+  padding: 2px; }
+
+.subheader {
+  font-size: 12px;
+  font-weight: 300;
+  font-family: "Noto Sans", sans-serif;
+  line-height: 14px;
+  padding: 2px; }
 
 #app-body {
   padding-top: 60px;
-  height: 100%; }
+  height: calc(100% - $toolbar-height); }
   #app-body .view-container {
     max-width: 950px;
-    padding: 15px;
+    padding: 30px;
     margin: 0 auto;
     overflow: auto;
     height: 100%;
     width: 100%; }
 
-/* 
-md-chips-wrap{
-  background-color: #E8E8E8;
-}
-
-.md-chips{
-  padding: 0px 5px;
-}
-
-.md-chips .md-chip-input-container{
-  width: 100%;
-}
-
-.md-chips .md-chip-input-container input{
-  width: 100%;
-} */
 .md-datepicker-input-container {
   display: none; }
 
 md-content {
-  background: transparent; }
+  background: transparent;
+  padding: 10px; }
+
+.chipsdemoBasicUsage .errors {
+  font-size: 12px;
+  color: #dd2c00;
+  margin-top: 10px; }
+
+.chipsdemoBasicUsage .custom-chips md-chip {
+  position: relative; }
+
+.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  margin-right: 0;
+  height: 24px; }
+
+.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip {
+  position: relative;
+  height: 24px;
+  width: 24px;
+  line-height: 30px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  transition: background 0.15s linear;
+  display: block; }
+
+.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0) scale(0.7);
+  color: white;
+  fill: white; }
+
+.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:focus {
+  background: rgba(255, 0, 0, 0.8); }
+
+.chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
+  padding-right: 5px; }
 
 .ng-enter {
   animation: 1.0 slideIn; }
@@ -72,6 +118,11 @@ md-content {
     height: 0; }
   to {
     height: auto; } }
+#toolbar {
+  height: 60px;
+  position: fixed;
+  top: 0; }
+
 .ng-enter {
   animation: 1.0 slideIn; }
 
@@ -84,8 +135,8 @@ md-content {
   to {
     height: auto; } }
 #workbench-container {
-  border-right: 1px solid gray;
-  width: 250px; }
+  width: 250px;
+  position: relative; }
 @keyframes slideIn {
   from {
     margin-left: -250px; }
@@ -102,64 +153,87 @@ md-content {
   #workbench-container.compress {
     animation: 0.5s slideOut;
     margin-left: -250px; }
+  #workbench-container #workbench {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%; }
+    #workbench-container #workbench md-toolbar {
+      z-index: 1; }
+    #workbench-container #workbench .profile-pic-container {
+      height: 200px;
+      width: 100%; }
+    #workbench-container #workbench .band {
+      padding: 10px; }
+    #workbench-container #workbench .stats span {
+      font-size: 12px; }
+    #workbench-container #workbench .folder {
+      overflow: hidden; }
+      #workbench-container #workbench .folder .folder-title {
+        border-bottom: 1px solid white;
+        font-size: 12px;
+        line-height: 24px; }
+        #workbench-container #workbench .folder .folder-title a {
+          color: blue; }
+      #workbench-container #workbench .folder .folder-notes {
+        height: 200px;
+        overflow: auto; }
+        #workbench-container #workbench .folder .folder-notes.open {
+          animation: 0.5s slideIn;
+          overflow: auto;
+          height: 200px;
+          min-height: 100px; }
+        #workbench-container #workbench .folder .folder-notes.close {
+          animation: 0.5s slideOut;
+          overflow: hidden;
+          height: 0; }
+        #workbench-container #workbench .folder .folder-notes .post-box {
+          display: inline-block;
+          width: 50px;
+          height: 50px;
+          border-radius: 2px;
+          margin: 4px;
+          font-size: 12px; }
+          #workbench-container #workbench .folder .folder-notes .post-box .title {
+            text-align: center;
+            font-size: 10px;
+            line-height: 10px;
+            word-wrap: break-word;
+            margin: 0 auto; }
+          #workbench-container #workbench .folder .folder-notes .post-box.hover {
+            background-color: gray; }
 
-#workbench [md-fab-speed-dial].md-fab-top-left {
-  left: 0px; }
+/* #workbench{
+    [md-fab-speed-dial].md-fab-top-left{
+      left: 0px;
+    }
+}
 
-.folder .folder-title {
-  border-bottom: 1px solid white;
-  font-size: 12px;
-  line-height: 24px;
-  background-color: gray; }
-  .folder .folder-title a {
-    color: blue; }
-.folder .folder-notes {
-  height: 0;
-  overflow: hidden; }
-  .folder .folder-notes.open {
-    animation: 0.5s slideIn;
-    overflow: auto;
-    height: auto;
-    min-height: 100px; }
-  .folder .folder-notes.close {
-    animation: 0.5s slideOut;
-    overflow: hidden;
-    height: 0; }
-  .folder .folder-notes .post-box {
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    border: 1px solid black;
-    border-radius: 2px;
-    margin: 4px; }
-    .folder .folder-notes .post-box .title {
-      text-align: center;
-      font-size: 10px;
-      line-height: 10px;
-      word-wrap: break-word;
-      margin: 0 auto; }
-    .folder .folder-notes .post-box.hover {
-      background-color: gray; }
 
-.search-bar {
+
+.search-bar{
   border: 1px solid white;
   color: white;
   height: 40px;
   padding: 0px;
-  background: none; }
+  background: none;
+}
 
-.dndDragging {
+.dndDragging{
   border: 2px solid black;
-  cursor: url("hyper.cur"); }
+  cursor: url("hyper.cur");
+}
 
-.dndDraggingSource {
+.dndDraggingSource{
   background-color: gray;
-  display: none; }
+  display: none;
+}
 
-.dndPlaceholder {
-  height: 50px;
-  width: 50px; }
-
+.dndPlaceholder{
+  height: $post-size;
+  width: $post-size;
+}
+ */
 .shortcut-container {
   overflow: hidden;
   width: 720px; }
@@ -208,48 +282,12 @@ md-content {
   display: inline-block;
   margin-right: 10px; }
 
-.chipsdemoBasicUsage .errors {
-  font-size: 12px;
-  color: #dd2c00;
-  margin-top: 10px; }
+.profile-img-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; }
 
-.chipsdemoBasicUsage .custom-chips md-chip {
-  position: relative; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container {
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  margin-right: 0;
-  height: 24px; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip {
-  position: relative;
-  height: 24px;
-  width: 24px;
-  line-height: 30px;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  margin: 0;
-  transition: background 0.15s linear;
-  display: block; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0) scale(0.7);
-  color: white;
-  fill: white; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:focus {
-  background: rgba(255, 0, 0, 0.8); }
-
-.chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
-  padding-right: 5px; }
+/* @import 'profileDesigns'; */
+/* @import 'tagCloud' */
 
 /*# sourceMappingURL=styles.css.map */

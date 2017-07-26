@@ -1,0 +1,134 @@
+<md-toolbar layout='column'>
+  <a ui-sref='home.profile'>
+    <div class='profile-pic-container' style='background-image: url({{user.avatar}}); background-position: bottom center;'></div>
+
+    <div class='md-accent band pointer' ng-click=''> 
+        <div class='header'>Akshata Mohanty</div>
+        <div class='subheader'>Architect</div>
+        <md-divider></md-divider>
+        <div class='stats'>
+            <span>
+              <ng-md-icon icon="book" size='14' style="fill: white"></ng-md-icon>{{user.contributions.length}}
+              <md-tooltip md-direction="bottom">No. of posts</md-tooltip>
+            </span>
+            <span>
+              <ng-md-icon icon="grade" size='14' style="fill: white"></ng-md-icon>...
+              <md-tooltip md-direction="bottom">Score</md-tooltip>
+            </span>
+            <span>
+              <ng-md-icon icon="favorite" size='14' style="fill: white"></ng-md-icon>...
+              <md-tooltip md-direction="bottom">No. of likes</md-tooltip>
+            </span>
+        </div> 
+      </a> 
+    </div>
+  </a>
+</md-toolbar>
+
+<md-content layout='column'>
+
+  <div class='header'>My posts</div>
+  <md-divider></md-divider>
+  <div class='folder'>
+    <!-- <div class='folder-title pointer'>
+            @{{user.name | lowercase | removeSpaces}}
+            <a style='float: right' ng-click='ex1=!ex1'>...</a>
+    </div> -->
+    <div class='folder-notes'>
+        <md-card class='post-box' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>
+                {{node.title | shorten }}
+            <md-tooltip md-direction="bottom">{{node.title}} {{node}}</md-tooltip>
+        </md-card>
+    </div>
+  </div>
+
+
+  <md-divider></md-divider>
+
+  <div layout='column'>
+    <div class='header'>Saved</div>
+  </div>
+
+</md-content>
+
+
+
+<!-- New Node Creation -->
+<!-- <md-toolbar layout="column" style='padding-top: 20px;'>
+  
+  <div layout='column' layout-align='top center'>
+    <a ui-sref='home.profile' style='margin: 0 auto; display: block;'>
+      <img src={{user.avatar}} style='width: 100px; height: 100px;'>
+      <h3 class='md-body-2' style='margin: 0px;'>{{user.name}}</h3>
+      <h4 class='md-caption' style='margin: 0px;'>Level: {{user.level}}</h4>
+      <h4 class='md-caption' style='margin: 0px; margin-bottom: 15px;'>@{{user.name | lowercase | removeSpaces}}</h4>
+    </a>
+  </div>
+
+  <md-divider></md-divider>
+
+  <md-fab-speed-dial ng-hide="bench.hidden" md-direction="right" md-open="bench.isOpen"
+                     class="md-scale" ng-class="{ 'md-hover-full': bench.hover }"
+                     ng-mouseenter="bench.isOpen=true" ng-mouseleave="bench.isOpen=false">
+    <md-fab-trigger>
+      <md-button aria-label="menu" class="md-fab md-warn">
+        <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
+        <i class="material-icons" style='line-height: 56px;'>create</i>
+      </md-button>
+    </md-fab-trigger>
+
+    <md-fab-actions>
+      <div ng-repeat="item in bench.items">
+        <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
+          <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
+                      md-autohide="false">
+            {{item.name}}
+          </md-tooltip>
+
+          <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
+        </md-button>
+      </div>
+    </md-fab-actions>
+  </md-fab-speed-dial>
+
+</md-toolbar> -->
+
+<!-- <md-content>
+
+  <md-divider></md-divider>
+
+  <div class='text-center'>Your Nodes</div>
+
+  <div class='folder'>
+    <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>
+            @{{user.name | lowercase | removeSpaces}}
+
+            <a style='float: right' ng-click='ex1=!ex1'>...</a>
+    </div>
+    <div class='folder-notes open'>
+        <div class='post-box hover' style='font-size: 12px;' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>{{node.title | shorten }}</div>
+    </div>
+  </div>
+
+  <md-divider></md-divider>
+
+  <div class='text-center'> Forks </div>
+
+  <div class='folder' ng-repeat="subs in user.forked" dnd-list='subs.my_posts' dnd-drop='addNodeToFork(item, subs)'>
+
+    <div class='folder-title pointer' ng-click='goToSpace(subs.id)'>
+            {{ subs.name }}
+            <a style='float: right'>...</a>
+    </div>
+  
+    <div class='folder-notes open'>
+        <div class='post-box hover' ng-repeat='node in subs.posts' ng-click='goToNode(node)'>
+            <div class='title' style='font-size: 12px;'>{{ node }}</div>
+        </div>
+    </div>
+  
+  </div>
+
+</md-content> -->
+
+
