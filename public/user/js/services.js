@@ -508,7 +508,6 @@ angular.module('studionet')
         // ----------------- returns an object with information about the space based on the state params
 		o.getSpace = function($stateParams){
 
-
 			// get the tags and the dates from the route params
 			var tArray = $stateParams.tags ? $stateParams.tags.split(",").map(function(t){return parseInt(t)}) : [];
 			var dArray = $stateParams.dates ? $stateParams.dates.split(",").map(function(t){return parseInt(t)}) : [];

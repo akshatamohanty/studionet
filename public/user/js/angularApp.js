@@ -90,8 +90,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		    },
 			controller: 'SearchResultsController',
 			resolve: {
-				location: ['spaces', '$stateParams', function(spaces, $stateParams){
-
+				location: ['spaces', '$stateParams', 'tagsPromise', function(spaces, $stateParams, tagsPromise){
 					// get information about the space based on the route params
 					return spaces.getSpace($stateParams);  
 				}],
