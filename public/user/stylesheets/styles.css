@@ -1,17 +1,20 @@
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans|Raleway");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Raleway");
 html, body {
   background-color: #E8E8E8;
   height: 100%;
   width: 100%;
-  overflow: auto;
   font-size: 10px;
   font-weight: 300;
   line-height: 16px;
-  font-family: "Noto Sans", sans-serif; }
+  font-family: "Open Sans", sans-serif;
+  word-wrap: break-word;
+  overflow: hidden; }
 
-::-webkit-scrollbar {
-  width: 2px; }
-
+/* 
+::-webkit-scrollbar
+{
+  width: $scroll-thk;
+} */
 :focus {
   outline: none; }
 
@@ -36,23 +39,29 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   font-family: "Raleway", sans-serif;
   line-height: 18px;
-  padding: 2px; }
+  padding: 2px;
+  margin-top: 10px; }
 
 .subheader {
   font-size: 12px;
   font-weight: 300;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Open Sans", sans-serif;
   line-height: 14px;
   padding: 2px; }
 
+.background, #workbench-container #workbench md-content .folder .folder-notes .post-box.note, #workbench-container #workbench md-content .folder .folder-notes .post-box.text, #workbench-container #workbench md-content .folder .folder-notes .post-box.question, #workbench-container #workbench md-content .folder .folder-notes .post-box.assignment {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)); }
+
 #app-body {
-  padding-top: 60px;
-  height: calc(100% - $toolbar-height); }
+  overflow: hidden; }
   #app-body .view-container {
     max-width: 950px;
     padding: 30px;
     margin: 0 auto;
-    overflow: auto;
+    overflow: hidden;
     height: 100%;
     width: 100%; }
 
@@ -60,52 +69,30 @@ h1, h2, h3, h4, h5, h6 {
   display: none; }
 
 md-content {
-  background: transparent;
-  padding: 10px; }
+  background: transparent; }
 
-.chipsdemoBasicUsage .errors {
-  font-size: 12px;
-  color: #dd2c00;
-  margin-top: 10px; }
+.md-show {
+  height: auto; }
 
-.chipsdemoBasicUsage .custom-chips md-chip {
-  position: relative; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container {
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  margin-right: 0;
-  height: 24px; }
-
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip {
-  position: relative;
-  height: 24px;
-  width: 24px;
-  line-height: 30px;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 50%;
-  border: none;
+.md-chips {
+  font-size: 14px;
   box-shadow: none;
-  padding: 0;
-  margin: 0;
-  transition: background 0.15s linear;
-  display: block; }
+  float: left; }
 
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip md-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate3d(-50%, -50%, 0) scale(0.7);
-  color: white;
-  fill: white; }
+div.md-chip-content {
+  display: inline-block; }
 
-.chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:hover, .chipsdemoBasicUsage .custom-chips md-chip .md-chip-remove-container button.vegetablechip:focus {
-  background: rgba(255, 0, 0, 0.8); }
+div.md-chip-remove-container {
+  display: inline-block; }
+  div.md-chip-remove-container md-icon {
+    height: 14px;
+    width: 14px; }
+  div.md-chip-remove-container button {
+    border-radius: 50%;
+    padding: 0px; }
 
-.chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
-  padding-right: 5px; }
+md-chips {
+  height: 60px; }
 
 .ng-enter {
   animation: 1.0 slideIn; }
@@ -118,11 +105,6 @@ md-content {
     height: 0; }
   to {
     height: auto; } }
-#toolbar {
-  height: 60px;
-  position: fixed;
-  top: 0; }
-
 .ng-enter {
   animation: 1.0 slideIn; }
 
@@ -135,7 +117,9 @@ md-content {
   to {
     height: auto; } }
 #workbench-container {
+  border-right: 1px solid black;
   width: 250px;
+  min-width: 250px;
   position: relative; }
 @keyframes slideIn {
   from {
@@ -154,53 +138,69 @@ md-content {
     animation: 0.5s slideOut;
     margin-left: -250px; }
   #workbench-container #workbench {
-    position: absolute;
-    top: 0px;
-    width: 100%;
     height: 100%; }
     #workbench-container #workbench md-toolbar {
       z-index: 1; }
     #workbench-container #workbench .profile-pic-container {
-      height: 200px;
+      height: 180px;
       width: 100%; }
     #workbench-container #workbench .band {
       padding: 10px; }
-    #workbench-container #workbench .stats span {
+    #workbench-container #workbench .stats {
       font-size: 12px; }
-    #workbench-container #workbench .folder {
-      overflow: hidden; }
-      #workbench-container #workbench .folder .folder-title {
-        border-bottom: 1px solid white;
-        font-size: 12px;
-        line-height: 24px; }
-        #workbench-container #workbench .folder .folder-title a {
-          color: blue; }
-      #workbench-container #workbench .folder .folder-notes {
-        height: 200px;
-        overflow: auto; }
-        #workbench-container #workbench .folder .folder-notes.open {
-          animation: 0.5s slideIn;
+    #workbench-container #workbench md-content {
+      height: calc(100% - 200px - 20px ); }
+      #workbench-container #workbench md-content .profile-posts {
+        padding: 10px; }
+      #workbench-container #workbench md-content .folder {
+        margin-top: 5px;
+        border: 1px solid #8D8D8D; }
+        #workbench-container #workbench md-content .folder .folder-title {
+          font-size: 12px;
+          line-height: 24px;
+          font-weight: 400;
+          background-color: #848484; }
+          #workbench-container #workbench md-content .folder .folder-title a {
+            color: blue; }
+        #workbench-container #workbench md-content .folder .folder-notes {
+          height: auto;
+          max-height: 200px;
           overflow: auto;
-          height: 200px;
-          min-height: 100px; }
-        #workbench-container #workbench .folder .folder-notes.close {
-          animation: 0.5s slideOut;
-          overflow: hidden;
-          height: 0; }
-        #workbench-container #workbench .folder .folder-notes .post-box {
-          display: inline-block;
-          width: 50px;
-          height: 50px;
-          border-radius: 2px;
-          margin: 4px;
-          font-size: 12px; }
-          #workbench-container #workbench .folder .folder-notes .post-box .title {
-            text-align: center;
-            font-size: 10px;
-            line-height: 10px;
-            word-wrap: break-word;
-            margin: 0 auto; }
-          #workbench-container #workbench .folder .folder-notes .post-box.hover {
+          width: 100%;
+          border-color: gray; }
+          #workbench-container #workbench md-content .folder .folder-notes.open {
+            animation: 0.5s slideIn;
+            overflow: auto;
+            height: auto;
+            min-height: 40px; }
+          #workbench-container #workbench md-content .folder .folder-notes.close {
+            animation: 0.5s slideOut;
+            overflow: hidden;
+            height: 0; }
+          #workbench-container #workbench md-content .folder .folder-notes .post-box {
+            position: relative;
+            float: left;
+            width: 40%;
+            height: 50px;
+            font-size: 12px; }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box .title {
+              text-align: center;
+              vertical-align: middle;
+              font-size: 14px;
+              line-height: 10px;
+              word-wrap: break-word;
+              margin: 10% auto;
+              height: 80%; }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.comment {
+              background-color: red; }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.note, #workbench-container #workbench md-content .folder .folder-notes .post-box.text {
+              background-color: green;
+              background-image: url("http://placehold.it/150x150"); }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.question {
+              background-image: url("http://placehold.it/150x150"); }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.assignment {
+              background-image: url("http://placehold.it/150x150"); }
+          #workbench-container #workbench md-content .folder .folder-notes .post-box:hover {
             background-color: gray; }
 
 /* #workbench{

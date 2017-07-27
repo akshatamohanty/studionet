@@ -1,52 +1,106 @@
 <md-toolbar layout='column'>
-  <a ui-sref='home.profile'>
-    <div class='profile-pic-container' style='background-image: url({{user.avatar}}); background-position: bottom center;'></div>
+    
+    <div class='profile-pic-container' style='background-image: url({{user.avatar}}); background-position: bottom center;'>
+      <md-fab-speed-dial style='position: absolute; right: 0px' ng-hide="bench.hidden" md-direction="left" md-open="bench.isOpen"
+                         class="md-fling" ng-class="{ 'md-hover-full': bench.hover }"
+                         ng-mouseenter="bench.isOpen=true" ng-mouseleave="bench.isOpen=false">
+        <md-fab-trigger>
+          <md-button aria-label="menu" class="md-fab md-warn">
+            <md-tooltip md-direction="right" md-visible="tooltipVisible">New Node</md-tooltip>
+            <i class="material-icons" style='line-height: 56px;'>create</i>
+          </md-button>
+        </md-fab-trigger>
+
+        <md-fab-actions>
+          <div ng-repeat="item in bench.items">
+            <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
+              <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
+                          md-autohide="false">
+                {{item.name}}
+              </md-tooltip>
+
+              <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
+            </md-button>
+          </div>
+        </md-fab-actions>
+      </md-fab-speed-dial>
+    </div>
 
     <div class='md-accent band pointer' ng-click=''> 
+      <a ui-sref='home.profile'>
         <div class='header'>Akshata Mohanty</div>
         <div class='subheader'>Architect</div>
         <md-divider></md-divider>
-        <div class='stats'>
-            <span>
+        <div class='stats' layout='row'>
+            <div flex>
               <ng-md-icon icon="book" size='14' style="fill: white"></ng-md-icon>{{user.contributions.length}}
               <md-tooltip md-direction="bottom">No. of posts</md-tooltip>
-            </span>
-            <span>
+            </div>
+            <div flex>
               <ng-md-icon icon="grade" size='14' style="fill: white"></ng-md-icon>...
               <md-tooltip md-direction="bottom">Score</md-tooltip>
-            </span>
-            <span>
+            </div>
+            <div flex>
               <ng-md-icon icon="favorite" size='14' style="fill: white"></ng-md-icon>...
               <md-tooltip md-direction="bottom">No. of likes</md-tooltip>
-            </span>
+            </div>
         </div> 
-      </a> 
+      </a>
     </div>
-  </a>
+
 </md-toolbar>
 
-<md-content layout='column'>
+<md-content flex>
 
-  <div class='header'>My posts</div>
-  <md-divider></md-divider>
-  <div class='folder'>
-    <!-- <div class='folder-title pointer'>
-            @{{user.name | lowercase | removeSpaces}}
-            <a style='float: right' ng-click='ex1=!ex1'>...</a>
-    </div> -->
-    <div class='folder-notes'>
-        <md-card class='post-box' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>
-                {{node.title | shorten }}
-            <md-tooltip md-direction="bottom">{{node.title}} {{node}}</md-tooltip>
-        </md-card>
+  <div class='profile-posts' layout='column' layout-fill ng-init='show=-1'>
+    <div class='header'>My posts ({{user.contributions.length}})
+          <a style='float: right' ng-click='show == -1 ? show = undefined : show=-1'> 
+              <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show != -1'></ng-md-icon>
+              <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show == -1'></ng-md-icon>
+          </a>
     </div>
-  </div>
+    <md-divider></md-divider>
+
+    <div class='folder'>
+      <!-- <div class='folder-title pointer'>
+              @{{user.name | lowercase | removeSpaces}}
+              <a style='float: right' ng-click='ex1=!ex1'>...</a>
+      </div> -->
+      <div class='folder-notes' ng-class='show == -1 ? "open" : "close" '>
+          <md-card class='post-box' ng-class='node.type' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>
+              <div class='title'>{{node.title }}</div>
+              <!-- <md-tooltip class="tooltip" md-direction="bottom" style='height: auto'>
+                  <p>Title: {{node.title}}</p>
+                  <span ng-if='node.tags.length == 0'>This {{node.type}} is still on your shelf. Drop in a space to publish.</span>
+              </md-tooltip> -->
+          </md-card>
+      </div>
+    </div>
 
 
-  <md-divider></md-divider>
+    <md-divider></md-divider>
 
-  <div layout='column'>
-    <div class='header'>Saved</div>
+    <div class='header'>Saved Spaces</div>
+    <md-divider></md-divider>
+
+    <div class='folder' ng-repeat='fork in user.forked'>
+      <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
+              <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}} posts)</i></span>
+              <a style='float: right'> 
+                  <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
+                  <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
+              </a>
+      </div>
+      <div class='folder-notes' ng-class='show == fork.id ? "open" : "close" ' dnd-list='fork.posts' dnd-drop='addNodeToFork(item, fork)'>
+          <md-card class='post-box' ng-class='node.type' ng-repeat='node in fork.posts' ng-click='goToNode(node.id)' dnd-draggable='node'>
+              <div class='title'>{{node.title | shorten }}</div>
+              <!-- <md-tooltip class="tooltip" md-direction="bottom">
+                  <h6>Category: {{node.type}}</h6>
+                  <p>Title: {{node.title}}</p>
+              </md-tooltip> -->
+          </md-card>
+      </div>
+    </div>
   </div>
 
 </md-content>
@@ -67,29 +121,7 @@
 
   <md-divider></md-divider>
 
-  <md-fab-speed-dial ng-hide="bench.hidden" md-direction="right" md-open="bench.isOpen"
-                     class="md-scale" ng-class="{ 'md-hover-full': bench.hover }"
-                     ng-mouseenter="bench.isOpen=true" ng-mouseleave="bench.isOpen=false">
-    <md-fab-trigger>
-      <md-button aria-label="menu" class="md-fab md-warn">
-        <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-        <i class="material-icons" style='line-height: 56px;'>create</i>
-      </md-button>
-    </md-fab-trigger>
 
-    <md-fab-actions>
-      <div ng-repeat="item in bench.items">
-        <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
-          <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
-                      md-autohide="false">
-            {{item.name}}
-          </md-tooltip>
-
-          <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
-        </md-button>
-      </div>
-    </md-fab-actions>
-  </md-fab-speed-dial>
 
 </md-toolbar> -->
 

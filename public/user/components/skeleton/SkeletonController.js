@@ -107,7 +107,8 @@ angular.module('studionet')
 
 // Controls for the new node button
 angular.module('studionet')
-  .controller('WorkbenchCtrl', function($scope, $mdDialog, $timeout) {
+  .controller('WorkbenchCtrl', function($scope, $mdDialog, $timeout, profile, spaces, $mdToast) {
+    
     var self = this;
 
     self.hidden = false;
@@ -195,6 +196,11 @@ angular.module('studionet')
     }
 
 
+    // keep the bench scrolling down with the scroll
+    /*$(window).scroll(function(){
+      console.log("hello world");
+      $("#workbench-container").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
+    });*/
 
   });
 

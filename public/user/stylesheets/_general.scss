@@ -2,18 +2,20 @@ html, body{
   background-color: $bg-color;
   height: 100%;
   width: 100%;
-  overflow: auto;
 
   font-size: 10px;
   font-weight: 300;
   line-height: 16px;
   font-family: $text-font;
-}
 
+  word-wrap: break-word;
+  overflow: hidden;
+}
+/* 
 ::-webkit-scrollbar
 {
   width: $scroll-thk;
-}
+} */
 
 :focus{
   outline: none;
@@ -44,7 +46,8 @@ h1, h2, h3, h4, h5, h6{
   font-weight: 600;
   font-family: $header-font;
   line-height: 18px;
-  padding: $min-padding
+  padding: $min-padding;
+  margin-top: 10px;
 }
 
 .subheader{
@@ -55,17 +58,29 @@ h1, h2, h3, h4, h5, h6{
   padding: $min-padding;
 }
 
+.background{
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.45), 
+      rgba(0, 0, 0, 0.45)
+    ),
+}
+
 #app-body{
-  padding-top: $toolbar-height;
-  height: calc(100% - $toolbar-height);
+
+  overflow: hidden;
 
   .view-container{
     max-width: $max-width;
     padding: $max-padding;
     margin: 0 auto;
-    overflow: auto;
+    overflow: hidden;
     height: 100%;
     width: 100%;
   }
 
 }
+
+

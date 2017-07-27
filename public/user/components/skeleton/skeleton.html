@@ -1,4 +1,4 @@
-<div layout="column" class="relative" role="main" ng-cloak>
+<div layout='column' style='height: 100%; ' layout-fill>
   
   <!-- toolbar -->
   <md-toolbar class="scroll-shrink" id="toolbar">
@@ -77,11 +77,11 @@
 
 
   <!-- main body container -->
-  <div id='app-body' layout="row">
+  <md-content id='app-body' layout="row" flex>
 
       <!-- workbench -->
       <!-- this slides in and out depending on the showBench value -->
-      <div id='workbench-container' ng-class='showBench ? "expand": "compress" '>
+      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column' style='height: 100%; ' layout-fill>
         <ng-include src="'./components/skeleton/workbench.html'" id='workbench' ng-controller="WorkbenchCtrl as bench"></ng-include>
       </div>
       
@@ -92,9 +92,8 @@
           <ui-view class='view-container'></ui-view>
         </div>
       </div>
-  
-  </div>
+
+  </md-content>
 
 </div>
-
 

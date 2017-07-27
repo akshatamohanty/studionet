@@ -23,15 +23,13 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
     'OPTIONAL MATCH (u)-[f:FOLLOWS]->(s:space)',
     'WITH collect({id: id(s), name: f.name}) as follows, u',
     'OPTIONAL MATCH (u)-[c:FORKED]->(s:space)',
-    'WITH follows, collect({id: id(s), name: c.name, posts: c.posts}) as spaces, u',
+    'WITH follows, collect({id: id(s), name: c.name, posts: c.posts}) as forks, u',
     //'OPTIONAL MATCH p1=(g:group)-[r:MEMBER]->(u)',
     //'WITH collect({id: id(g), role: r.role, joinedOn: r.joinedOn}) as groups, u',
     'OPTIONAL MATCH p2=(u)-[r1:CREATED]->(c:contribution)',
-    'WITH spaces, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, type: c.contentType }) as contributions, follows, u',
-    'WITH spaces, follows, u, contributions',
-    'UNWIND contribtions as c',
-    'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag)',
-    'COLLECT (ID(t)) as tags',
+    'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = "" ',
+    'WITH u, forks, follows, c, r1, collect (id(t)) as tags',
+    'WITH forks, follows, u, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, type: c.contentType, tags: tags }) as contributions',
     //'WITH groups, collect({id: id(c), title: c.title, rating: c.rating, rateCount: c.rateCount, views: c.views}) as contributions, u',
     //'OPTIONAL MATCH p3=(t:tag)<-[r1:CREATED]-(u)',
     //'WITH groups, collect({id: id(t)}) as tags, contributions, u',
@@ -48,9 +46,8 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
               lastLoggedIn: u.lastLoggedIn,\
               id: id(u),\
               contributions: contributions,\
-              tags: tags,\
               follows: follows,\
-              forked: spaces\
+              forked: forks \
     }'
   ].join('\n');
 
