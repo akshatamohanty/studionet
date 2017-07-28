@@ -365,10 +365,16 @@ router.route('/:contributionId')
 
     var query = [
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
-      'OPTIONAL MATCH (t:tag)<-[:TAGGED]-(c)',
-      'WITH c, collect( id(t) ) as tags',
+      'OPTIONAL MATCH (t:tag)<-[td:TAGGED]-(c)',
+      'WITH c, collect( {tag_id: id(t), users: td.by_users} ) as tags',
       'OPTIONAL MATCH (a:attachment)<-[:ATTACHMENT]-(c)',
       'WITH c, tags, collect( { attachment: a, id: id(a) } ) as attachments',
+      'OPTIONAL MATCH (comment:contribution)-[:COMMENT_FOR]->(c)',
+      'WITH c, tags, attachments, collect( { id: id(comment), createdBy: comment.createdBy, date: comment.dateCreated, body: comment.body } ) as comments',
+      'OPTIONAL MATCH (parent:contribution)<-[:RELATED_TO]-(c) WHERE NOT parent.contentType="comment"',
+      'WITH c, tags, attachments, comments, collect( { id: id(parent), title: parent.title, createdBy: parent.createdBy, date: parent.dateCreated } ) as parents',
+      'OPTIONAL MATCH (child:contribution)-[:RELATED_TO]->(c) WHERE NOT child.contentType="comment"',
+      'WITH c, tags, attachments, comments, parents, collect( { id: id(child), title: child.title, createdBy: child.createdBy, date: child.dateCreated } ) as children',
       'RETURN { \
                 ratingArray: [ SIZE((:user)-[:RATED{rating: 5}]->(c)), SIZE((:user)-[:RATED{rating: 4}]->(c)), \
                   SIZE((:user)-[:RATED{rating: 3}]->(c)), SIZE((:user)-[:RATED{rating: 2}]->(c)), \
@@ -376,13 +382,17 @@ router.route('/:contributionId')
                 id: ID(c),\
                 title: c.title, \
                 edited: c.edited, \
+                type: c.contentType, \
                 body: c.body, \
-                lastUpdated: c.lastUpdated, \
+                date: c.lastUpdated, \
                 ref: c.ref, \
                 createdBy: c.createdBy, \
                 views: c.views, \
                 tags: tags, \
-                attachments: attachments }'
+                attachments: attachments,\
+                comments: comments,\
+                parents: parents, \
+                children: children }'
     ].join('\n');
 
     var params = {

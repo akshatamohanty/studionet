@@ -143,6 +143,8 @@ angular.module('studionet')
 
 	$scope.fork = function(){
 
+		alert("forking")
+
 	    // Appending dialog to document.body to cover sidenav in docs app
 	    var confirm = $mdDialog.prompt()
 	      .title('What do you want to name your collection?')
@@ -196,13 +198,6 @@ angular.module('studionet')
 				    
 		});
 
-	      
-
-
-	}
-
-	$scope.addNodeToFork = function(){
-		 
 	}
 
 	$scope.subscribe = function(){

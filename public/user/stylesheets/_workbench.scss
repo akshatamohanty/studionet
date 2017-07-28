@@ -26,6 +26,10 @@
 
       height: 100%;
 
+      .header{
+        margin-top: 20px;
+      }
+
       md-toolbar{
         z-index: 1;
       }
@@ -46,20 +50,23 @@
       md-content{
         
         height: calc(100% - #{$profile-bar-height} - #{2*$md-padding} );
+        overflow: hidden;
+
 
         .profile-posts{
-          padding: $md-padding;
+          padding: 0px 20px;
+          overflow: scroll;
+          height: 97%;
         }
 
         .folder{
           margin-top: 5px;
-          border: 1px solid #8D8D8D;
 
           .folder-title{
             font-size: 0.5*$folder-height;
             line-height: $folder-height;
             font-weight: 400;
-            background-color: #848484;
+            background-color: #DCDADA;
 
             a{
               color: blue;
@@ -94,14 +101,24 @@
               height: $post-size;
               font-size: 12px;
 
+              overflow: hidden;
+
               .title{
                 text-align: center;
                 vertical-align: middle;
-                font-size: 14px;
-                line-height: 10px;
+                font-size: 11px;
+                line-height: 14px;
                 word-wrap: break-word;
                 margin: 10% auto;
                 height: 80%;
+              }
+
+              &.published{
+                  background-color: gray;
+              }   
+
+              &.unpublished{
+                  background-color: white;
               }
 
               &.comment{

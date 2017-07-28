@@ -43,7 +43,6 @@ angular.module('studionet')
 		}
 
 		fn.goToNode = function(node_id){
-			
 			if(node_id == null)
 				return;
 
@@ -88,8 +87,6 @@ angular.module('studionet')
 			}
 
 			return $http.get('/api/contributions/' + contribution_id).success(function(res){
-
-				var res = res.data;
 
 				// ------------- replace tag IDs with the actual tag
 				/*res.tags = res.tags.map(function(t){
@@ -601,7 +598,6 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-								console.log(data);
 								return data;
 						});
 

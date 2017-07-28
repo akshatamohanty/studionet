@@ -18,12 +18,10 @@
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
       <!-- adding a new node in this space; hidden if timed space is expired -->
-      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)' ng-if='expired == false'>
-        <md-card-title layout-align='center'>
-          <md-card-title-text>
-              <span class="md-headline">Add a node to this space</span>
-          </md-card-title-text>
-        </md-card-title>
+      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)' ng-if='expired == false' dnd-draggable='post'>
+        <md-content style="height: 100%; font-size: 14px; padding: 15px;">
+          <span ng-repeat='t in _tags'>#{{ getTagString(t).name }} </span>
+        </md-content>
       </md-card>
 
       <!-- expired message container -->
@@ -36,16 +34,11 @@
       </md-card>
 
       <!-- the results when results exist-->
-      <md-card class='pointer' ng-repeat='post in posts' dnd-draggable='post' ng-click='goToNode(post.id)'> 
-        <md-card-title>
-          <md-card-title-text>
-            <span class="md-headline">{{post.title}}</span>
-            <span class="md-subhead">{{post.rating}}</span>
-          </md-card-title-text>
-          <md-card-title-media>
-            <div class="md-media-{{post.size}} card-media"></div>
-          </md-card-title-media>
-        </md-card-title>
+      <md-card class='pointer mini-post' ng-repeat='post in posts' dnd-draggable='post' ng-click='goToNode(post.id)'> 
+        <div class='dragBar'></div>
+        <md-content layout-wrap>
+            <div class='post-title'>{{post.title}}</div>
+        </md-content>
       </md-card>
 
       <!-- todo: message when results don't exist -->

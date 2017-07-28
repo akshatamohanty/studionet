@@ -1,7 +1,7 @@
 <md-toolbar layout='column'>
     
     <div class='profile-pic-container' style='background-image: url({{user.avatar}}); background-position: bottom center;'>
-      <md-fab-speed-dial style='position: absolute; right: 0px' ng-hide="bench.hidden" md-direction="left" md-open="bench.isOpen"
+      <!-- <md-fab-speed-dial style='position: absolute; right: 0px' ng-hide="bench.hidden" md-direction="left" md-open="bench.isOpen"
                          class="md-fling" ng-class="{ 'md-hover-full': bench.hover }"
                          ng-mouseenter="bench.isOpen=true" ng-mouseleave="bench.isOpen=false">
         <md-fab-trigger>
@@ -23,7 +23,7 @@
             </md-button>
           </div>
         </md-fab-actions>
-      </md-fab-speed-dial>
+      </md-fab-speed-dial> -->
     </div>
 
     <div class='md-accent band pointer' ng-click=''> 
@@ -52,14 +52,18 @@
 
 <md-content flex>
 
-  <div class='profile-posts' layout='column' layout-fill ng-init='show=-1'>
-    <div class='header'>My posts ({{user.contributions.length}})
+  <div class='profile-posts' layout='column' ng-init='show=undefined'>
+    <div class='header'>My posts ({{user.contributions.length}}) 
+
+          <a ui-sref='home.node({type:"note"})'>
+            <ng-md-icon icon="add" size='18' style="fill: green"></ng-md-icon>
+          </a>
+
           <a style='float: right' ng-click='show == -1 ? show = undefined : show=-1'> 
               <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show != -1'></ng-md-icon>
               <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show == -1'></ng-md-icon>
           </a>
     </div>
-    <md-divider></md-divider>
 
     <div class='folder'>
       <!-- <div class='folder-title pointer'>
@@ -67,12 +71,11 @@
               <a style='float: right' ng-click='ex1=!ex1'>...</a>
       </div> -->
       <div class='folder-notes' ng-class='show == -1 ? "open" : "close" '>
-          <md-card class='post-box' ng-class='node.type' ng-repeat='node in user.contributions' ng-click='goToNode(node.id)' dnd-draggable='node'>
-              <div class='title'>{{node.title }}</div>
-              <!-- <md-tooltip class="tooltip" md-direction="bottom" style='height: auto'>
-                  <p>Title: {{node.title}}</p>
-                  <span ng-if='node.tags.length == 0'>This {{node.type}} is still on your shelf. Drop in a space to publish.</span>
-              </md-tooltip> -->
+          <md-card class='post-box' ng-class='node.tags.length ? "published" : "unpublished" ' ng-repeat='node in user.contributions | orderBy: "created_on":true ' ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'>
+              <div class='title'>{{node.title}}</div>
+              <md-tooltip ng-if='node.tags.length == 0'class="tooltip" md-direction="bottom" style='height: auto'>
+                  You haven't published this node yet.
+              </md-tooltip>
           </md-card>
       </div>
     </div>
@@ -80,27 +83,63 @@
 
     <md-divider></md-divider>
 
-    <div class='header'>Saved Spaces</div>
+    <div class='header'>
+        Timed Spaces
+    </div>
+
     <md-divider></md-divider>
 
-    <div class='folder' ng-repeat='fork in user.forked'>
-      <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
-              <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}} posts)</i></span>
-              <a style='float: right'> 
-                  <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
-                  <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
-              </a>
-      </div>
-      <div class='folder-notes' ng-class='show == fork.id ? "open" : "close" ' dnd-list='fork.posts' dnd-drop='addNodeToFork(item, fork)'>
-          <md-card class='post-box' ng-class='node.type' ng-repeat='node in fork.posts' ng-click='goToNode(node.id)' dnd-draggable='node'>
-              <div class='title'>{{node.title | shorten }}</div>
-              <!-- <md-tooltip class="tooltip" md-direction="bottom">
-                  <h6>Category: {{node.type}}</h6>
-                  <p>Title: {{node.title}}</p>
-              </md-tooltip> -->
-          </md-card>
+    <div class='folder-notes'>
+      <div class='folder' ng-repeat='fork in user.forked' ng-if='fork.timed[0]!=undefined'>
+        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
+                <span ng-click='goToSpace(fork.id)'>{{fork.name}}</span>
+                <a style='float: right'> 
+                    <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
+                    <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
+                </a>
+        </div>
+        <div class='folder-notes' ng-class='show == fork.id ? "open" : "close" ' dnd-list='fork.posts' dnd-drop='addNodeToFork(item, fork)'>
+            <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='node'>
+                <div class='title'>{{ posts[node_id].title }}</div>
+                <!-- <md-tooltip class="tooltip" md-direction="bottom">
+                    <h6>Category: {{node.type}}</h6>
+                    <p>Title: {{node.title}}</p>
+                </md-tooltip> -->
+            </md-card>
+        </div>
       </div>
     </div>
+
+    <md-divider></md-divider>
+
+    <div class='header' dnd-list='newforks' dnd-drop='fork()'>
+        Saved Spaces
+    </div>
+
+    <md-divider></md-divider>
+
+    <div class='folder-notes'>
+      <div class='folder' ng-repeat='fork in user.forked' ng-if='fork.timed[0]==undefined'>
+        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
+                <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}} posts)</i></span>
+                <a style='float: right'> 
+                    <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
+                    <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
+                </a>
+        </div>
+        <div class='folder-notes' ng-class='show == fork.id ? "open" : "close" ' dnd-list='fork.posts' dnd-drop='addNodeToFork(item, fork)'>
+            <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='node'>
+                <div class='title'>{{ posts[node_id].title }}</div>
+                <!-- <md-tooltip class="tooltip" md-direction="bottom">
+                    <h6>Category: {{node.type}}</h6>
+                    <p>Title: {{node.title}}</p>
+                </md-tooltip> -->
+            </md-card>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 
 </md-content>

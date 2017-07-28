@@ -1,4 +1,7 @@
 <div id='contributionViewModal' class="modal fade" role="dialog" ng-controller="NodeController" ng-cloak>
+    Showing details of node - {{ node_id }}
+
+    {{ post_details }}
 
     <div class='node-arrow left-side-arrow hidden-xs' ng-hide="parents.length == 0">
         <i class='fa fa-angle-left'></i>
@@ -23,7 +26,7 @@
           <div class="modal-body">
 
                 <div class="authorBar row">
-                    
+
                     <div class="col-xs-9">
                         <div class='row'>
                           <div class='col-xs-2 author-profile' style="background: url({{author.avatar}}?q={{random}});"></div>
@@ -32,7 +35,7 @@
                                 <div class = "row pointer" data-dismiss='modal' ng-click='showAuthorModal()' style='font-size: 15px; line-height: 27px; color:#646464;font-weight: 600;'>
                                 {{ author.nickname.length ? author.nickname : author.name }} </div>
                                 <div class='row meta' ng-if='contribution.tags.length>0'>Tagged <div class='tag' ng-repeat='tag in contribution.tags'>&bull; {{tag.name}} </div> </div>
-                                <div class='row meta'><time>{{ contribution.lastUpdated ? contribution.lastUpdated : contribution.dateCreated | amCalendar }}</time> 
+                                <div class='row meta'><time>{{ contribution.lastUpdated ? contribution.lastUpdated : contribution.dateCreated | amCalendar }}</time>
                                   &bull; {{ contribution.readingTime }}</div><!-- 300 CPM = 300 WPM -->
                               </div>
                           </div>
@@ -41,10 +44,10 @@
 
                     <div class="col-xs-3 text-right statisticsContainer" ng-class="{'hasStars':user.id != contribution.createdBy}">
                       <span id='rating' uib-rating ng-model="$parent.rate" max="$parent.max" read-only="false" on-hover="$parent.hoveringOver(value)" on-leave="overStar = null" ng-click='rateContribution($parent.rate, contribution.id)' ng-if='contribution.createdBy != user.id && user.isGuest != true'></span>
-                      <span id='avg_rating' class="pop" 
-                          uib-popover-template="'/user/components/nodes/statistics.html'" popover-trigger="'mouseenter'" 
+                      <span id='avg_rating' class="pop"
+                          uib-popover-template="'/user/components/nodes/statistics.html'" popover-trigger="'mouseenter'"
                           popover-placement="bottom-right" popover-class='statsPopover' popover-append-to-body='true'>
-                        {{ contribution.rating > 0 ? (contribution.rating).toFixed(1) : "-" }}  
+                        {{ contribution.rating > 0 ? (contribution.rating).toFixed(1) : "-" }}
                         <i class='glyphicon glyphicon-star'></i></span>
                     </div>
 
@@ -52,7 +55,7 @@
 
                 <!-- tags -->
 
-                
+
                 <!-- content -->
                 <h1>
                   <i ng-click='toggleBookmark(contribution.id)' ng-class="bookmarked || hover ? 'bookmark fa fa-bookmark': 'bookmark fa fa-bookmark-o'" ng-mouseenter="hover = true" ng-mouseleave="hover = false" uib-tooltip='Bookmark'></i>&nbsp;&nbsp;{{contribution.title}}
@@ -60,7 +63,27 @@
                 <hr>
                 <p class='row contribution-content text-justify' ng-bind-html="contribution.body"></p>
 
-
+                <!-- Render obj file using ThreeJs -->
+                <div class='row' ng-if='contribution.attachments[0].id!=null'>
+                    <div ng-repeat="attachment in contribution.attachments | filter:{attachment: {name:'.obj'}}" >
+                        <div class="container" ng-controller="objcontroller">
+                          <div class = "row">
+                              <div class="twelve columns add-bottom">
+                                    <div
+                                      id="webglContainer"
+                                      objdirective
+                                      width="canvasWidth"
+                                      height="canvasHeight"
+                                      fillcontainer="dofillcontainer"
+                                      scale="scale"
+                                      material-type="materialType"
+                                      filename= {{attachment.attachment.name}}
+                                    ></div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Attachments - if present -->
                 <div class='row' ng-if='contribution.attachments[0].id!=null'>
@@ -94,7 +117,7 @@
                     <div class="row comment" ng-repeat='reply in replies | orderBy: dateCreated'>
                         <div class='row comment-heading'>
                           <div class='comment-author-name'>
-                              <b>{{usersHash[reply.createdBy].nickname ? usersHash[reply.createdBy].nickname : usersHash[reply.createdBy].name}}</b> says: 
+                              <b>{{usersHash[reply.createdBy].nickname ? usersHash[reply.createdBy].nickname : usersHash[reply.createdBy].name}}</b> says:
                           </div>
                           <div class='dateCreated'><time am-time-ago="reply.lastUpdated ? reply.lastUpdated : reply.dateCreated "></time></div>
                         </div>
@@ -121,7 +144,7 @@
 
                       <button type="button" class="btn btn-default modal-button" ng-show='contribution.type!="comment" && user.isGuest' uib-tooltip='Add Comment - Only open to NUS' uib-position='top'><i class='fa fa-comments'></i></button>
                       <button type="button" class="btn btn-default modal-button" ng-show='contribution.type!="comment" && user.isGuest' uib-tooltip='Add Node - Only open to NUS' uib-position='top'><i class='fa fa-plus'></i></button>
-                      
+
                       <!-- if author -->
                       <button type="button" ng-click="showUpdateModal(contribution.id)" class="btn btn-default modal-button" ng-if="(user.id == contribution.createdBy)" ng-disabled="user.isGuest" uib-tooltip='Edit' uib-position='top'><i class='fa fa-pencil'></i></button>
 

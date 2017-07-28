@@ -3,18 +3,16 @@ html, body {
   background-color: #E8E8E8;
   height: 100%;
   width: 100%;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 300;
-  line-height: 16px;
+  line-height: 18px;
   font-family: "Open Sans", sans-serif;
   word-wrap: break-word;
   overflow: hidden; }
 
-/* 
-::-webkit-scrollbar
-{
-  width: $scroll-thk;
-} */
+::-webkit-scrollbar {
+  width: 5px; }
+
 :focus {
   outline: none; }
 
@@ -34,7 +32,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 2px;
   font-family: "Raleway", sans-serif; }
 
-.header {
+.header, .post-details .post-title {
   font-size: 16px;
   font-weight: 600;
   font-family: "Raleway", sans-serif;
@@ -48,6 +46,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", sans-serif;
   line-height: 14px;
   padding: 2px; }
+
+.scroll {
+  height: 100%;
+  overflow: auto; }
 
 .background, #workbench-container #workbench md-content .folder .folder-notes .post-box.note, #workbench-container #workbench md-content .folder .folder-notes .post-box.text, #workbench-container #workbench md-content .folder .folder-notes .post-box.question, #workbench-container #workbench md-content .folder .folder-notes .post-box.assignment {
   background-position: center;
@@ -63,7 +65,23 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
     overflow: hidden;
     height: 100%;
-    width: 100%; }
+    width: 80%;
+    min-width: 450px; }
+  #app-body .dndPlaceholder {
+    list-style-type: none; }
+  #app-body .dndDragover {
+    background-color: #D4D4D4; }
+  #app-body .dndDragging {
+    width: 200px;
+    height: 30px;
+    background-color: #D4D4D4; }
+    #app-body .dndDragging * {
+      display: none; }
+  #app-body .dragBar {
+    width: 100%;
+    height: 30px; }
+  #app-body .dragBar:hover {
+    background-color: #D4D4D4; }
 
 .md-datepicker-input-container {
   display: none; }
@@ -139,6 +157,8 @@ md-chips {
     margin-left: -250px; }
   #workbench-container #workbench {
     height: 100%; }
+    #workbench-container #workbench .header, #workbench-container #workbench .post-details .post-title, .post-details #workbench-container #workbench .post-title {
+      margin-top: 20px; }
     #workbench-container #workbench md-toolbar {
       z-index: 1; }
     #workbench-container #workbench .profile-pic-container {
@@ -149,17 +169,19 @@ md-chips {
     #workbench-container #workbench .stats {
       font-size: 12px; }
     #workbench-container #workbench md-content {
-      height: calc(100% - 200px - 20px ); }
+      height: calc(100% - 200px - 20px );
+      overflow: hidden; }
       #workbench-container #workbench md-content .profile-posts {
-        padding: 10px; }
+        padding: 0px 20px;
+        overflow: scroll;
+        height: 97%; }
       #workbench-container #workbench md-content .folder {
-        margin-top: 5px;
-        border: 1px solid #8D8D8D; }
+        margin-top: 5px; }
         #workbench-container #workbench md-content .folder .folder-title {
           font-size: 12px;
           line-height: 24px;
           font-weight: 400;
-          background-color: #848484; }
+          background-color: #DCDADA; }
           #workbench-container #workbench md-content .folder .folder-title a {
             color: blue; }
         #workbench-container #workbench md-content .folder .folder-notes {
@@ -182,15 +204,20 @@ md-chips {
             float: left;
             width: 40%;
             height: 50px;
-            font-size: 12px; }
+            font-size: 12px;
+            overflow: hidden; }
             #workbench-container #workbench md-content .folder .folder-notes .post-box .title {
               text-align: center;
               vertical-align: middle;
-              font-size: 14px;
-              line-height: 10px;
+              font-size: 11px;
+              line-height: 14px;
               word-wrap: break-word;
               margin: 10% auto;
               height: 80%; }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.published {
+              background-color: gray; }
+            #workbench-container #workbench md-content .folder .folder-notes .post-box.unpublished {
+              background-color: white; }
             #workbench-container #workbench md-content .folder .folder-notes .post-box.comment {
               background-color: red; }
             #workbench-container #workbench md-content .folder .folder-notes .post-box.note, #workbench-container #workbench md-content .folder .folder-notes .post-box.text {
@@ -278,6 +305,9 @@ md-chips {
   height: 150px;
   background-color: transparent; }
 
+.mini-post {
+  max-width: 200px; }
+
 .inline-radio {
   display: inline-block;
   margin-right: 10px; }
@@ -289,5 +319,60 @@ md-chips {
 
 /* @import 'profileDesigns'; */
 /* @import 'tagCloud' */
+.linked-post-container {
+  height: 80px;
+  margin: 30px 0px; }
+  .linked-post-container .dndPlaceholder {
+    border: 1px dashed gray; }
+  .linked-post-container.ancestor {
+    height: 40px;
+    margin: 10px !important;
+    display: inline-block; }
+
+.post-details {
+  margin: 0px;
+  padding: 15px 20px; }
+  .post-details .post-title {
+    margin-bottom: 10px;
+    padding: 0px !important; }
+    .post-details .post-title.main {
+      margin: 0px 0px 10px 0px !important;
+      font-size: 24px;
+      line-height: 36px; }
+    .post-details .post-title.linked {
+      margin: 0px 0px 0px 0px !important;
+      font-size: 14px; }
+  .post-details .author-profile-picture {
+    margin: 5px;
+    display: inline;
+    border-radius: 50%; }
+    .post-details .author-profile-picture.main {
+      width: 30px;
+      height: 30px; }
+    .post-details .author-profile-picture.linked {
+      width: 15px;
+      height: 15px; }
+  .post-details .author-name {
+    margin: 5px;
+    display: inline;
+    height: 30px; }
+    .post-details .author-name.main {
+      line-height: 30px;
+      font-size: 16px; }
+    .post-details .author-name.linked {
+      line-height: 15px;
+      font-size: 12px; }
+  .post-details .tags span {
+    margin: 5px;
+    padding: 5px;
+    background: #C1BEBE;
+    border-radius: 10px;
+    display: inline-block; }
+  .post-details .post-body {
+    margin: 30px 0px 30px 0px; }
+    .post-details .post-body p {
+      font-size: 12px;
+      line-height: 24px;
+      text-align: justify; }
 
 /*# sourceMappingURL=styles.css.map */

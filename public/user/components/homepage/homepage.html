@@ -20,7 +20,7 @@
               <div ng-mouseover="hover=true; status = getStatus(spaces[space.id].timed)" ng-mouseleave="hover=false">
                 <div style='padding: 12px; height: auto;' ng-hide='hover'> 
                   <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
-                  <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name}}</div>
+                  <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name | shorten }}</div>
                   <div style='font-size: 10px;margin: 0px;'>
                       <span ng-repeat="tag in spaces[space.id].tags">#{{tags[tag].name | shorten }} </span>
                   </div>
@@ -74,7 +74,7 @@
             <a ui-sref={{getSpaceURL(space.id)}}>
               <div style='margin: 12px; height: auto;'> 
                 <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
-                <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name}}</div>
+                <div style='font-size: 16px;margin-bottom: 10px;'>{{space.name | shorten }}</div>
                 <div style='font-size: 10px;margin: 0px;'>
                     <span ng-repeat="tag in spaces[space.id].tags">#{{tags[tag].name | shorten }} </span>
                 </div>
@@ -97,7 +97,7 @@
          <div class='shortcut-div' ng-repeat='post in recentPosts'>
               <a ui-sref='home.node-details({"address" : post.id})'>
                 <div style='border: 1px dashed white; margin: 12px; height: auto;'> 
-                  <div style='font-size: 16px;margin-bottom: 10px;'>{{ post.title }}</div>
+                  <div style='font-size: 16px;margin-bottom: 10px;'>{{ post.title | shorten }}</div>
                   <div style='font-size: 12px;margin-bottom: 5px;margin: 0px;'><em>{{post.dateCreated | date : 'mediumDate'}}</em></div>
                 </div> 
               </a>
@@ -107,7 +107,7 @@
 
 
     <!-- users online -->
-    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
+    <!-- <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
       <h3 class='container-heading'>
                 Online Users
                 <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
@@ -125,6 +125,6 @@
               </a>
          </div>
       </div>
-    </md-card>
+    </md-card> -->
                 
 </div>

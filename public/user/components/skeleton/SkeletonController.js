@@ -28,9 +28,6 @@ angular.module('studionet')
           $scope.getSpaceURL = spaces.getSpaceURL;
 
           $scope.goToSpaceWithArgs = function(query){
-
-            console.log(query);
-
             // send only the tag ids 
             routerUtils.goToSpaceWithArgs( query.tags.map(function(t){ return t.id }), query.dates );
           } 
@@ -155,6 +152,10 @@ angular.module('studionet')
       });
     };
 
+    var newforks = [];
+    $scope.fork = function(){
+      console.log("forking space");
+    }
 
     $scope.addNodeToFork = function(item, space){
 
