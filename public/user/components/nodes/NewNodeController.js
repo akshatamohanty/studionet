@@ -1,5 +1,6 @@
 angular.module('studionet')
-.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'supernode', 'tags', 'users', 'contributions', '$mdDialog', function($scope, $stateParams, $state, supernode, tags, users, contributions, $mdDialog){
+.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'supernode', 'tags', 'users', 'contributions', '$mdDialog', 
+                                  function($scope, $stateParams, $state, supernode, tags, users, contributions, $mdDialog){
 
 
       $scope.$emit('hideBench');
@@ -12,12 +13,12 @@ angular.module('studionet')
         $state.go('home.hompage');
       }
 
-      alert($stateParams.tags);
+      $scope.getTagName = function(tag_id){ return tags.tagsHash[tag_id].name };
 
       // for the new contribution
       $scope.contributionData = { 
                                   attachments: [], 
-                                  tags: $stateParams.tags ? $stateParams.tags.map(function(t){ return t.toLowerCase().trim() }) : [],
+                                  tags: $stateParams.tags ? $stateParams.tags : [],
                                   refType: "RELATED_TO", 
                                   contentType: $stateParams.type, 
                                   ref:  $stateParams.ref ? supernode.contribution : $stateParams.ref
@@ -29,12 +30,6 @@ angular.module('studionet')
       $scope.simplePeople = users.users.map(function(u){
         return {label: u.name};
       });
-
-      /*$scope.loadTags = function($query){
-          return tags.tags.filter(function(tag){
-            return tag.name.toLowerCase().search($query.toLowerCase()) != -1;
-          });
-      }*/
 
       //  This close function doesn't need to use jQuery or bootstrap, because
       //  the button has the 'data-dismiss' attribute.
@@ -49,7 +44,6 @@ angular.module('studionet')
 
       //Uploaded files
       $scope.uplodateFiles = function (files){
-            console.log(files.length + "files have been choosen.");
             if(files){
                   files.forEach(function(file){
                         $scope.contributionData.attachments.push(file);

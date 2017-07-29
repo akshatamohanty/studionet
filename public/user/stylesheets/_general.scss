@@ -73,13 +73,24 @@ h1, h2, h3, h4, h5, h6{
     )
 }
 
+.tags{
+  margin-top: 10px;
+  span{
+    margin: 5px; 
+    padding: 5px;
+    background: #C1BEBE;
+    border-radius: 10px;
+    display: inline-block;
+  }
+}
+
 #app-body{
 
   overflow: hidden;
 
   .view-container{
     max-width: $max-width;
-    padding: $max-padding;
+    padding: $min-padding;
     margin: 0 auto;
     overflow: hidden;
     height: 100%;
@@ -108,6 +119,11 @@ h1, h2, h3, h4, h5, h6{
   .dragBar{
     width: 100%;
     height: 30px;
+    cursor: move;
+    
+    position: absolute;
+    top: 0;
+    z-index: 10;
   }
 
   .dragBar:hover{

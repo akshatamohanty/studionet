@@ -1,7 +1,7 @@
 angular.module('studionet')
 
-.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions',
-                                function($scope, attachments, $stateParams, users, tags, contributions){ 
+.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog',
+                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog){ 
 
 
         // change this to resolve 
@@ -67,6 +67,76 @@ angular.module('studionet')
         setMainPost($scope.$resolve.postDetails.data, undefined);
 
         $scope.setMainPost = setMainPost;
+
+        //Uploaded files
+        $scope.uplodateFiles = function (files, contributionData){
+            console.log(files.length + " file(s) have been choosen.");
+            if(files){
+                files.forEach(function(file){
+                      contributionData.attachments.push(file);
+                });
+            }
+        }
+
+        //remove files
+        $scope.removeFiles = function (attachment, contributionData) {
+              var index = contributionData.attachments.indexOf(attachment);
+              if(index > -1){
+                    contributionData.attachments.splice(index, 1);
+              }
+        }
+
+        $scope.removeFilesAndfromDB = function (attachment, contributionData){
+
+            // if attachment is an inline image, delete the corresponding img src in the contribution body
+            var result = null;
+            if(attachment.attachment.name.startsWith("studionet-inline-img-")){
+              result = contributionData.body.match('<img(.*)' + attachment.attachment.name + '(.*)\/>')
+            }
+
+            if(result == null){
+              attachments.deleteAttachmentbyId(attachment.id, $scope.contribution.id)
+                .then(function(res){
+                  var index = contributionData._attachments.indexOf(attachment);
+                  if(index > -1){
+                        contributionData._attachments.splice(index, 1);
+                        $scope.contribution.body = contributionData.body;
+                        alert("Attachment was successfully deleted");
+                  }
+                }, function(error){
+                  alert('[WARNING]: Deleting attachment is unsuccessful');
+                })
+            }
+            else{
+              alert("Cannot delete inline attachment. Please remove the image in the content first.")
+            }
+
+        }
+
+
+        // ------------------Function: - Delete
+        $scope.delete = function(contributionId){
+            
+            contributions.deleteContribution(contributionId).success(function(data){
+              var msg = 'Your contribution was deleted';
+                  // display success message
+                  // navigate after 3 seconds
+                  $mdDialog.show(
+                    $mdDialog.alert()
+                      .parent(angular.element(document.querySelector('body')))
+                      .clickOutsideToClose(false)
+                      .title('Success!')
+                      .textContent(msg)
+                      .ariaLabel('Action Successful')
+                      .ok('Got it!')
+                      //.targetEvent(ev)
+                  );
+
+                history.back();
+            });
+
+        };
+
 
 
 }]);

@@ -56,14 +56,14 @@ router.route('/')
 			'UNWIND {tagsParam} as tagName '
 						+ 'MERGE (t:tag {name: tagName}) '
 						+ 'ON CREATE SET t.createdBy = {createdByParam}'
-						+ 'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
+						+ 'CREATE (c)-[r2:TAGGED]->(t) ',
 			'RETURN c'
 		].join('\n');
 
 		var currentDate = Date.now();
 		var params = {
 			createdByParam: parseInt(req.user.id),
-			//tagsParam: ( req.body.tags !== "" ?  : [] ), //because form data has text string for tags   
+			tagsParam: req.body.tags, //because form data has text string for tags   
 			contributionTitleParam: req.body.title,
 			contributionBodyParam: req.body.body,
 			contributionRefParam: parseInt(req.body.ref), 
@@ -78,11 +78,11 @@ router.route('/')
 			viewsParam: 0
 		};
 
-    if(req.body.tags == "")
+/*    if(req.body.tags == "")
       params.tagsParam = ""
     else
       params.tagsParam = req.body.tags.split(",");
-
+*/
 
 		db.query(query, params, function(error, result){
 			if (error){
@@ -129,7 +129,9 @@ router.route('/query')
                   WHERE c1 = c2 \
                   MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0 \
                   WITH c, collect ({ id: ID(t), tagged_by: tg.by_users }) as tags\
-                  RETURN ID(c) as id, c.createdBy as created_by, c.dateCreated as created_at, c.contentType as contentType, c.title as title, c.rating as rating, c.views as views, tags as tags"
+                  OPTIONAL MATCH (c)-[:ATTACHMENT]->(a)\
+                  WITH c, tags, collect({id: id(a), name: a.name, thumb: a.thumb}) as attachments\
+                  RETURN ID(c) as id, c.createdBy as createdBy, c.dateCreated as dateCreated, c.contentType as contentType, c.title as title, c.rating as rating, c.views as views, tags as tags, attachments as attachments"
 
     var params = {
       tagsParam : tags,
@@ -835,7 +837,7 @@ router.route('/:contributionId/tag')
       'WITH c',
       'MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0',
       'WITH c, COLLECT(distinct { id: ID(t), tagged_by: tg.by_users }) as tags',
-      'RETURN tags'
+      'RETURN c as contribution, tags as tags'
     ].join('\n');
 
     var params = {

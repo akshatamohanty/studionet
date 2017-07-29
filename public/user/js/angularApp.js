@@ -234,3 +234,13 @@ app.filter('shorten', [function() {
 }])
 
 
+// back button directive
+app.directive('backButton', function() {
+  return {
+    template: 	"<a onclick='history.back()'>\
+			        <u>Back</u>\
+			    </a>"
+  };
+});
+
+

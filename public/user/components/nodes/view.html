@@ -3,17 +3,17 @@
 	<!-- back button -->
 	<a onclick='history.back()' style='display: block;'><u>Back</u></a>
 
-	<div class='linked-post-container ancestor' ng-repeat='ancestor in ancestors | orderBy: "+":reverse ' layout='row' layout-wrap>
+<!-- 	<div class='linked-post-container ancestor' ng-repeat='ancestor in ancestors | orderBy: "+":reverse ' layout='row' layout-wrap>
 		<md-card class='post-details' layout='column' flex ng-click='expand(ancestor.id)'>
 			<div class='post-title linked'>{{ancestor.title}} <i style='font-size: 10px'>By {{users[ancestor.createdBy].name}}</i></div>
 		</md-card>
-	</div>
+	</div> -->
 
 	<!-- parent -->
 	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item)'>
 		
 		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent=parent-1' ng-disabled='parent==0'>
-			<ng-md-icon icon="keyboard_arrow_left" size='14' style="fill: #222"></ng-md-icon>
+			<ng-md-icon icon="keyboard_arrow_left" size='14' style="fill: #222"></ng-md-icon> 
 		</md-button>
 		
 		<md-card class='post-details' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)'>
@@ -70,6 +70,8 @@
 
 	            <!-- post-functions -->
 				<div class='post-functions' layout='row' layout-fill>
+
+					<md-button ng-if='post_details.createdBy == user.id && post_details.children[0].id == null;' ng-click='delete(post_details.id)'>DELETE</md-button>
 
 					<div flex='20' style='height: 80px; border: 1px dashed gray; text-align: center; line-height: 80px;'>
 						<md-button class="md-mini" ng-disabled="false" aria-label="add a link" md-no-ink="false" md-ripple-size="full">

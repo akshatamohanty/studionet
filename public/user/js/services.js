@@ -53,14 +53,45 @@ angular.module('studionet')
 			$state.go('home.search');
 		};
 
+
+ 		fn.getThumb = function(contributionId, attachment){
+
+            if(attachment.thumb){
+              return "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail";
+            }
+            else{
+              if(attachment.name.indexOf(".pdf") > -1)
+                return "./img/file_pdf.jpeg"
+              else if(attachment.name.indexOf(".doc") > -1)
+                return "./img/file_doc.png"
+              else
+                return "./img/file_default.png"; // replace with image for particular extension
+            }
+        }
+
 		return fn;
 	}])
 
-	.factory('contributions', ['$http', '$filter', 'profile', function($http, $filter, profile){
+	.factory('contributions', ['$http', '$filter', 'profile', 'tags', function($http, $filter, profile, tags){
 
 		var o = {
 			contributions: [],
 			contributionsHash: []
+		};
+
+		// --------- Observers
+		var observerCallbacks = [];
+
+		// register an observer
+		o.registerObserverCallback = function(callback){
+		   observerCallbacks.push(callback);
+		};
+
+		// call this when you know graph has been changed
+		var notifyObservers = function(){
+			angular.forEach(observerCallbacks, function(callback){
+		    	 callback();
+		    });
 		};
 
 		// Fetches the array of contributions
@@ -76,6 +107,8 @@ angular.module('studionet')
 
 				angular.copy(ordered, o.contributions);
 				o.contributionsHash = o.contributions.hash();
+
+				notifyObservers();
 
 			});
 		};
@@ -121,6 +154,12 @@ angular.module('studionet')
 
 		// Data needs to be sent in FormData format
 		o.createContribution = function(new_contribution){
+
+			if(new_contribution.tags.length > 0){
+				new_contribution.tags = new_contribution.tags.map(function(t){
+					return tags.tagsHash[t].name;
+				})
+			}
 
 			var inlineImages = extractImages(new_contribution);
 			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
@@ -189,14 +228,10 @@ angular.module('studionet')
 
 		// ---- Deletes a contribution
 		// Confirmation Testing happens here
-		o.deleteContribition = function(contribution_id){
+		o.deleteContribution = function(contribution_id){
 
 			var r = confirm("Are you sure you want to delete your node? This action cannot be undone.");
 	        if (r == true) {
-
-	        	o.spinner.spin(document.getElementById('cy'));
-
-	        	o.removeAdditionalStyles();
 
 		        return $http({
 						method  : 'delete',
@@ -206,16 +241,11 @@ angular.module('studionet')
 						})
 			    .success(function(res) {
 
-					// remove node from graph
-					o.removeNode(contribution_id);
-					
 					// refresh profile
 					profile.getUser();
 
-
 			    })
 			    .error(function(error){
-			    	o.spinner.stop();
 					throw error;
 			    })	
 			}
@@ -619,11 +649,9 @@ angular.module('studionet')
 		o.forkSpace = function(data){
 			return $http.post('/api/spaces/' + data.space + '/fork', { name: data.name } ).success(function(data){ 
 
-							console.log("Results", data);
-
 							// refresh the spaces
-							o.getAll();
 							profile.getUser();
+							o.getAll();
 
 							return data;
 					});
@@ -637,7 +665,6 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-								console.log("added to fork", data);
 								profile.getUser();
 								return data;
 						});
@@ -744,6 +771,10 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
+
+							//refresh user profile
+							o.getUser();
+
 							return data;
 						});
 		}

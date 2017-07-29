@@ -32,7 +32,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 2px;
   font-family: "Raleway", sans-serif; }
 
-.header, .post-details .post-title {
+.header, .space_sidebar .header, .post-details .post-title {
   font-size: 16px;
   font-weight: 600;
   font-family: "Raleway", sans-serif;
@@ -57,11 +57,20 @@ h1, h2, h3, h4, h5, h6 {
   background-size: cover;
   background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)); }
 
+.tags {
+  margin-top: 10px; }
+  .tags span {
+    margin: 5px;
+    padding: 5px;
+    background: #C1BEBE;
+    border-radius: 10px;
+    display: inline-block; }
+
 #app-body {
   overflow: hidden; }
   #app-body .view-container {
     max-width: 950px;
-    padding: 30px;
+    padding: 2px;
     margin: 0 auto;
     overflow: hidden;
     height: 100%;
@@ -79,12 +88,13 @@ h1, h2, h3, h4, h5, h6 {
       display: none; }
   #app-body .dragBar {
     width: 100%;
-    height: 30px; }
+    height: 30px;
+    cursor: move;
+    position: absolute;
+    top: 0;
+    z-index: 10; }
   #app-body .dragBar:hover {
     background-color: #D4D4D4; }
-
-.md-datepicker-input-container {
-  display: none; }
 
 md-content {
   background: transparent; }
@@ -92,25 +102,19 @@ md-content {
 .md-show {
   height: auto; }
 
-.md-chips {
-  font-size: 14px;
-  box-shadow: none;
-  float: left; }
+.textAngular .btn-toolbar {
+  background-color: transparent;
+  padding: 0px 0px 10px 0px; }
 
-div.md-chip-content {
-  display: inline-block; }
+.textAngular .btn-default {
+  border: 1px solid #ccc; }
 
-div.md-chip-remove-container {
-  display: inline-block; }
-  div.md-chip-remove-container md-icon {
-    height: 14px;
-    width: 14px; }
-  div.md-chip-remove-container button {
-    border-radius: 50%;
-    padding: 0px; }
+.textAngular .btn-default {
+  border: 0px;
+  margin: 0px 0px 2px 2px; }
 
-md-chips {
-  height: 60px; }
+.ta-scroll-window.form-control {
+  border: 1px solid #CCC; }
 
 .ng-enter {
   animation: 1.0 slideIn; }
@@ -135,7 +139,7 @@ md-chips {
   to {
     height: auto; } }
 #workbench-container {
-  border-right: 1px solid black;
+  border-right: 2px solid #D9D9D9;
   width: 250px;
   min-width: 250px;
   position: relative; }
@@ -169,12 +173,12 @@ md-chips {
     #workbench-container #workbench .stats {
       font-size: 12px; }
     #workbench-container #workbench md-content {
-      height: calc(100% - 200px - 20px );
+      height: calc(100% - 20px );
       overflow: hidden; }
       #workbench-container #workbench md-content .profile-posts {
         padding: 0px 20px;
         overflow: scroll;
-        height: 97%; }
+        height: 100%; }
       #workbench-container #workbench md-content .folder {
         margin-top: 5px; }
         #workbench-container #workbench md-content .folder .folder-title {
@@ -302,11 +306,58 @@ md-chips {
   border: 1px dashed black;
   text-align: center;
   width: 150px;
-  height: 150px;
-  background-color: transparent; }
+  height: 150px; }
+  .empty-card md-content {
+    background-color: transparent; }
+    .empty-card md-content #addNode {
+      line-height: 150px; }
+  .empty-card md-content:hover {
+    background-color: #D1D1D1;
+    cursor: move; }
 
 .mini-post {
-  max-width: 200px; }
+  max-width: 200px;
+  position: relative; }
+  .mini-post .poster {
+    height: 60%;
+    min-height: 50px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    overflow: hidden; }
+    .mini-post .poster .post-title {
+      font-size: 18px;
+      font-weight: 300px;
+      line-height: 28px;
+      padding: 30px 10px 10px 10px;
+      vertical-align: middle;
+      margin: 0 auto;
+      text-align: center; }
+  .mini-post .post-details {
+    padding: 5px 10px;
+    height: 40%; }
+    .mini-post .post-details .post-title {
+      margin: 5px 0px 5px 0px;
+      font-size: 14px; }
+    .mini-post .post-details .author-name {
+      margin: 0px;
+      font-size: 12px; }
+    .mini-post .post-details .small {
+      font-size: 10px;
+      font-style: italic; }
+
+.space_sidebar .header, .space_sidebar .post-details .post-title, .post-details .space_sidebar .post-title {
+  font-size: 20px;
+  line-height: 24px;
+  margin-bottom: 10px; }
+.space_sidebar .details {
+  font-weight: 400;
+  font-size: 14px;
+  font-family: "Raleway", sans-serif; }
+
+.results-container .subheader {
+  font-size: 12px;
+  color: gray; }
 
 .inline-radio {
   display: inline-block;
@@ -327,7 +378,8 @@ md-chips {
   .linked-post-container.ancestor {
     height: 40px;
     margin: 10px !important;
-    display: inline-block; }
+    display: inline-block;
+    width: 200px; }
 
 .post-details {
   margin: 0px;
@@ -362,17 +414,72 @@ md-chips {
     .post-details .author-name.linked {
       line-height: 15px;
       font-size: 12px; }
-  .post-details .tags span {
-    margin: 5px;
-    padding: 5px;
-    background: #C1BEBE;
-    border-radius: 10px;
-    display: inline-block; }
   .post-details .post-body {
     margin: 30px 0px 30px 0px; }
     .post-details .post-body p {
       font-size: 12px;
       line-height: 24px;
       text-align: justify; }
+
+#searchbar {
+  margin: 0px 60px 0px 30px;
+  height: 48px; }
+  #searchbar ng-md-icon svg {
+    width: 80%;
+    height: 80%;
+    margin-top: 5px;
+    margin-left: 5px; }
+  #searchbar .tags {
+    border: 1px solid white;
+    background-color: #FAFAFA;
+    margin-top: 0px;
+    position: relative; }
+    #searchbar .tags span {
+      font-size: 12px; }
+    #searchbar .tags md-chips md-chip {
+      display: inline-block;
+      background: transparent;
+      float: left; }
+    #searchbar .tags md-chip-remove-container {
+      display: none; }
+    #searchbar .tags button.md-chip-remove {
+      display: none; }
+    #searchbar .tags .md-chip .md-chip-input-container {
+      float: clear;
+      margin: 0px; }
+  #searchbar .dates {
+    font-size: 12px;
+    line-height: 48px;
+    margin-left: 10px;
+    		/* .md-button.md-icon-button{
+    			margin-left: 5px;
+    			margin-right: 0px;
+    			padding: 5px;
+    			height: 30px;
+    			width: 30px;
+    
+    		} */
+    /* .md-datepicker-input-container{
+    	margin-left: 0px;
+    	font-size: 10px;
+    } */ }
+    #searchbar .dates .links {
+      color: blue;
+      font-size: 12px;
+      line-height: 14px !important;
+      margin: 10px 0px;
+      font-style: italic;
+      cursor: pointer; }
+    #searchbar .dates .advanced {
+      position: absolute;
+      top: 60px;
+      background: white;
+      margin-left: -200px;
+      width: 250px; }
+    #searchbar .dates md-datepicker md-icon {
+      fill: rgba(0, 0, 0, 0.5); }
+  #searchbar .searchbtn {
+    font-size: 12px;
+    line-height: 48px; }
 
 /*# sourceMappingURL=styles.css.map */

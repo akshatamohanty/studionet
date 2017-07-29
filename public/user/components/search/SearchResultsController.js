@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', '$mdToast', '$mdDialog', 'routerUtils', 'tags', 'users', 'profile', 'spaces',
-										function($scope, $mdToast, $mdDialog, routerUtils, tags, users, profile, spaces ){
+.controller('SearchResultsController', ['$scope', '$mdToast', '$mdDialog', 'routerUtils', 'tags', 'users', 'profile', 'spaces', 
+										function($scope, $mdToast, $mdDialog, routerUtils, tags, users, profile, spaces){
 
 	
 	// error handling - if URL is not valid, return to search page
@@ -23,6 +23,7 @@ angular.module('studionet')
 	
 	// --------------- general functions
 	$scope.getTagString = function(id){ return tags.tagsHash[id] };
+	$scope.getUserName = function(user_id){return users.usersHash[user_id].name };
 	$scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
 
 
@@ -76,28 +77,68 @@ angular.module('studionet')
 	// compute the suggested tags
 	// 
 	// 
+	var suggested_tags = [];
+	for(var i=0; i < $scope.posts.length; i++){
+		var post = $scope.posts[i];
+		post.tags.forEach(function(t){
+
+			if( suggested_tags[t.id] == undefined )
+				suggested_tags[t.id] = t.tagged_by.length;
+			else
+				suggested_tags[t.id] += t.tagged_by.length;
+			
+		})
+	}
+	$scope.suggested_tags = [];
+	for( key in suggested_tags ){
+		if( suggested_tags.hasOwnProperty(key) && $scope._tags.indexOf(parseInt(key)) == -1 ){
+			$scope.suggested_tags.push({ id: key, count: suggested_tags[key] })
+		}
+	}
+
 
 	// compute leaders based on the posts 
 	// 
 	// 
 
 
+	// background of the cards 
+	$scope.getPostBackground = function(post){
+
+		if(post.attachments == undefined)
+			return {};
+
+		if(post.attachments[0].id == null)
+			return {};
+
+		var path = undefined;
+		for(var i=0; i < post.attachments.length; i++){
+			path = routerUtils.getThumb(post.id, post.attachments[i]);
+			if(path.startsWith("./img/") == false)
+				break;
+		}
+
+		return {"background-image": "url(" + path + ")" };
+
+	}
+
+	$scope.addTagToSearch = function(tag_id){
+		$scope._tags.push(parseInt(tag_id));
+		routerUtils.goToSpaceWithArgs($scope._tags, $scope._dates);
+	}
+
+	$scope.goToTagSpace = function(tag_id){
+		routerUtils.goToSpaceWithArgs([tag_id], []);
+	}
+
 
 	// ------------- location based functions
-
+	$scope.newnodepath =  {type: "note", tags: $scope._tags, ref: null};
+	
 	//
 	//	tags a contribution with the tags of the space
 	//
 	$scope.addNodeToSpace = function(item){
-
-		// todo: check if this item was created by the user
-		if( item.created_by !== profile.user.id ){
-
-			// todo: show dialog
-
-			alert("You can only add your own nodes to spaces");
-			
-		}
 
 		// check if the item is already present in the results 
 		// return if it does
@@ -117,17 +158,22 @@ angular.module('studionet')
 		profile.tagContribution(item.id, $scope._tags)
 				.success(function(data){
 
-	   					item.tags = data; 
+						var data = data[0];
 
-	   					// refresh the post results
-						$scope.posts.push(item);
-				
+	   					item.tags = data.tags; 
+	   					data.contribution.tags = data.tags
+
+	   					// add the node to results
+	   					$scope.posts.push(data.contribution);
+						
 						// if item isn't in the time frame, show failure alert
 						var toast = $mdToast.simple()
 						      .textContent('Successfully added to this space')
 						      .position("bottom right")
 
 						$mdToast.show(toast);
+
+
 				})
 				.error(function(){
 
@@ -143,7 +189,22 @@ angular.module('studionet')
 
 	$scope.fork = function(){
 
-		alert("forking")
+		// check if the space is present in the users forks
+		if($scope.status > 0){
+
+			var user_forks = profile.user.forked;
+
+			for(var i=0; i< user_forks.length; i++){
+				if(user_forks[i].id == space.id){
+	      			var toast = $mdToast.simple()
+				      .textContent('Oops.. this space is already in your saved spaces')
+				      .position("bottom left")
+
+					$mdToast.show(toast);
+					return;
+				}	
+			}
+		}
 
 	    // Appending dialog to document.body to cover sidenav in docs app
 	    var confirm = $mdDialog.prompt()
@@ -203,5 +264,7 @@ angular.module('studionet')
 	$scope.subscribe = function(){
 		alert("subscription doens't work yet")
 	}
+
+
 
 }]);

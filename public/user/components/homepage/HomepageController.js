@@ -5,6 +5,8 @@ angular.module('studionet')
           $scope.$emit('showBench');
           $scope.$emit('hideSearch');
 
+          $scope.$emit('clearQuery');
+
           $scope.tags = tags.tagsHash;
 
           // get user

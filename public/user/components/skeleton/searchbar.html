@@ -1,0 +1,54 @@
+<div id='searchbar' layout-align='center' layout='row'>
+  
+  <div class='tags' flex layout='row'>
+
+    <md-chips ng-model="query.tags" md-autocomplete-snap
+              md-transform-chip="ctrl.transformChip($chip)"
+              md-removable="true"
+              placeholder="Enter a tag"
+              delete-button-label="Remove Tag"
+              delete-hint="Press delete to remove tag"
+              secondary-placeholder="+Tag">
+
+      <md-chip-template>
+        <span>#{{$chip.name}}</span>
+      </md-chip-template>
+      
+      <md-autocomplete
+          md-selected-item="ctrl.selectedItem"
+          md-search-text="ctrl.searchText"
+          md-items="item in ctrl.querySearch(ctrl.searchText)"
+          md-item-text="item.name"
+          placeholder="Search for a tag...">
+        <span md-highlight-text="ctrl.searchText" flex>{{item.name}}</span>
+      </md-autocomplete>
+
+
+    </md-chips>
+
+  </div>
+
+  <div class='dates' flex='10'>
+  
+    <div class='links' ng-click='showDates=!showDates'>
+      <span ng-if='query.dates[0]==undefined'>[Advanced]</span>
+      <span ng-if='query.dates[0]!=undefined'>{{query.dates[0] | date: 'mediumDate'}} - {{query.dates[1] | date: 'mediumDate'}}</span>
+    </div>
+
+    <div class='advanced' layout='column' ng-show='showDates'>
+      <md-datepicker md-max-date="query.dates[1]" ng-model="query.dates[0]" required></md-datepicker>
+      <md-datepicker md-min-date="query.dates[0]" ng-model="query.dates[1]" required></md-datepicker>
+      <md-button class="md-raised" ng-click='showDates=false'>Done</md-button>
+    </div>
+
+  </div>
+
+
+
+  <div flex='10' class='searchbtn' ng-click='goToSpaceWithArgs(query)' ng-hide='query.tags.length == 0'>
+      <!-- <span>[Search]</span> -->
+      <ng-md-icon icon="search" style="fill: gray" size="36"></ng-md-icon>
+  </div>
+
+
+</div>

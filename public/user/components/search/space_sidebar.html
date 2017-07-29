@@ -1,19 +1,23 @@
+<div class='space_sidebar'>
 
-  <h3 class='md-caption'>
+  <div class='details'>
     <span ng-if='_dates.length > 0' ng-class=' expired ? "{color: red}" : "" '>{{_dates[0] | date: 'mediumDate' }} - {{_dates[1] | date: 'mediumDate' }}</span>
-  </h3>
-  <h1 class='md-title'>{{space_name}}</h1>
+  </div>
 
-  <div><span ng-repeat='t in _tags'>#{{ getTagString(t).name }} </span></div>
+  <div class='header'>{{space_name}}</div>
+
+  <div class='tags pointer'>
+      <span ng-repeat='t in _tags' ng-click='goToTagSpace(t)'>#{{ getTagString(t).name }} </span>
+  </div>
   
   <!-- button to subscribe | disabled for now -->
   <!-- md-button aria-label="menu" class="md-raised md-warn" ng-disabled='status == 2 || status == 4' ng-click='subscribe()'> Follow </md-button> -->
 
   <!-- button to fork -->
-  <md-button aria-label="menu" class="md-raised md-warn" ng-disabled='status == 3 || status == 4' ng-click='fork()'> Collect </md-button>
+  <!-- <md-button aria-label="menu" class="md-raised md-warn" ng-disabled='status == 3 || status == 4' ng-click='fork()'> Collect </md-button> -->
 
   <!-- the space is saved - display extra information -->
-  <div ng-if='status > 0'>
+  <div ng-if='status > 0 && false'>
     
     <h6 class='md-caption' style='margin-bottom: 0px;'>About this space</h6>
     <div style='font-size: 12px;'>{{about_space}}</div>
@@ -43,3 +47,5 @@
     <h6 class='md-caption' style='margin-bottom: 0px;'>Leaders</h6>
     <ul style='padding-left: 10px;'><li ng-repeat='leader in leaders' style='font-size: 12px;'><a ui-sref='home.profile-details({"address": leader.handle})'>{{leader.name}}</a></li></ul>
   </div>
+  
+</div>

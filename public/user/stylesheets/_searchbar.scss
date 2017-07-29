@@ -1,0 +1,99 @@
+#searchbar{
+	margin: 0px 2*$max-padding 0px $max-padding ;
+
+	height: 48px; // fix this
+
+
+	ng-md-icon{
+		svg{
+			width: 80%;
+			height: 80%;
+			margin-top: 5px;
+			margin-left: 5px;
+		}
+	}
+
+	.tags{
+		border: 1px solid white;
+		background-color: #FAFAFA;
+		margin-top: 0px;
+		position: relative;
+
+		span{
+			font-size: 12px;
+		}
+
+		md-chips md-chip{
+			display: inline-block;
+			background: transparent;
+			float: left;
+		}
+
+		md-chip-remove-container{
+			display: none;
+		}
+
+		button.md-chip-remove{
+			display: none;
+		}
+
+		.md-chip .md-chip-input-container{
+			float: clear;
+			margin: 0px;
+		}
+
+	}
+
+
+	.dates{
+		font-size: 12px;
+		line-height: 48px;
+		margin-left: 10px;
+
+		.links{
+			color:  blue;
+			font-size: 12px;
+			line-height: 14px !important;
+			margin: 10px 0px;
+			font-style: italic;
+			cursor: pointer;
+
+		}
+
+		.advanced{
+			position: absolute;
+			top: 60px;
+			background: white;
+			margin-left: -200px;
+			width: 250px;
+		}
+
+		md-datepicker{
+
+			md-icon{
+				fill: rgba(0,0,0,.5); 	
+			}
+		}
+
+		/* .md-button.md-icon-button{
+			margin-left: 5px;
+			margin-right: 0px;
+			padding: 5px;
+			height: 30px;
+			width: 30px;
+
+		} */
+
+		/* .md-datepicker-input-container{
+			margin-left: 0px;
+			font-size: 10px;
+		} */
+	}
+
+	.searchbtn{
+		font-size: 12px;
+		line-height: 48px;
+	}
+
+}
+

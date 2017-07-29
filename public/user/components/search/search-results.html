@@ -1,16 +1,18 @@
 <div layout="row" layout-xs='column' layout-align="top top" layout-fill layout-margin flex >
 
   <!-- Section : Displaying the search results -->
-  <div flex-gt-xs="80" layout="column" layout-align="top" style='overflow: auto;'>
+  <div class='results-container' flex-gt-xs="80" layout="column" layout-align="top" style='overflow: auto;' >
     
     <!-- suggestions to add the next tags -->
-    <div>
-      <h3 class='md-caption'>Suggested Tags</h3>
-      <div layout="row">
-        <md-chips layout='row' ng-repeat="item in suggested_tags">
-          <md-chip class="pointer" style='padding: 10px; border-radius:5px;'>{{item}}</md-chip>
-        </md-chips>
-      </div>
+    <div class='tags'>
+      <div class='subheader' ng-if='suggested_tags.length > 0'>Add another tag ...</div>
+      <!-- <div class='subheader' ng-if='suggested_tags.length == 0'>No other tags to add</div> -->
+      <span class='pointer' ng-repeat='tag in suggested_tags | orderBy: "-count"' ng-click='addTagToSearch(tag.id)'>
+              #{{ getTagString(tag.id).name }}
+              <md-tooltip md-delay="400" md-direction="bottom" md-autohide="true">
+                {{ tag.count }} post(s) contain this tag
+              </md-tooltip>
+      </span>
     </div>
 
 
@@ -18,27 +20,47 @@
     <div layout="row" layout-xs="column" layout-margin layout-wrap>
 
       <!-- adding a new node in this space; hidden if timed space is expired -->
-      <md-card class='empty-card' md-theme="default" dnd-list dnd-drop='addNodeToSpace(item)' ng-if='expired == false' dnd-draggable='post'>
+      <md-card class='empty-card' md-theme="default" ng-if='expired == false' dnd-type="'space'" dnd-allowed-types="['post']" dnd-list dnd-drop='addNodeToSpace(item)' dnd-draggable='{status: 1}' dnd-callback='fork()'>
         <md-content style="height: 100%; font-size: 14px; padding: 15px;">
-          <span ng-repeat='t in _tags'>#{{ getTagString(t).name }} </span>
+            <!-- <span ng-repeat='t in _tags'>#{{ getTagString(t).name }} </span> -->
+            <a id='addNode' ui-sref='home.node(newnodepath)'>
+              <ng-md-icon icon="add_box" style="fill: green" size="48">
+              </ng-md-icon>
+            </a>
         </md-content>
       </md-card>
 
       <!-- expired message container -->
-      <md-card class='empty-card' md-theme="default" ng-if='expired == true'>
-        <md-card-title layout-align='center'>
-          <md-card-title-text>
-              <span class="md-headline">Expired</span>
-          </md-card-title-text>
-        </md-card-title>
+      <md-card class='empty-card' md-theme="default" ng-if='expired == true' layout-align='center'>
+          <ng-md-icon icon="lock" style="fill: gray" size="48">
+            <!-- <md-tooltip md-delay="400" md-direction="bottom" md-autohide="true">
+             The last date to submit to this space has passed. You can still save nodes to this space in your own folder but they will not be displayed in this space.
+            </md-tooltip> -->
+          </ng-md-icon>
+          
       </md-card>
 
       <!-- the results when results exist-->
-      <md-card class='pointer mini-post' ng-repeat='post in posts' dnd-draggable='post' ng-click='goToNode(post.id)'> 
+      <md-card class='pointer mini-post' ng-repeat='post in posts | orderBy:"-dateCreated"' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
+        
         <div class='dragBar'></div>
+        
         <md-content layout-wrap>
-            <div class='post-title'>{{post.title}}</div>
+            
+            <div class='poster' ng-style='getPostBackground(post)'>
+              <div class='post-title' ng-if='post.attachments[0].id == null'>{{post.title}}</div>
+            </div>
+
+            <md-divider></md-divider>
+
+            <div class='post-details'>
+                <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>
+                <div class='author-avatar'>{{getUserAvatar(post.createdBy)}}</div>
+                <div class='author-name'>{{getUserName(post.createdBy)}}</div> 
+                <div class='small'>{{post.dateCreated |  date: 'mediumDate' }} </div>
+            </div>
         </md-content>
+
       </md-card>
 
       <!-- todo: message when results don't exist -->

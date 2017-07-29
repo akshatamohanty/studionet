@@ -4,7 +4,7 @@
 
 #workbench-container{
 
-    border-right: 1px solid black;
+    border-right: 2px solid #D9D9D9;
 
     width: $bench-width;
     min-width: $bench-width;
@@ -49,14 +49,14 @@
 
       md-content{
         
-        height: calc(100% - #{$profile-bar-height} - #{2*$md-padding} );
+        height: calc(100% - #{2*$md-padding} );
         overflow: hidden;
 
 
         .profile-posts{
           padding: 0px 20px;
           overflow: scroll;
-          height: 97%;
+          height: 100%;
         }
 
         .folder{

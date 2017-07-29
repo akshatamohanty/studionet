@@ -11,63 +11,34 @@
       </div>
 
       <!-- Branding -->
-      <div hide show-gt-xs flex-gt-sm="10" layout-align='top left'>
-        <span md-truncat>Studionet</span>
+      <div hide show-gt-xs flex-gt-sm="15" layout-align='top left'>
+        <a ui-sref='home.homepage'><span md-truncat>Studionet</span></a>
       </div>
 
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="70" ng-controller='CustomInputDemoCtrl as ctrl'>
-        
-        <div layout="row">
-
-          <md-chips flex='70' ng-model="query.tags" md-autocomplete-snap
-                    md-transform-chip="ctrl.transformChip($chip)"
-                    md-require-match="true">
-            
-            <md-autocomplete
-                md-selected-item="ctrl.selectedItem"
-                md-search-text="ctrl.searchText"
-                md-items="item in ctrl.querySearch(ctrl.searchText)"
-                md-item-text="item.name"
-                placeholder="Search for a tag...">
-              <span md-highlight-text="ctrl.searchText" flex>{{item.name}}</span>
-            </md-autocomplete>
-
-            <md-chip-template>
-              <strong>#{{$chip.name}}</strong>
-            </md-chip-template>
-
-          </md-chips>
-
-          <div flex='30'>
-            <md-datepicker ng-model="query.dates[0]"></md-datepicker>
-            <md-datepicker md-min-date="query.dates[0]" ng-model="query.dates[1]" md-placeholder="Enter date"></md-datepicker>
-            <md-button class='raised' ng-click='goToSpaceWithArgs(query)' style='display: inline; color: black' ng-disabled="query.tags.length==0">Search</md-button>
-          </div>
-
-        </div>
-      
+      <div show-gt-sm flex="80">
+        <ng-include src="'./components/skeleton/searchbar.html'" ng-controller="searchbarCtrl as ctrl"></ng-include>
       </div>
 
 
       <!-- buttons -->
-      <div flex="10">
+      <div flex="0">
 
-        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
+        <!-- <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
           <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
           <md-tooltip
             md-direction="bottom">
             Search
           </md-tooltip>
-        </md-button>
+        </md-button> -->
 
-        <md-button class="md-icon-button" aria-label="Home" ng-disabled="false" ng-click='showProfile()'>
+        <!-- <md-button class="md-icon-button" aria-label="Home" ng-disabled="false" ng-click='showProfile()'>
           <a ui-sref='home.homepage'><ng-md-icon icon="home" style="fill: white" size="25"></ng-md-icon></a>
           <md-tooltip
             md-direction="bottom">
             Home
           </md-tooltip>
-        </md-button>
+        </md-button> -->
         
       </div>
 

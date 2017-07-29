@@ -1,7 +1,3 @@
-.md-datepicker-input-container{
-  display: none;
-}
-
 md-content{
   background: transparent;
 }
@@ -10,30 +6,23 @@ md-content{
   height: auto;
 }
 
-.md-chips{
-  font-size: 14px;
-  box-shadow: none;
-  float: left;
+
+// -- text Angular
+
+.textAngular .btn-toolbar{
+  background-color: transparent;
+  padding: 0px 0px 10px 0px;
 }
 
-div.md-chip-content{
-  display: inline-block;
+.textAngular .btn-default{
+  border: 1px solid #ccc;
 }
 
-div.md-chip-remove-container{
-  display: inline-block;
-
-  md-icon{
-    height: 14px;
-    width: 14px;
-  }
-
-  button{
-    border-radius: 50%;
-    padding: 0px;
-  }
+.textAngular .btn-default{
+  border: 0px;
+  margin: 0px 0px 2px 2px;
 }
 
-md-chips{
-  height: $toolbar-height;
+.ta-scroll-window.form-control{
+  border: 1px solid #CCC;
 }

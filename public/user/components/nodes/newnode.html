@@ -1,21 +1,33 @@
 <div  layout='column' layout-align='top center' layout-fill>
+  
   <div class='view-container'>
     
     <!-- back button -->
-    <a onclick='history.back()'><u>Back</u></a>
+    <!-- <back-button></back-button> -->
 
     <!-- actual form -->
-    <div>
+    <div style='margin-top: 30px;'>
 
-        <h1>New {{ contributionData.contentType }}</h1>
+        <div class='post-header'>
+        
+          <h1 style='display: inline-block;'>New {{ contributionData.contentType }}</h1>
 
-        <div>Existing tags, if any</div>
+          <md-radio-group ng-model="contributionData.contentType" style='float:right; margin-top: -15px;'>
+            <md-radio-button value="note" class="md-primary inline-radio">Note</md-radio-button>
+            <md-radio-button value="question" class='inline-radio'>Question</md-radio-button>
+            <md-radio-button value="assignment" class='inline-radio'>Assignment</md-radio-button>
+          </md-radio-group>
+        
+        </div>
 
-        <md-radio-group ng-model="contributionData.contentType">
-          <md-radio-button value="note" class="md-primary inline-radio">Note</md-radio-button>
-          <md-radio-button value="question" class='inline-radio'>Question</md-radio-button>
-          <md-radio-button value="assignment" class='inline-radio'>Assignment</md-radio-button>
-        </md-radio-group>
+
+        <md-divider></md-divider>
+
+        <div class='tags'>
+          <span ng-repeat="tag in contributionData.tags">{{getTagName(tag)}}</span>
+        </div>
+
+
 
         <!-- Title -->
         <md-input-container class="md-block">
@@ -31,14 +43,18 @@
 
         <!-- attachments -->
         <section>
-          <a type="button" ngf-select="uplodateFiles($files, contributionData)" ngf-multiple="true">
-          <i class='fa fa-paperclip'></i><h5 style='display: inline-block;'>&nbsp;&nbsp;&nbsp;&nbsp;Attachments <small>({{contributionData.attachments.length}} file(s) uploaded)</small></h5>
+          <a class='pointer' type="button" ngf-select="uplodateFiles($files, contributionData)" ngf-multiple="true">
+                  <i class='fa fa-paperclip'></i>
+                <h3 style='display: inline-block;'>
+                      Attachments 
+                      <small>({{contributionData.attachments.length}} file(s) uploaded)</small>
+                </h3>
           </a>
           
 
           <!--<input type="file" ngf-select="showUplodatedFiles" ng-model="contributionData.attachments" name="file" ngf-multiple="true">-->
           <div class="attachments" ng-repeat="attachment in contributionData.attachments">
-            <h5 style="color: blue; width: 70%; display: inline-block;"><u>{{ attachment.name }} ({{ attachment.size/1000 }} KB)</u></h5>
+            <h4 style="color: blue; width: 70%; display: inline-block;"><u>{{ attachment.name }} ({{ attachment.size/1000 }} KB)</u></h4>
             <button style='float: right; display: inline-block;' class="btn btn-xs" ng-click="removeFiles(attachment)">X</button>
           </div>
         </section>
@@ -64,7 +80,7 @@
         </div> -->
 
         <!-- actions -->
-        <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+        <section layout="row" layout-sm="column" layout-align="center center" layout-margin>
           <md-button class="md-primary md-raised" ng-click='createContribution()' ng-disabled="!(contributionData.body && contributionData.title)" >Save</md-button>
           <md-button class="md-warn raised" ng-click='close()'>Discard</md-button>
         </section>

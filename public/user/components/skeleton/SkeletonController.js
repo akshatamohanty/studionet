@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags',
-                               function($scope, $mdToast, profile, contributions, spaces, routerUtils, tags){
+.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', '$stateParams',
+                               function($scope, $mdToast, profile, contributions, spaces, routerUtils, tags, $stateParams){
 
           $scope.showBench = true;
           $scope.searchActive = false;
@@ -11,9 +11,14 @@ angular.module('studionet')
           $scope.$on('showBench', function(){ $scope.showBench = true });
           $scope.$on('showSearch', function(){ $scope.searchActive = true });
 
+          $scope.$on('clearQuery', function(){ $scope.query = {tags: [], dates: []}; $scope.showDates = false;  });
+
           // global references -- good practice???
           $scope.posts = contributions.contributionsHash; 
+          contributions.registerObserverCallback(function(){ console.log("updating contributions"); $scope.posts = contributions.contributionsHash;  });
+
           $scope.spaces = spaces.spacesHash;
+          spaces.registerObserverCallback(function(){ console.log("updating spaces"); $scope.spaces = spaces.spacesHash; });
 
           // user profile
           $scope.user = profile.user;
@@ -38,11 +43,12 @@ angular.module('studionet')
           $scope.createTag = tags.createTag;
 
 
+
 }]);
 
 // search bar
 angular.module('studionet')
-      .controller('CustomInputDemoCtrl', function DemoCtrl ($timeout, $q, tags) {
+      .controller('searchbarCtrl', function DemoCtrl ($timeout, $q, tags) {
 
           var self = this;
 
@@ -58,6 +64,7 @@ angular.module('studionet')
           self.autocompleteDemoRequireMatch = true;
           self.transformChip = transformChip;
 
+
           /**
            * Return the proper object when the append is called.
            */
@@ -65,6 +72,11 @@ angular.module('studionet')
             // If it is an object, it's already a known chip
             if (angular.isObject(chip)) {
               return chip;
+            }
+
+            else{
+              alert("not in database? create a tag?");
+              return;
             }
 
             // Otherwise, create a new one
@@ -151,11 +163,6 @@ angular.module('studionet')
         targetEvent: $event
       });
     };
-
-    var newforks = [];
-    $scope.fork = function(){
-      console.log("forking space");
-    }
 
     $scope.addNodeToFork = function(item, space){
 
