@@ -45,11 +45,12 @@
 
       .stats{
         font-size: 12px;
+        font-family: $header-font !important;
       }
 
       md-content{
         
-        height: calc(100% - #{2*$md-padding} );
+        height: calc(100% - #{6*$md-padding} );
         overflow: hidden;
 
 

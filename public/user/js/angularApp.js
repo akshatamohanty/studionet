@@ -191,11 +191,45 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 
 // Configuration options for Angular Material and Plugins
 app.config(['$mdThemingProvider', function($mdThemingProvider){
-	$mdThemingProvider.theme('default')
-			.primaryPalette('light-green');
-	}])
-	.config(['$mdIconProvider', function($mdIconProvider) {
-	        $mdIconProvider.icon('md-close', 'img/icons/ic_close_24px.svg', 24);
+		
+
+		$mdThemingProvider.theme('default').primaryPalette('studionet', {
+		      'default': '400', // by default use shade 400 from the pink palette for primary intentions
+		      'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
+		      'hue-2': '600', // use shade 600 for the <code>md-hue-2</code> class
+		      'hue-3': 'A100' // use shade A100 for the <code>md-hue-3</code> class
+		    })
+		    // If you specify less than all of the keys, it will inherit from the
+		    // default shades
+		    .accentPalette('studionet', {
+		      'default': '200', // use shade 200 for default, and keep all other shades the same
+		    });
+
+		$mdThemingProvider.definePalette('studionet', {
+		    '50': 'FFFFFF',
+		    '100': 'FFFFFF',
+		    '200': '727272',
+		    '300': 'FFFFFF',
+		    '400': '#575555',
+		    '500': 'FFFFFF',
+		    '600': '#E5E5E5',
+		    '700': 'FFFFFF',
+		    '800': 'FFFFFF',
+		    '900': '#444242',
+		    'A100': '7A7A7A',
+		    'A200': 'FFFFFF',
+		    'A400': 'FFFFFF',
+		    'A700': 'FFFFFF',
+		    'contrastDefaultColor': 'dark',    // whether, by default, text (contrast)
+		                                        // on this palette should be dark or light
+
+		    'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+		     '200', '300', '400', 'A100'],
+		    'contrastLightColors': undefined    // could also specify this if default was 'dark'
+		  });
+
+
+
 	}])
 	.config(function($provide) {
 	    $provide.decorator('taOptions', ['$delegate', function(taOptions) {

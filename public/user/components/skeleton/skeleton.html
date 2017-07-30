@@ -1,7 +1,7 @@
 <div layout='column' style='height: 100%; ' layout-fill>
   
   <!-- toolbar -->
-  <md-toolbar class="scroll-shrink" id="toolbar">
+  <md-toolbar class="scroll-shrink md-accent" id="toolbar">
     
     <div class="md-toolbar-tools" layout-align='top center'>
       
@@ -48,20 +48,18 @@
 
 
   <!-- main body container -->
-  <md-content id='app-body' layout="row" flex>
+  <md-content id='app-body' layout="row" flex layout='start start'>
 
       <!-- workbench -->
       <!-- this slides in and out depending on the showBench value -->
-      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column' style='height: 100%; ' layout-fill>
+      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column' layout-fill>
         <ng-include src="'./components/skeleton/workbench.html'" id='workbench' ng-controller="WorkbenchCtrl as bench"></ng-include>
       </div>
       
       <!-- states -->
-      <div flex>
-        <div layout='column' layout-align='top left' layout-fill layout-padding>
-          <!-- view-container: centers the content -->
-          <ui-view class='view-container'></ui-view>
-        </div>
+      <div layout='column' layout-align='start stretch' flex>
+        <!-- view-container: centers the content -->
+        <ui-view class='view-container'></ui-view>
       </div>
 
   </md-content>

@@ -1,4 +1,4 @@
-<div class='scroll'>
+<div class='scroll post-view-section'>
 
 	<!-- back button -->
 	<a onclick='history.back()' style='display: block;'><u>Back</u></a>
@@ -10,22 +10,28 @@
 	</div> -->
 
 	<!-- parent -->
-	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item)'>
+	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item, post_details.id)'>
 		
-		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent=parent-1' ng-disabled='parent==0'>
-			<ng-md-icon icon="keyboard_arrow_left" size='14' style="fill: #222"></ng-md-icon> 
+		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent - 1 >= 0 ? parent=parent-1 :  null'>
+			<ng-md-icon icon="keyboard_arrow_left" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent > 0 '></ng-md-icon>
 		</md-button>
 		
-		<md-card class='post-details' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)'>
-			<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} <span ng-if='post_details.parents[parent].id==null'>This node has no parents</span></div>
+		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)' ng-if='post_details.parents[parent].id!=null'>
+			<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} </div>
 			<div layout="row">
 				<img class='author-profile-picture linked' src='users[post_details.parents[parent].createdBy].avatar'>
 				<div class='author-name linked'>{{users[post_details.parents[parent].createdBy].name}}</div>
 			</div>
 		</md-card>
+
+
+		<md-card class='post-details pointer' layout='column' flex ng-if='post_details.parents[parent].id==null'>
+			<div class='post-title linked'>This post has no preceeding posts.</div>
+		</md-card>
+
 		
-		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent=parent+1' ng-disabled='parent==post_details.parents.length-1'>
-			<ng-md-icon icon="keyboard_arrow_right" size='14' style="fill: #222"></ng-md-icon>
+		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null'>
+			<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon>
 		</md-button>
 
 	</div>
@@ -34,13 +40,55 @@
 	<div class='post-container' layout='column' dnd-draggable='post_details'>
 
 		<md-card class='post-details' layout='column' flex>
-			<div class='post-title main'>{{post_details.type}} : {{ post_details.title }}</div>
-			<div class='tags'>
-				<span ng-repeat='tag in post_details.tags'>#{{tags[tag.tag_id].name}}</span>
+
+			<div class='post-actions'>
+
+				<div class='action' ng-click='reply(post_details)'>
+					<ng-md-icon icon="reply" size='20' style="fill: #AFAFAF"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Reply</md-tooltip>
+				</div>
+
+				<div class='action' ng-click='comment(post_details.id)'>
+					<ng-md-icon icon="chat_bubble" size='20' style="fill: #AFAFAF"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Comment</md-tooltip>
+				</div>
+
+				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='like(post_details.id)'>
+					<ng-md-icon icon="thumb_up" size='20' style="fill: #AFAFAF"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Like this post!</md-tooltip>
+				</div>
+
+				<div class='action' ng-if='post_details.createdBy == user.id && post_details.children[0].id == null && post_details.comments[0].id == null;' ng-click='delete(post_details.id)'>
+					<ng-md-icon icon="delete" size='20' style="fill: #AFAFAF"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
+				</div>
+
+				<!-- <div class='action' ng-if='post_details.createdBy == user.id;' ng-click='edit(post_details.id)'>
+					<ng-md-icon icon="mode_edit" size='20' style="fill: #AFAFAF"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
+				</div> -->
+
+
+				<!-- <div flex='20' style='height: 80px; border: 1px dashed gray; text-align: center; line-height: 80px;'>
+					<md-button class="md-mini" ng-disabled="false" aria-label="add a link" md-no-ink="false" md-ripple-size="full">
+						Add a link
+					</md-button>
+				</div> -->
+			</div>
+
+
+			<div class='post-title main'> 
+					<ng-md-icon icon="{{ post_details.type | post_icon }}" size='28' style="fill: #AFAFAF;">
+						<md-tooltip md-direction="bottom">{{ post_details.type }}</md-tooltip>
+					</ng-md-icon> 
+					{{ post_details.title }}
 			</div>
 			<div layout="row">
 				<img class='author-profile-picture main' src='users[post_details.createdBy].avatar'>
 				<div class='author-name main'> {{ users[post_details.createdBy].name }}</div>
+			</div>
+			<div class='tags'>
+				<span ng-repeat='tag in post_details.tags'>#{{tags[tag.tag_id].name}}</span>
 			</div>
 
 			<md-divider></md-divider>
@@ -51,15 +99,15 @@
 				<div ng-bind-html='post_details.body'></div>
 
 				<!-- Attachments - if present -->
-	            <div class='row' ng-if='post_details.attachments[0].id!=null'>
+	            <div ng-if='post_details.attachments[0].id!=null'>
 	                <b>Attachments ({{post_details.attachments.length}} files)</b>
 	                <div ng-repeat="attachment in post_details.attachments">
 	                  <a href="/api/post_details/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
-	                    <div class='row'>
-	                      <div class='col-xs-2 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}});'></div>
-	                      <div class='col-xs-10'>
+	                    <div layout='row'>
+	                      <div class='flex-20 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}});'></div>
+	                      <div class='flex-80'>
 	                          <div class='attachment-details'>
-	                            <h6>{{attachment.attachment.name}}</h6>
+	                            <h4>{{attachment.attachment.name}}</h4>
 	                            <div> Size: {{ (attachment.attachment.size/1000000).toFixed(2) }} MB </div>
 	                          </div>
 	                      </div>
@@ -69,38 +117,30 @@
 	            </div>
 
 	            <!-- post-functions -->
-				<div class='post-functions' layout='row' layout-fill>
+				<div class='comment' layout='column' ng-if='post_details.comments[0].id != null'>
 
-					<md-button ng-if='post_details.createdBy == user.id && post_details.children[0].id == null;' ng-click='delete(post_details.id)'>DELETE</md-button>
+					<md-divider></md-divider>
+	                
+	                <h3 style='line-height: 24px;'>
+	                	Comments 
+	                </h3>
 
-					<div flex='20' style='height: 80px; border: 1px dashed gray; text-align: center; line-height: 80px;'>
-						<md-button class="md-mini" ng-disabled="false" aria-label="add a link" md-no-ink="false" md-ripple-size="full">
-							Add a link
-						</md-button>
-					</div>
+	                <!-- commenting area -->
+	                <textarea ng-show='showComment'>
+	                	
+	                </textarea>
 
-					<div flex='90' style='padding: 20px;'>
-		                
-		                <h3><i class='fa fa-comments'></i>&nbsp;&nbsp;&nbsp;Comments</b></h3>
+					<md-divider></md-divider>
 
+	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: dateCreated'>
+	                    
+	                    <b>{{users[comment.createdBy].nickname ? users[comment.createdBy].nickname : users[comment.createdBy].name}}</b> says:
 
-		                <div class="row comment" ng-repeat='reply in post_details.comments | orderBy: dateCreated'>
-		                    <div class='row comment-heading'>
-		                      <div class='comment-author-name'>
-		                          <b>{{users[reply.createdBy].nickname ? users[reply.createdBy].nickname : users[reply.createdBy].name}}</b> says:
-		                      </div>
-		                      <div class='dateCreated'><time am-time-ago="reply.lastUpdated ? reply.lastUpdated : reply.dateCreated "></time></div>
-		                    </div>
+	                    <div ng-bind-html="comment.body"></div>
+	                    
+	                    <div class='pointer' style='font-size: 10px; color: blue;' ng-if='comment.createdBy == user.id' ng-click='delete(comment.id, true)'>[ Delete ]</div>
 
-		                    <div class='row comment-body pointer' ng-click='setData(reply.id)'>
-		                      <div ng-bind-html="reply.body"></div>
-		                      <div class='comment-actions' ng-if='reply.createdBy == user.id'>
-		                        <!-- <a class='action' ng-click='setData(reply.id)'>[Edit]</a>
-		                        <a class='action' ng-click='setData(reply.id)'>[Delete]</a> -->
-		                      </div>
-		                    </div>
-		                </div>
-					</div>
+	                </div>
 
 				</div>
 			</div>
@@ -113,31 +153,36 @@
 	</div>
 
 	<!-- children -->
-	<div class='linked-post-container' layout='row' layout-wrap>
+	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewChild(item, post_details.id)'>
 		
-		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child=child-1' ng-disabled='child==0'>
-			<ng-md-icon icon="keyboard_arrow_left" size='14' style="fill: #222"></ng-md-icon>
+		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child - 1 >= 0 ? child=child-1 :  null'>
+			<ng-md-icon icon="keyboard_arrow_left" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child>0'></ng-md-icon>
 		</md-button>
 		
-		<md-card class='post-details' layout='column' flex ng-click='setMainPost(post_details.children[child], 1)'>
-			<div class='post-title linked'>{{child+1}} | {{post_details.children.length}} {{post_details.children[child].title}} <span ng-if='post_details.children[child].id==null'>This node has no children</span></div>
+		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.children[child].id)' ng-if='post_details.children[child].id!=null'>
+			<div class='post-title linked'>{{child+1}} | {{post_details.children.length }} {{post_details.children[child].title}} </div>
 			<div layout="row">
 				<img class='author-profile-picture linked' src='users[post_details.children[child].createdBy].avatar'>
 				<div class='author-name linked'>{{users[post_details.children[child].createdBy].name}}</div>
 			</div>
 		</md-card>
-		
-		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child=child+1' ng-disabled='child==post_details.children.length-1'>
-			<ng-md-icon icon="keyboard_arrow_right" size='14' style="fill: #222"></ng-md-icon>
+
+
+		<md-card class='post-details pointer' layout='column' flex ng-if='post_details.children[child].id==null'>
+			<div class='post-title linked'>This post has no replies.</div>
+		</md-card>
+
+		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child + 1 < post_details.children.length ? child=child+1: null'>
+			<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child<post_details.children.length-1'></ng-md-icon>
 		</md-button>
 
 	</div>
 
-	<div class='linked-post-container ancestor' ng-repeat='descendant in descendants' layout='row' layout-wrap>
+	<!-- <div class='linked-post-container ancestor' ng-repeat='descendant in descendants' layout='row' layout-wrap>
 		<md-card class='post-details' layout='column' flex ng-click='expand(ancestor.id)'>
-			<div class='post-title linked'>{{post_details.parents[parent].title}} <span ng-if='post_details.parents[parent].id==null'>This node has no parents</span></div>
+			<div class='post-title linked'>{{post_details.children[child].title}} <span ng-if='post_details.children[child].id==null'>This node has no parents</span></div>
 		</md-card>
-	</div>
+	</div> -->
 
 
 </div>

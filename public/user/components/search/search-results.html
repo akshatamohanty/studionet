@@ -1,7 +1,7 @@
-<div layout="row" layout-xs='column' layout-align="top top" layout-fill layout-margin flex >
+<div class='scroll'>
 
   <!-- Section : Displaying the search results -->
-  <div class='results-container' flex-gt-xs="80" layout="column" layout-align="top" style='overflow: auto;' >
+  <div class='results-container' flex layout="column" layout-align="start start" style='overflow: auto;' >
     
     <!-- suggestions to add the next tags -->
     <div class='tags'>
@@ -17,16 +17,17 @@
 
 
     <!-- results-->
-    <div layout="row" layout-xs="column" layout-margin layout-wrap>
+    <div layout="row" layout-xs="column" layout-wrap>
 
       <!-- adding a new node in this space; hidden if timed space is expired -->
       <md-card class='empty-card' md-theme="default" ng-if='expired == false' dnd-type="'space'" dnd-allowed-types="['post']" dnd-list dnd-drop='addNodeToSpace(item)' dnd-draggable='{status: 1}' dnd-callback='fork()'>
-        <md-content style="height: 100%; font-size: 14px; padding: 15px;">
-            <!-- <span ng-repeat='t in _tags'>#{{ getTagString(t).name }} </span> -->
-            <a id='addNode' ui-sref='home.node(newnodepath)'>
+        <md-content style="height: 100%; font-size: 14px; padding: 15px; overflow: hidden;" layout='column'>
+            <!-- <a id='addNode' ui-sref='home.node(newnodepath)'> -->
+            <a id='addNode'>
               <ng-md-icon icon="add_box" style="fill: green" size="48">
               </ng-md-icon>
             </a>
+            <span class='space-name' ng-if='space_name != "..."'><b>{{space_name}}</b></span>
         </md-content>
       </md-card>
 
@@ -41,11 +42,11 @@
       </md-card>
 
       <!-- the results when results exist-->
-      <md-card class='pointer mini-post' ng-repeat='post in posts | orderBy:"-dateCreated"' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
+      <md-card class='pointer mini-post' ng-repeat='post in posts | orderBy:"-dateCreated" | filter: {contentType: "!comment"}'   dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
         
         <div class='dragBar'></div>
         
-        <md-content layout-wrap>
+        <md-content layout='column'>
             
             <div class='poster' ng-style='getPostBackground(post)'>
               <div class='post-title' ng-if='post.attachments[0].id == null'>{{post.title}}</div>
@@ -57,7 +58,7 @@
                 <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>
                 <div class='author-avatar'>{{getUserAvatar(post.createdBy)}}</div>
                 <div class='author-name'>{{getUserName(post.createdBy)}}</div> 
-                <div class='small'>{{post.dateCreated |  date: 'mediumDate' }} </div>
+                <div class='small'>{{post.dateCreated |  date: 'mediumDate' }}</div>
             </div>
         </md-content>
 
@@ -71,9 +72,9 @@
   </div>
 
   <!-- Section : About the Space -->
-  <div flex-gt-xs="20" layout-align="top">  
+  <!-- <div flex-gt-xs="20" layout-align="top">  
     <ng-include src="'components/search/space_sidebar.html'"></ng-include>
-  </div>
+  </div> -->
 
 
 </div>

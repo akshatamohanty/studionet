@@ -49,8 +49,6 @@ router.route('/')
         return parseInt(t);
       }).sort(function(a,b){ return a > b });
 
-      console.log(_tags);
-
       // Check for existing spaces with same tag connections and timed value
       // If space exists, return without doing anything
       // If space doesn't exist, return after creating the space
@@ -92,7 +90,6 @@ router.route('/:spaceId/fork')
 
   // return all spaces
   .post(auth.ensureAuthenticated, function(req, res){
-      console.log(req.body, req.params)
       var query = [ 
                     "MATCH (u:user) WHERE ID(u) = {userIdParam}",
                     "WITH u",
@@ -117,6 +114,33 @@ router.route('/:spaceId/fork')
         }
       });
       
+
+  })
+
+  .delete(auth.ensureAuthenticated, function(req, res){
+
+      console.log("im here");
+      
+      var query = [ 
+                    "MATCH (u:user)-[f:FORKED]->(s:space) WHERE ID(u) = {userIdParam} and ID(s) = {spaceIdParam}",
+                    "DELETE f",
+                  ].join(" ");
+
+      var params = {
+        spaceIdParam : parseInt(req.params.spaceId),
+        userIdParam : parseInt(req.user.id),
+      };
+
+      console.log(params);
+
+      db.query(query, params, function(error, result){
+        if (error){
+          console.log('Error forking the space: ', error);
+        }
+        else{
+          res.send(result);
+        }
+      });
 
   });
 

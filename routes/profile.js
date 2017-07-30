@@ -30,6 +30,10 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
     'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = "" ',
     'WITH u, forks, follows, c, r1, collect (id(t)) as tags',
     'WITH forks, follows, u, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, type: c.contentType, tags: tags, ref: c.ref }) as contributions',
+    'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[v:VIEWED]-(u1:user) WHERE NOT ID(u)=ID(u1)',
+    'WITH forks, follows, u, contributions, count(v) as views',
+    'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[r:RATED]-(u3:user) WHERE NOT ID(u)=ID(u3)',
+    'WITH forks, follows, u, contributions, views, count(r) as thumbs',
     //'WITH groups, collect({id: id(c), title: c.title, rating: c.rating, rateCount: c.rateCount, views: c.views}) as contributions, u',
     //'OPTIONAL MATCH p3=(t:tag)<-[r1:CREATED]-(u)',
     //'WITH groups, collect({id: id(t)}) as tags, contributions, u',
@@ -45,6 +49,8 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
               avatar: u.avatar,\
               lastLoggedIn: u.lastLoggedIn,\
               id: id(u),\
+              views: views,\
+              thumbs: thumbs,\
               contributions: contributions,\
               follows: follows,\
               forked: forks \

@@ -1,18 +1,20 @@
-<div  layout='column' layout-align='top center' layout-fill>
+<div class='scroll post-view-section' layout='column' layout-align='start center' style='margin-top: 20px;'>
   
-  <div class='view-container'>
-    
     <!-- back button -->
-    <!-- <back-button></back-button> -->
+    <!-- <back-button></back-button>   -->
+
+    <h3 ng-if='ref' style='margin-bottom: 10px;'>
+       Replying to Post: {{ ref.title }} 
+    </h3>
 
     <!-- actual form -->
-    <div style='margin-top: 30px;'>
+    <div layout='column'>
 
-        <div class='post-header'>
+        <div>
         
-          <h1 style='display: inline-block;'>New {{ contributionData.contentType }}</h1>
+          <!-- <h5 style='display: inline-block;'>New {{ contributionData.contentType }}</h5> -->
 
-          <md-radio-group ng-model="contributionData.contentType" style='float:right; margin-top: -15px;'>
+          <md-radio-group ng-model="contributionData.contentType" style='float:left;margin: 10px 0px;'>
             <md-radio-button value="note" class="md-primary inline-radio">Note</md-radio-button>
             <md-radio-button value="question" class='inline-radio'>Question</md-radio-button>
             <md-radio-button value="assignment" class='inline-radio'>Assignment</md-radio-button>
@@ -21,12 +23,6 @@
         </div>
 
 
-        <md-divider></md-divider>
-
-        <div class='tags'>
-          <span ng-repeat="tag in contributionData.tags">{{getTagName(tag)}}</span>
-        </div>
-
 
 
         <!-- Title -->
@@ -34,6 +30,11 @@
           <label class="new-node-title">Enter a title</label>
           <textarea ng-model="contributionData.title"></textarea>
         </md-input-container>
+
+
+        <div class='tags' style='margin-top: 0px'>
+          <span ng-repeat="tag in contributionData.tags">{{getTagName(tag)}}</span>
+        </div>
 
 
         <md-input-container class="md-block" text="Enter your text here" style="border-width:5px;  border-style:grove;">
@@ -88,5 +89,4 @@
 
     </div>
 
-  </div>
 </div>

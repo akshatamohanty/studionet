@@ -1,7 +1,7 @@
 angular.module('studionet')
 
-.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog',
-                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog){ 
+.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links',
+                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links){ 
 
 
         // change this to resolve 
@@ -14,9 +14,51 @@ angular.module('studionet')
         $scope.users = users.usersHash;
         $scope.tags = tags.tagsHash;
 
-        $scope.linkNewParent = function(new_parent){
-        	alert("new parent added");
+        $scope.linkNewParent = function(new_parent, post_id){
+
+            // [post]->[parent]
+          	var linkData = {
+               source: post_id,
+               target: new_parent.id,
+               note: "drag and drop"
+            }
+
+            links.createLink(linkData).success(function(){
+                var toast = $mdToast.simple()
+                  .textContent('Successfully created new links!')
+                  .position("bottom right")
+
+                $mdToast.show(toast);
+
+                $state.reload();
+
+            });
+
         }
+
+        $scope.linkNewChild = function(new_child, post_id){
+
+            // [child | source]->[post | target]
+            var linkData = {
+               source: new_child.id,
+               target: post_id,
+               note: "drag and drop"
+            }
+
+            links.createLink(linkData).success(function(){
+                var toast = $mdToast.simple()
+                  .textContent('Successfully created new links!')
+                  .position("bottom right")
+
+                $mdToast.show(toast);
+
+                $state.reload();
+
+            });
+
+        }
+
+
 
         $scope.ancestors = [];
         $scope.parent = 0;
@@ -59,14 +101,15 @@ angular.module('studionet')
         	}
         	else{
         		$scope.post_details = post;
+            contributions.viewContribution(post.id);
         	}
 
 
         }
-
-        setMainPost($scope.$resolve.postDetails.data, undefined);
-
         $scope.setMainPost = setMainPost;
+
+        // initial;
+        setMainPost($scope.$resolve.postDetails.data, undefined);
 
         //Uploaded files
         $scope.uplodateFiles = function (files, contributionData){
@@ -113,9 +156,66 @@ angular.module('studionet')
 
         }
 
+        $scope.comment = function(post_id){
+            // Appending dialog to document.body to cover sidenav in docs app
+            var confirm = $mdDialog.prompt()
+              .title('Chit Chat')
+              .textContent('Comments are short! If you want to write more, please reply to this post.')
+              .placeholder('Lorem ipsum ..')
+              .ariaLabel('Comment')
+              //.targetEvent(ev)
+              .ok('Comment')
+              .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function(result) {
+                  
+                  var new_comment = { 
+                                  attachments: [], 
+                                  tags: [],
+                                  refType: "COMMENT_FOR", 
+                                  ref:  post_id,
+                                  contentType: "comment",
+                                  body: result,
+                                  title: "Re: " + post_id
+                                };
+
+                  contributions.createContribution( new_comment ).then(function(res){
+                        var toast = $mdToast.simple()
+                          .textContent('Hurrah! Keep the conversation going!')
+                          .position("bottom right")
+
+                        $mdToast.show(toast);
+
+                        $state.reload();
+
+
+                  }, function(error){
+
+                      // display error
+                  
+                  }); 
+
+            }, function() {
+              $scope.status = 'You didn\'t name your dog.';
+            });
+        }
+
+        $scope.reply = function(post){
+          $state.go('home.node', {type: "note", tags: [], ref: post });
+        }
+
+        $scope.like = function(post_id){
+            contributions.likeContribution(post_id).success(function(){
+                  var toast = $mdToast.simple()
+                          .textContent('You liked this post!')
+                          .position("top centre")
+
+                  $mdToast.show(toast);
+            });
+        }
 
         // ------------------Function: - Delete
-        $scope.delete = function(contributionId){
+        $scope.delete = function(contributionId, comment){
             
             contributions.deleteContribution(contributionId).success(function(data){
               var msg = 'Your contribution was deleted';
@@ -132,7 +232,12 @@ angular.module('studionet')
                       //.targetEvent(ev)
                   );
 
-                history.back();
+                if(comment == true){
+                  $state.reload();
+                }
+                else{
+                    history.back();
+                }
             });
 
         };
@@ -140,3 +245,24 @@ angular.module('studionet')
 
 
 }]);
+
+app.filter('post_icon', [function() {
+    return function(string) {
+
+      switch(string){
+
+        case "note":
+          return "speaker_notes";
+
+        case "question":
+          return "question_answer"
+
+        case "assignment":
+          return "assignment"
+
+        default: 
+          return "speaker_notes";
+      }
+
+    };
+}])

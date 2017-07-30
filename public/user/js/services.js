@@ -33,9 +33,13 @@ angular.module('studionet')
 
 		fn.goToSpaceWithArgs = function(tags, dates){
 
-			dates = dates.map(function(dateString){ return new Date(dateString).getTime() });
-
-			$state.go('home.search-results', {tags: tags.join(","), dates: dates.join(",") });
+			if(tags[0] == undefined){
+				$state.go('home.homepage');
+			}
+			else{
+				dates = dates.map(function(dateString){ return new Date(dateString).getTime() });
+				$state.go('home.search-results', {tags: tags.join(","), dates: dates.join(",") });
+			}
 		}
 
 		fn.goToProfile = function(url){
@@ -155,8 +159,9 @@ angular.module('studionet')
 		// Data needs to be sent in FormData format
 		o.createContribution = function(new_contribution){
 
+			var tagnames = [];
 			if(new_contribution.tags.length > 0){
-				new_contribution.tags = new_contribution.tags.map(function(t){
+				tagnames = new_contribution.tags.map(function(t){
 					return tags.tagsHash[t].name;
 				})
 			}
@@ -167,7 +172,7 @@ angular.module('studionet')
 			var formData = new FormData();
 			formData.append('title', new_contribution.title);
 			formData.append('body', new_contribution.body);
-			formData.append('tags', new_contribution.tags);
+			formData.append('tags', tagnames);
 			formData.append('refType', new_contribution.refType);
 			formData.append('contentType', new_contribution.contentType);
 			formData.append('ref', new_contribution.ref);
@@ -181,10 +186,14 @@ angular.module('studionet')
 					processData: false,
 					data: formData
 		    })
-		    .success(function(res) {
+		    .success(function(req, res) {
+
+		    	console.log("result", res, req);
 
 		    	// refresh profile
 		    	profile.getUser();
+
+		    	//profile.tagContribution
 
 		    	return res;
 
@@ -244,6 +253,8 @@ angular.module('studionet')
 					// refresh profile
 					profile.getUser();
 
+					o.getAll();
+
 			    })
 			    .error(function(error){
 					throw error;
@@ -252,6 +263,20 @@ angular.module('studionet')
 			else
 				console.log("Error Deleting");
 		}
+
+		o.likeContribution = function(id){
+			return $http.post('/api/contributions/' + id + '/rate', {'rating': 5} ).success(function(data){
+			
+
+
+			});
+		};
+
+		o.viewContribution = function(id){
+			return $http.post('/api/contributions/' + id + '/view').success(function(data){
+
+			});
+		};
 
 
 
@@ -382,8 +407,6 @@ angular.module('studionet')
 			// post request to create the tag
 			return $http.post('/api/tags', {tags: new_tag}).success(function(data){
 				
-				console.log(data);
-
 				o.getAll();
 				
 			}).error(function(err) {
@@ -651,6 +674,19 @@ angular.module('studionet')
 
 							// refresh the spaces
 							profile.getUser();
+							o.getAll();
+
+							return data;
+					});
+		}
+
+		o.deleteFork = function(space_id){
+			return $http.delete('/api/spaces/' + space_id + '/fork').success(function(data){ 
+
+							// refresh the user profile
+							profile.getUser();
+
+							// refresh the spaces
 							o.getAll();
 
 							return data;

@@ -1,4 +1,4 @@
-<md-toolbar layout='column'>
+<md-toolbar class='md-hue-2' layout='column'>
     
     <!-- <div class='profile-pic-container' style='background-image: url({{user.avatar}}); background-position: bottom center;'> -->
       <!-- <md-fab-speed-dial style='position: absolute; right: 0px' ng-hide="bench.hidden" md-direction="left" md-open="bench.isOpen"
@@ -27,28 +27,28 @@
     </div>
 
     <div class='md-accent band pointer' ng-click=''> 
-      <a ui-sref='home.profile'>
+      <a ui-sref='home.homepage'>
         <div layout='row' layout-fill layout-margin>
           <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
           <div>     
-              <div class='header' style='margin-top: 0px; margin-left: 5px;'>Akshata Mohanty</div>
-              <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>Architect</div>
+              <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.name}}</div>
+              <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>{{user.level | level}}</div>
           </div>
         </div>
 
         <md-divider style="margin-bottom: 10px;"></md-divider>
         
-        <div class='stats' layout='row'>
+        <div class='stats md-hue-3' layout='row'>
             <div flex>
-              <ng-md-icon icon="book" size='14' style="fill: white"></ng-md-icon>{{user.contributions.length}}
+              <ng-md-icon icon="book" size='14' style="fill: #AFAFAF"></ng-md-icon>{{user.contributions.length}}
               <md-tooltip md-direction="bottom">No. of posts</md-tooltip>
             </div>
             <div flex>
-              <ng-md-icon icon="grade" size='14' style="fill: white"></ng-md-icon>...
-              <md-tooltip md-direction="bottom">Score</md-tooltip>
+              <ng-md-icon icon="visibility" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.views }}
+              <md-tooltip md-direction="bottom">No. of views</md-tooltip>
             </div>
             <div flex>
-              <ng-md-icon icon="favorite" size='14' style="fill: white"></ng-md-icon>...
+              <ng-md-icon icon="thumb_up" size='14' style="fill: #AFAFAF"></ng-md-icon> {{ user.thumbs }}
               <md-tooltip md-direction="bottom">No. of likes</md-tooltip>
             </div>
         </div> 
@@ -81,10 +81,11 @@
       </div> -->
       <div class='folder-notes' ng-class='show == -1 ? "open" : "close" '>
           <md-card class='post-box' ng-class='node.tags.length ? "published" : "unpublished" ' ng-repeat='node in user.contributions | orderBy: "created_on":true ' ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'">
-              <div class='title'>{{node.title}}</div>
-              <md-tooltip ng-if='node.tags.length == 0'class="tooltip" md-direction="bottom" style='height: auto'>
-                  You haven't published this node yet.
-              </md-tooltip>
+              <div class='title'>{{node.title}}
+                <md-tooltip ng-if='node.tags.length == 0'class="tooltip" md-direction="bottom" style='height: auto'>
+                    You haven't published this node in a space yet.
+                </md-tooltip>
+              </div>
           </md-card>
       </div>
     </div>
@@ -101,9 +102,10 @@
 
     <div class='folder-notes'>
       <div class='folder' ng-repeat='fork in user.forked' ng-if='fork.timed[0]!=undefined'>
-        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
+        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id' ng-mouseover="hover=true" ng-mouseleave="hover=false">
                 <span ng-click='goToSpace(fork.id)'>{{fork.name}}</span>
                 <a style='float: right'> 
+                    <ng-md-icon icon="delete" size='14' style="fill: black" ng-show='hover==true' ng-click='deleteFork(fork.id)'></ng-md-icon>
                     <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
                     <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
                 </a>
@@ -130,9 +132,10 @@
 
     <div class='folder-notes' dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
       <div class='folder' ng-repeat='fork in user.forked' ng-if='fork.timed[0]==undefined'>
-        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id'>
-                <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}} posts)</i></span>
+        <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id' ng-mouseover="hover=true" ng-mouseleave="hover=false">
+                <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}})</i></span>
                 <a style='float: right'> 
+                    <ng-md-icon icon="delete" size='14' style="fill: black"  ng-show='hover==true' ng-click='deleteFork(fork.id)'></ng-md-icon>
                     <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
                     <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
                 </a>

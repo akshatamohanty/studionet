@@ -14,6 +14,7 @@ angular.module('studionet')
       }
 
       $scope.getTagName = function(tag_id){ return tags.tagsHash[tag_id].name };
+      $scope.ref = $stateParams.ref;
 
       // for the new contribution
       $scope.contributionData = { 
@@ -21,7 +22,7 @@ angular.module('studionet')
                                   tags: $stateParams.tags ? $stateParams.tags : [],
                                   refType: "RELATED_TO", 
                                   contentType: $stateParams.type, 
-                                  ref:  $stateParams.ref ? supernode.contribution : $stateParams.ref
+                                  ref:  $stateParams.ref == null ? supernode.contribution : $stateParams.ref.id
                                 };
 
       

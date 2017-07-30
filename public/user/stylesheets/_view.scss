@@ -1,3 +1,8 @@
+.post-view-section{
+	max-width: 950px;
+	margin: 0 auto;
+}
+
 .linked-post-container{
 	height: 80px;
 
@@ -75,16 +80,63 @@
 
 	.post-body{
 
-		margin: 30px 0px 30px 0px;
+		margin: 10px 0px 30px 0px;
 		
 		p{
-			font-size: 12px;
+			font-size: 14px;
 			line-height: 24px;
 			text-align: justify;
+			font-family: $text-font;
+		}
+
+		img{
+			width: auto;
+			max-width: 100%;
+			max-height: 450px;
+			display: block;
+			margin: 10px auto;
+			border: 1px solid gray;
 		}
 	}
 }
 
 
-.post-functions{
+.post-container{
+	
+	position: relative;
+
+	.post-actions{
+
+		cursor: move;
+		
+		.action{
+			display: inline-block;
+			float: right;
+			margin: 0px 10px 0px 10px;
+			height: 20px;
+			cursor: pointer;
+		}
+
+		.action:hover{
+			svg{
+				fill: blue;
+			}
+		}
+	}
+
+	.tags{
+		margin-bottom: 10px;
+	}
+	
+}
+
+
+
+.comment{
+	margin-bottom: 10px;
+	margin-top: 10px;
+
+	font-size: 14px;
+	color: #5D5D5D;
+
 }

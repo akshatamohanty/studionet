@@ -44,20 +44,17 @@ router.route('/')
 	.post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
 
 		// Creating the contribution node, then link it to the creator (user)
-		var query = [
-			'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
-			+ ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
-			+ ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
-			+ ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
-			'MATCH (u:user) WHERE id(u)={createdByParam}',
-			'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c) WITH c',
-			'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
-			'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1) WITH c',
-			'UNWIND {tagsParam} as tagName '
-						+ 'MERGE (t:tag {name: tagName}) '
-						+ 'ON CREATE SET t.createdBy = {createdByParam}'
-						+ 'CREATE (c)-[r2:TAGGED]->(t) ',
-			'RETURN c'
+    var query = [
+      'MATCH (u:user) WHERE id(u)={createdByParam}',
+      'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
+      + ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
+      + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
+      + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}})',
+			'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c)',
+      'WITH c',
+      'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
+			'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
+			'RETURN id(c)'
 		].join('\n');
 
 		var currentDate = Date.now();
@@ -78,11 +75,10 @@ router.route('/')
 			viewsParam: 0
 		};
 
-/*    if(req.body.tags == "")
+    if(req.body.tags == "")
       params.tagsParam = ""
     else
       params.tagsParam = req.body.tags.split(",");
-*/
 
 		db.query(query, params, function(error, result){
 			if (error){
@@ -91,9 +87,7 @@ router.route('/')
 				return res.send(error);
 			}
 			else{
-				console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
-        console.log(result);
-				//req.contributionId = result[0].id;
+				console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id + " post-id" + result );
 				res.status(200);
 
         // broadcasting message

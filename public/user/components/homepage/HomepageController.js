@@ -18,11 +18,27 @@ angular.module('studionet')
 
           // compute the recent posts
           $scope.recentPosts = [];
-          var latestCount = 20;
-          var postcount = contributions.contributions.length;
-          for(var i=1; i <= latestCount; i++){
-            $scope.recentPosts.push(contributions.contributions[postcount - i])
+          var latestCount = 0;
+          var getRecent = function(){
+
+            var newcount = latestCount + 10;
+            if(newcount >= contributions.contributions.length)
+              return;
+
+            for(var i=latestCount + 1; i <= newcount; i++){
+              var newpost = contributions.contributions[contributions.contributions.length - i];
+              if(newpost.tags.length > 0 && newpost.type != "comment")
+                $scope.recentPosts.push(contributions.contributions[contributions.contributions.length - i]);
+              else
+                newcount += 1;
+            }
+
+            latestCount = newcount ;
+
+
           }
+          $scope.getRecent = getRecent;
+          contributions.registerObserverCallback(function(){ $scope.recentPosts =[]; latestCount = 0; getRecent(); });
 
           // show the users currently online
           $scope.usersOnline = [
