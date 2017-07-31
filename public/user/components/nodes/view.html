@@ -104,7 +104,7 @@
 	                <div ng-repeat="attachment in post_details.attachments">
 	                  <a href="/api/contributions/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
 	                    <div layout='row'>
-	                      <div class='flex-30 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}}); background-size: cover;'></div>
+	                      <div class='flex-30 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}}); background-size: contain;'></div>
 	                      <div class='flex-70'>
 	                          <div class='attachment-details' style='margin-left: 20px;'>
 	                            <h4>{{attachment.attachment.name}}</h4>
