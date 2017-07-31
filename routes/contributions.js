@@ -41,65 +41,89 @@ router.route('/')
 	 *           If tags are created, contribution creator will be set to this tags as the creator of these tags.
 	 *
 	 */
-	.post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
 
-		// Creating the contribution node, then link it to the creator (user)
+  /*
+   * Creates a new contribution linked to the current user.
+   *
+   * req.author : profile.user.id;
+   * req.title : Contribution's Title
+   * req.body : Contribution's Content
+   * req.tags : Array - Contribution's tags
+   * To-do: Once a new tag is specified for the created contribution, this new tag should be sent to DB as well
+   * 
+   * req.ref : the being created contribution's parent (reply to ... )  
+   * 
+   * Links created:
+   * Reference link - Reference to another contribution (may be normal contribution or root node)
+   * Tag link - Links itself to the tags specified in the req body, creating them if necessary. 
+   *           If tags are created, contribution creator will be set to this tags as the creator of these tags.
+   *
+   */
+  .post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
+
+    // Creating the contribution node, then link it to the creator (user)
     var query = [
-      'MATCH (u:user) WHERE id(u)={createdByParam}',
       'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
       + ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
       + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
-      + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}})',
-			'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c)',
-      'WITH c',
+      + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
+      'MATCH (u:user) WHERE id(u)={createdByParam}',
+      'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c) WITH c',
       'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
-			'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
-			'RETURN c'
-		].join('\n');
+      'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1) WITH c',
+      'UNWIND {tagsParam} as tagName '
+            + 'MERGE (t:tag {name: tagName}) '
+            + 'ON CREATE SET t.createdBy = {createdByParam}'
+            + 'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
+      'RETURN c'
+    ].join('\n');
 
-		var currentDate = Date.now();
-		var params = {
-			createdByParam: parseInt(req.user.id),
-			tagsParam: req.body.tags, //because form data has text string for tags   
-			contributionTitleParam: req.body.title,
-			contributionBodyParam: req.body.body,
-			contributionRefParam: parseInt(req.body.ref), 
-			lastUpdatedParam: currentDate,
-			dateCreatedParam: currentDate,
-			refTypeParam: req.body.refType || "RELATED_TO", 
-			editedParam: false,
-			contentTypeParam: req.body.contentType,
-			ratingParam: 0,
-			totalRatingParam: 0,
-			rateCountParam: 0,
-			viewsParam: 0
-		};
+    var currentDate = Date.now();
+    var params = {
+      createdByParam: parseInt(req.user.id),
+      //tagsParam: ( req.body.tags !== "" ?  : [] ), //because form data has text string for tags   
+      contributionTitleParam: req.body.title,
+      contributionBodyParam: req.body.body,
+      contributionRefParam: parseInt(req.body.ref), 
+      lastUpdatedParam: currentDate,
+      dateCreatedParam: currentDate,
+      refTypeParam: req.body.refType || "RELATED_TO", 
+      editedParam: false,
+      contentTypeParam: req.body.contentType,
+      ratingParam: 0,
+      totalRatingParam: 0,
+      rateCountParam: 0,
+      viewsParam: 0
+    };
 
     if(req.body.tags == "")
       params.tagsParam = ""
     else
       params.tagsParam = req.body.tags.split(",");
 
-		db.query(query, params, function(error, result){
-			if (error){
-				console.log('[ERROR] Error creating new contribution for user : ', error);
-				res.status(500);
-				return res.send(error);
-			}
-			else{
-				console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id + " post-id" + result );
-				res.status(200);
+
+    db.query(query, params, function(error, result){
+      if (error){
+        console.log('[ERROR] Error creating new contribution for user : ', error);
+        res.status(500);
+        return res.send(error);
+      }
+      else{
+        console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
+        console.log(result);
+        req.contributionId = result[0].id;
+        res.status(200);
 
         // broadcasting message
         req.app.get('socket').emit('node_created', result[0]);
 
-				res.send( result );
-				
+        res.send( result[0] );
+        
         next();
-			}
-		}); 
+      }
+    }); 
 
-	}, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
+  }, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
 
 // route: /api/contributions/query
 router.route('/query')
