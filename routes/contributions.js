@@ -111,13 +111,13 @@ router.route('/')
       else{
         console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
         console.log(result);
-        req.contributionId = result[0].id;
+        //req.contributionId = result[0].id;
         res.status(200);
 
         // broadcasting message
-        req.app.get('socket').emit('node_created', result[0]);
+        req.app.get('socket').emit('node_created', result );
 
-        res.send( result[0] );
+        res.send( result );
         
         next();
       }
