@@ -32,7 +32,7 @@
         </md-input-container>
 
 
-        <div class='tags' style='margin-top: 0px'>
+        <div class='tags' style='margin-top: 0px' ng-if='getTagName(contributionData.tags[0]).length>0'>
           <span ng-repeat="tag in contributionData.tags">{{getTagName(tag)}}</span>
         </div>
 

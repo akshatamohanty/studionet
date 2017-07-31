@@ -1,7 +1,7 @@
 angular.module('studionet')
 
-.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links',
-                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links){ 
+.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils',
+                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils){ 
 
 
         // change this to resolve 
@@ -13,6 +13,9 @@ angular.module('studionet')
 
         $scope.users = users.usersHash;
         $scope.tags = tags.tagsHash;
+
+        $scope.getThumb = routerUtils.getThumb;
+
 
         $scope.linkNewParent = function(new_parent, post_id){
 
@@ -57,6 +60,7 @@ angular.module('studionet')
             });
 
         }
+
 
 
 

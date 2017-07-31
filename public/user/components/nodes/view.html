@@ -102,7 +102,7 @@
 	            <div ng-if='post_details.attachments[0].id!=null'>
 	                <b>Attachments ({{post_details.attachments.length}} files)</b>
 	                <div ng-repeat="attachment in post_details.attachments">
-	                  <a href="/api/post_details/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
+	                  <a href="/api/contributions/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
 	                    <div layout='row'>
 	                      <div class='flex-20 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}});'></div>
 	                      <div class='flex-80'>

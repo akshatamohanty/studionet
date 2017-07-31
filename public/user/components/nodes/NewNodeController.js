@@ -66,9 +66,9 @@ angular.module('studionet')
 
               var msg = 'Yay! You just created a new post!';
 
-              if($scope.contributionData.tags.length > 0 ){
+              /*if($scope.contributionData.tags.length > 0 ){
                 msg = 'Yay! You just created a new post tagged with ' + $scope.contributionData.tags.join(", ");
-              }
+              }*/
                 
               // display success message
               // navigate after 3 seconds
