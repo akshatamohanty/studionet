@@ -68,13 +68,15 @@ router.route('/')
       + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
       + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
       'MATCH (u:user) WHERE id(u)={createdByParam}',
-      'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c) WITH c',
+      'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c)',
+      'WITH c',
       'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
-      'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1) WITH c',
-      'UNWIND {tagsParam} as tagName '
-            + 'MERGE (t:tag {name: tagName}) '
-            + 'ON CREATE SET t.createdBy = {createdByParam}'
-            + 'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
+      'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
+      'WITH c',
+      'UNWIND {tagsParam} as tagName ',
+      'MERGE (t:tag {name: tagName}) ',
+      'ON CREATE SET t.createdBy = {createdByParam}',
+      'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
       'RETURN c'
     ].join('\n');
 
@@ -97,7 +99,7 @@ router.route('/')
     };
 
     if(req.body.tags == "")
-      params.tagsParam = ""
+      params.tagsParam = []
     else
       params.tagsParam = req.body.tags.split(",");
 

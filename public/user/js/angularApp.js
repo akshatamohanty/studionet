@@ -22,6 +22,9 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			templateUrl: '/user/components/skeleton/skeleton.html',
 			controller: 'SkeletonController',
 		    resolve: {
+				spProfile: ['supernode', function(supernode){
+					return supernode.getSupernodes();
+				}],
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}],								//TODO: Resolve system data and user specific call-to-actions

@@ -62,7 +62,8 @@ angular.module('studionet')
 
       $scope.createContribution = function(){
 
-          contributions.createContribution( $scope.contributionData ).then(function(res){
+          console.log($scope.contributionData);
+          /*contributions.createContribution( $scope.contributionData ).then(function(res){
 
               var msg = 'Yay! You just created a new post!';
 
@@ -89,7 +90,7 @@ angular.module('studionet')
 
               // display error
           
-          }); 
+          }); */
 
       };
    

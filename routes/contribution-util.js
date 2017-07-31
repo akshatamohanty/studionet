@@ -175,6 +175,7 @@ module.exports.getHandlerToSendImage = function(isForThumbnail) {
 }
 
 module.exports.updateDatabaseWithAttachmentsAndGenerateThumbnails = function(req, res, next){
+	
 	// add attachments (can have multiple..)
 
 	var contributionId = parseInt(req.contributionId || req.params.contributionId);
