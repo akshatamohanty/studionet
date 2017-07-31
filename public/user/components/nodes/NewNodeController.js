@@ -19,7 +19,7 @@ angular.module('studionet')
       // for the new contribution
       $scope.contributionData = { 
                                   attachments: [], 
-                                  tags: $stateParams.tags ? $stateParams.tags : [],
+                                  tags: $stateParams.tags.length > 0 ? $stateParams.tags : [supernode.tag],
                                   refType: "RELATED_TO", 
                                   contentType: $stateParams.type, 
                                   ref:  $stateParams.ref == null ? supernode.contribution : $stateParams.ref.id

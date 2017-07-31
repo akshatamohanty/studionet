@@ -82,7 +82,7 @@ router.route('/')
     var currentDate = Date.now();
     var params = {
       createdByParam: parseInt(req.user.id),
-      tagsParam: (req.body.tags == "" ? [] :  req.body.tags.split(",").map(function(t){ return parseInt(t)}) ), //because form data has text string for tags   
+      tagsParam: req.body.tags.split(",").map(function(t){ return parseInt(t)}), //because form data has text string for tags   
       contributionTitleParam: req.body.title,
       contributionBodyParam: req.body.body,
       contributionRefParam: parseInt(req.body.ref), 
@@ -97,6 +97,7 @@ router.route('/')
       viewsParam: 0
     };
 
+    console.log(params.tagsParam);
 
     db.query(query, params, function(error, result){
       if (error){

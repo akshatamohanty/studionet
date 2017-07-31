@@ -9,12 +9,13 @@ var db = require('seraph')({
 
 var superNodeId = {
 	contributionId: -1,
-	groupId: -1
+	groupId: -1,
+	tagId: -1
 };
 
 router.route('/')
 	.get(auth.ensureAuthenticated, function(req, res){
-		if (superNodeId.contributionId !== -1 && superNodeId.groupId !== -1){
+		if (superNodeId.contributionId !== -1 && superNodeId.groupId !== -1 && superNodeId.tagId !== -1){
 			console.log('Sending cached supernode id');
 			return res.send(superNodeId);
 		}
@@ -23,7 +24,9 @@ router.route('/')
 			'MATCH (c:contribution {superNode: true})',
 			'WITH c',
 			'MATCH (g:group {superNode: true})',
-			'RETURN {contributionId: id(c), groupId: id(g)}'
+			'WITH c, g',
+			'MATCH (t:tag) WHERE t.name = ""',
+			'RETURN {contributionId: id(c), groupId: id(g), tagId: id(t)}'
 		].join('\n');
 
 		db.query(query, function(error, result){
@@ -35,6 +38,7 @@ router.route('/')
 				console.log('[SUCCESS] Successfully retrieved supernode id');
 				superNodeId.contributionId = result[0].contributionId;
 				superNodeId.groupId = result[0].groupId;
+				superNodeId.tagId = result[0].tagId;
 				return res.send(result[0]);
 			}
 		});

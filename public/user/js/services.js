@@ -6,13 +6,15 @@ angular.module('studionet')
 	.factory('supernode', ['$http', function($http){
 		var o ={
 			group: -1, 
-			contribution: -1
+			contribution: -1,
+			tag: -1
 		};
 
 		o.getSupernodes = function(){
 			return $http.get('/api/supernode').success(function(data){
 				o.group = data.groupId; 
 				o.contribution = data.contributionId; 
+				o.tag = data.tagId
 			});
 		};
 
@@ -159,12 +161,6 @@ angular.module('studionet')
 		// Data needs to be sent in FormData format
 		o.createContribution = function(new_contribution){
 
-			/*var tagnames = [];
-			if(new_contribution.tags.length > 0){
-				tagnames = new_contribution.tags.map(function(t){
-					return tags.tagsHash[t].name;
-				})
-			}*/
 
 			var inlineImages = extractImages(new_contribution); 
 			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
