@@ -73,17 +73,16 @@ router.route('/')
       'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
       'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
       'WITH c',
-      'UNWIND {tagsParam} as tagName ',
-      'MERGE (t:tag {name: tagName}) ',
-      'ON CREATE SET t.createdBy = {createdByParam}',
-      'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
+      'UNWIND {tagsParam} as tagID',
+      'OPTIONAL MATCH (t:tag) WHERE ID(t)=tagID',
+      'CREATE (c)-[r2:TAGGED {by_users: [{createdByParam}]}]->(t) ',
       'RETURN c'
     ].join('\n');
 
     var currentDate = Date.now();
     var params = {
       createdByParam: parseInt(req.user.id),
-      //tagsParam: ( req.body.tags !== "" ?  : [] ), //because form data has text string for tags   
+      tagsParam: (req.body.tags == "" ? [] :  req.body.tags.split(",").map(function(t){ return parseInt(t)}) ), //because form data has text string for tags   
       contributionTitleParam: req.body.title,
       contributionBodyParam: req.body.body,
       contributionRefParam: parseInt(req.body.ref), 
@@ -98,11 +97,6 @@ router.route('/')
       viewsParam: 0
     };
 
-    if(req.body.tags == "")
-      params.tagsParam = []
-    else
-      params.tagsParam = req.body.tags.split(",");
-
 
     db.query(query, params, function(error, result){
       if (error){
@@ -112,8 +106,7 @@ router.route('/')
       }
       else{
         console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
-        console.log(result);
-        //req.contributionId = result[0].id;
+        req.contributionId = result[0].id;
         res.status(200);
 
         // broadcasting message

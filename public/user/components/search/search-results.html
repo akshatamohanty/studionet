@@ -22,8 +22,7 @@
       <!-- adding a new node in this space; hidden if timed space is expired -->
       <md-card class='empty-card' md-theme="default" ng-if='expired == false' dnd-type="'space'" dnd-allowed-types="['post']" dnd-list dnd-drop='addNodeToSpace(item)' dnd-draggable='{status: 1}' dnd-callback='fork()'>
         <md-content style="height: 100%; font-size: 14px; padding: 15px; overflow: hidden;" layout='column'>
-            <!-- <a id='addNode' ui-sref='home.node(newnodepath)'> -->
-            <a id='addNode'>
+            <a id='addNode' ui-sref='home.node(newnodepath)'>
               <ng-md-icon icon="add_box" style="fill: green" size="48">
               </ng-md-icon>
             </a>

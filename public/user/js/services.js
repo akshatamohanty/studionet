@@ -159,20 +159,20 @@ angular.module('studionet')
 		// Data needs to be sent in FormData format
 		o.createContribution = function(new_contribution){
 
-			var tagnames = [];
+			/*var tagnames = [];
 			if(new_contribution.tags.length > 0){
 				tagnames = new_contribution.tags.map(function(t){
 					return tags.tagsHash[t].name;
 				})
-			}
+			}*/
 
-			var inlineImages = extractImages(new_contribution);
+			var inlineImages = extractImages(new_contribution); 
 			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
 
 			var formData = new FormData();
 			formData.append('title', new_contribution.title);
 			formData.append('body', new_contribution.body);
-			formData.append('tags', tagnames);
+			formData.append('tags', new_contribution.tags.join(","));
 			formData.append('refType', new_contribution.refType);
 			formData.append('contentType', new_contribution.contentType);
 			formData.append('ref', new_contribution.ref);
@@ -188,12 +188,8 @@ angular.module('studionet')
 		    })
 		    .success(function(req, res) {
 
-		    	console.log("result", res, req);
-
 		    	// refresh profile
 		    	profile.getUser();
-
-		    	//profile.tagContribution
 
 		    	return res;
 
@@ -201,6 +197,7 @@ angular.module('studionet')
 		    .error(function(error){
 				throw error;
 		    }) 
+		
 		}
 
 
@@ -964,3 +961,52 @@ angular.module('studionet').directive('myAwns', ['users', function(users) {
     return directiveDefinitionObject;
 
   }]);
+
+
+// --- extraction of images 
+function dataURItoBlob(dataURI) {
+  
+  // convert base64 to raw binary data held in a string
+  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+  var byteString = atob(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to an ArrayBuffer
+  var ab = new ArrayBuffer(byteString.length);
+  var ia = new Uint8Array(ab);
+  for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([ab], {type: mimeString});
+
+
+}
+
+function extractImages(data){
+
+  var patt1 = new RegExp('data:image(\\S*)"', "g");
+  var result = data.body.match(patt1);
+
+  if(result == null)
+    return [];
+  
+  var attachments = [];
+  for(var i=0; i < result.length; i++){
+      var src = result[i].substr(0, result[i].length-1);
+      var fileType = src.match("data:image/(.*);")[1];
+      var theBlob = dataURItoBlob( src );
+      theBlob.lastModifiedDate = new Date();
+      theBlob.name = "studionet-inline-img-" + (new Date()).getTime() + (fileType ? "." + fileType : "");
+
+      data.body = data.body.replace(src, theBlob.name);
+
+      attachments.push(theBlob);
+  }
+
+  return attachments; 
+
+}
+
