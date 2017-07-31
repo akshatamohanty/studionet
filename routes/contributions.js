@@ -54,7 +54,7 @@ router.route('/')
       'WITH c',
       'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
 			'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
-			'RETURN id(c)'
+			'RETURN c'
 		].join('\n');
 
 		var currentDate = Date.now();

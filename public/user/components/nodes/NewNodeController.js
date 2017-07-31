@@ -64,7 +64,7 @@ angular.module('studionet')
 
           contributions.createContribution( $scope.contributionData ).then(function(res){
 
-              var msg = 'Yay! You just created a new post! Go to your shelf to view it.';
+              var msg = 'Yay! You just created a new post!';
 
               if($scope.contributionData.tags.length > 0 ){
                 msg = 'Yay! You just created a new post tagged with ' + $scope.contributionData.tags.join(", ");
