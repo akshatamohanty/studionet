@@ -57,7 +57,7 @@
 
 </md-toolbar>
 
-<md-content flex>
+<md-content flex dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
 
   <div class='profile-posts' layout='column' ng-init='show=undefined'>
     
@@ -130,7 +130,7 @@
 
     <md-divider></md-divider>
 
-    <div class='folder-notes' dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
+    <div class='folder-notes' >
       <div class='folder' ng-repeat='fork in user.forked' ng-if='fork.timed[0]==undefined'>
         <div class='folder-title pointer' ng-click='show == fork.id ? show = -1 : show=fork.id' ng-mouseover="hover=true" ng-mouseleave="hover=false">
                 <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}})</i></span>

@@ -67,11 +67,11 @@ angular.module('studionet')
             }
             else{
               if(attachment.name.indexOf(".pdf") > -1)
-                return "./img/file_pdf.jpeg"
+                return "./img/file_pdf.png"
               else if(attachment.name.indexOf(".doc") > -1)
-                return "./img/file_doc.png"
+                return "./img/file_doc.jpg"
               else
-                return "./img/file_default.png"; // replace with image for particular extension
+                return "./img/file_default.jpg"; // replace with image for particular extension
             }
         }
 
