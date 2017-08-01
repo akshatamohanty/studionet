@@ -1,7 +1,7 @@
 #searchbar{
 	margin: 0px 2*$max-padding 0px $max-padding ;
 
-	height: 48px; // fix this
+	height: 36px; // fix this
 	overflow: hidden;
 
 	ng-md-icon{
@@ -19,6 +19,8 @@
 		margin-top: 0px;
 		position: relative;
 		overflow: hidden;
+		border-radius: 4px;
+
 
 		span{
 			font-size: 12px;

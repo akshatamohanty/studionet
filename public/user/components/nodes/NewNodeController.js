@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'supernode', 'tags', 'users', 'contributions', '$mdDialog', 
-                                  function($scope, $stateParams, $state, supernode, tags, users, contributions, $mdDialog){
+.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'tags', 'users', 'contributions', '$mdDialog', 
+                                  function($scope, $stateParams, $state, tags, users, contributions, $mdDialog){
 
 
       $scope.$emit('hideBench');
@@ -19,10 +19,10 @@ angular.module('studionet')
       // for the new contribution
       $scope.contributionData = { 
                                   attachments: [], 
-                                  tags: $stateParams.tags.length > 0 ? $stateParams.tags : [supernode.tag],
+                                  tags: $stateParams.tags.length > 0 ? $stateParams.tags : [],
                                   refType: "RELATED_TO", 
                                   contentType: $stateParams.type, 
-                                  ref:  $stateParams.ref == null ? supernode.contribution : $stateParams.ref.id
+                                  ref:  $stateParams.ref
                                 };
 
       
@@ -66,9 +66,9 @@ angular.module('studionet')
 
               var msg = 'Yay! You just created a new post!';
 
-              /*if($scope.contributionData.tags.length > 0 ){
-                msg = 'Yay! You just created a new post tagged with ' + $scope.contributionData.tags.join(", ");
-              }*/
+              if($scope.contributionData.tags.length > 0 ){
+                msg = 'Yay! You just created a new post tagged with ' + $scope.contributionData.tags.map(function(t){  return $scope.getTagName(t); }).join(", ");
+              }
                 
               // display success message
               // navigate after 3 seconds

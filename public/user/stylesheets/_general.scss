@@ -63,6 +63,14 @@ h1, h2, h3, h4, h5, h6{
   overflow: auto;
 }
 
+.italics{
+  font-style: italic;
+}
+
+.move{
+  cursor: move;
+}
+
 .background{
   background-position: center;
   background-repeat: no-repeat;
@@ -74,12 +82,14 @@ h1, h2, h3, h4, h5, h6{
 }
 
 .tags{
+  
   margin-top: 10px;
+
   span{
-    margin: 5px; 
-    padding: 5px;
+    margin: 2px; 
+    padding: 2px;
     background: #C1BEBE;
-    border-radius: 10px;
+    border-radius: 4px;
     display: inline-block;
   }
 }
@@ -102,30 +112,27 @@ h1, h2, h3, h4, h5, h6{
 
   .dndDragover{
       background-color: #D4D4D4;
+      border: 1px dashed #605E5E;
   }
 
   .dndDragging{
-      width: 100%;
-      height: 30px;
-      background-color: #D4D4D4;
+    
+    border: 1px solid gray;
 
-      *{
-          display: none;
-      }
   }
 
   .dragBar{
-    width: 100%;
+    width: 30px;
     height: 30px;
     cursor: move;
     
     position: absolute;
     top: 0;
-    z-index: 3;
+    z-index: 2;
   }
 
   .dragBar:hover{
-    background-color: #D4D4D4;
+    border: 1px dashed gray;
   }
 
 }

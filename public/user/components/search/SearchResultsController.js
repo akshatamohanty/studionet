@@ -25,7 +25,7 @@ angular.module('studionet')
 	$scope.getTagString = function(id){ return tags.tagsHash[id] };
 	$scope.getUserName = function(user_id){return users.usersHash[user_id].name };
 	$scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
-
+	$scope.getPostStatus = profile.getPostStatus;
 
 	// ----------------- location data mapping
 
@@ -121,6 +121,7 @@ angular.module('studionet')
 		return {"background-image": "url(" + path + ")" };
 
 	}
+
 
 	$scope.addTagToSearch = function(tag_id){
 		$scope._tags.push(parseInt(tag_id));

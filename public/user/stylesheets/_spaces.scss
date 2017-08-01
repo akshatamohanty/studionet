@@ -2,6 +2,7 @@
 
 .empty-card { 
 	@include blank-card(150px); 
+	position: relative;
 
 	md-content{
 		background-color: transparent;
@@ -23,9 +24,22 @@
 	}
 }
 
+	
 .mini-post{
 	max-width: 200px;
 	position: relative;
+
+	.viewed{
+		background-color: #D4D0D0 !important;
+	}
+
+	.created{
+		background-color: #6EDD68 !important;
+	}
+
+	.liked{
+		background-color: #DBF064 !important;
+	}
 
 	.poster{
 		height: 60%;
@@ -66,6 +80,7 @@
 			font-style: italic;
 		}
 	}
+
 }
 
 .space_sidebar{
@@ -88,6 +103,10 @@
 }
 
 .results-container{
+	.tags{
+  		margin-bottom: 20px;
+	}
+
 	.subheader{
 		font-size: 12px;
 		color: gray;

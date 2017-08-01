@@ -21,27 +21,6 @@
       </div>
 
 
-      <!-- buttons -->
-      <div flex="0">
-
-        <!-- <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
-          <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
-          <md-tooltip
-            md-direction="bottom">
-            Search
-          </md-tooltip>
-        </md-button> -->
-
-        <!-- <md-button class="md-icon-button" aria-label="Home" ng-disabled="false" ng-click='showProfile()'>
-          <a ui-sref='home.homepage'><ng-md-icon icon="home" style="fill: white" size="25"></ng-md-icon></a>
-          <md-tooltip
-            md-direction="bottom">
-            Home
-          </md-tooltip>
-        </md-button> -->
-        
-      </div>
-
     </div>
 
   </md-toolbar>
@@ -52,8 +31,8 @@
 
       <!-- workbench -->
       <!-- this slides in and out depending on the showBench value -->
-      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column' layout-fill>
-        <ng-include src="'./components/skeleton/workbench.html'" id='workbench' ng-controller="WorkbenchCtrl as bench"></ng-include>
+      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column'>
+        <ng-include id='workbench' ng-controller="WorkbenchCtrl as bench" src="'./components/skeleton/workbench.html'"></ng-include>
       </div>
       
       <!-- states -->

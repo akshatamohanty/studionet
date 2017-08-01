@@ -1,7 +1,7 @@
 angular.module('studionet')
 
-.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils',
-                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils){ 
+.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location',
+                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location){ 
 
 
         // change this to resolve 
@@ -15,7 +15,11 @@ angular.module('studionet')
         $scope.tags = tags.tagsHash;
 
         $scope.getThumb = routerUtils.getThumb;
-
+        
+        $scope.backToTop = function(){
+              $location.hash('top');
+              $anchorScroll();
+        }
 
         $scope.linkNewParent = function(new_parent, post_id){
 
@@ -212,7 +216,7 @@ angular.module('studionet')
             contributions.likeContribution(post_id).success(function(){
                   var toast = $mdToast.simple()
                           .textContent('You liked this post!')
-                          .position("top centre")
+                          .position("bottom left")
 
                   $mdToast.show(toast);
             });

@@ -78,11 +78,12 @@ angular.module('studionet')
 		return fn;
 	}])
 
-	.factory('contributions', ['$http', '$filter', 'profile', 'tags', function($http, $filter, profile, tags){
+	.factory('contributions', ['$http', '$filter', 'profile', 'tags', 'supernode', function($http, $filter, profile, tags, supernode){
 
 		var o = {
 			contributions: [],
-			contributionsHash: []
+			contributionsHash: [], 
+			recent: null
 		};
 
 		// --------- Observers
@@ -161,7 +162,15 @@ angular.module('studionet')
 		// Data needs to be sent in FormData format
 		o.createContribution = function(new_contribution){
 
+			// add default parameters
+			if(new_contribution.ref == null)
+				new_contribution.ref = supernode.contribution;
 
+			if(new_contribution.tags.length == 0)
+				new_contribution.tags = [supernode.tag]
+
+
+			// extract inline images
 			var inlineImages = extractImages(new_contribution); 
 			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
 
@@ -182,10 +191,12 @@ angular.module('studionet')
 					processData: false,
 					data: formData
 		    })
-		    .success(function(req, res) {
+		    .success(function(res) {
 
 		    	// refresh profile
 		    	profile.getUser();
+
+		    	o.recent = res[0].id;
 
 		    	return res;
 
@@ -528,6 +539,10 @@ angular.module('studionet')
 			});
 		};
 
+		o.getSpaceById = function(space_id){
+			return o.spacesHash[space_id];
+		}
+
 		// ----------------- Utility function that returns the ui-sref path for a particular space ID
 		o.getSpaceURL = function(space_id){
 
@@ -711,7 +726,9 @@ angular.module('studionet')
 		
 		var o ={
 			user: {},
-			activity: [],
+			created: [],
+			viewed: [],
+			liked: []
 		};
 
 		// ----------------- Observers of this service which re-run when this data is refreshed
@@ -742,7 +759,7 @@ angular.module('studionet')
 		o.getUser = function(){
 			return $http.get('/api/profile/').success(function(data){
 				angular.copy(data, o.user);
-
+				o.getActivity();
 				notifyObservers();
 			});
 		};
@@ -756,7 +773,21 @@ angular.module('studionet')
 		// RATED : "properties":{"rating":3,"lastRated":1486385685468}
 		o.getActivity = function(){
 			return $http.get('/api/profile/activity').success(function(data){
-				angular.copy(data[0], o.activity);
+				
+				var activity = data[0];
+				for(var i=0; i < activity.length; i++){
+
+					var action =  activity[i];
+
+					if(action.type == "VIEWED")
+						o.viewed.push(action.end);
+					else if(action.type == "CREATED")
+						o.created.push(action.end);
+					else if(action.type == "RATED" || action.type == "BOOKMARKED")
+						o.liked.push(action.end)
+
+				}
+
 			});
 		};
 
@@ -785,6 +816,25 @@ angular.module('studionet')
 		o.showProfile = function(){
 
 		}
+
+		// 
+		// 
+		// 	Get the relationship of the user to the post
+		// 	
+		// 
+		o.getPostStatus = function(post_id){
+			
+			if(o.created.indexOf(post_id) > -1)
+				return "created";
+			else if(o.viewed.indexOf(post_id) > -1)
+				return "viewed";
+			else if(o.liked.indexOf(post_id) > -1)
+				return "liked"
+			else 
+				return {}
+
+		}	
+
 
 		//
 		//
@@ -904,7 +954,6 @@ angular.module('studionet')
 
 
 
-
 // -------------- Experimental directive
 // http://embed.plnkr.co/aWBXtk4a5mCNWZFEebiP/ 
 angular.module('studionet').directive('myAwns', ['users', function(users) {
@@ -1005,4 +1054,5 @@ function extractImages(data){
   return attachments; 
 
 }
+
 
