@@ -364,7 +364,9 @@ md-input-container {
       padding: 30px 10px 10px 10px;
       vertical-align: middle;
       margin: 0 auto;
-      text-align: center; }
+      text-align: center;
+      max-height: 40px;
+      overflow: auto; }
   .mini-post .post-details {
     padding: 5px 10px;
     height: 40%; }

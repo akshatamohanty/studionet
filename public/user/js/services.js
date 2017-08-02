@@ -1,6 +1,5 @@
 // ------------- Services
 angular.module('studionet')
-
 	//-------------------- Supernodes
 	// This service returns the group and contribution super node IDs
 	.factory('supernode', ['$http', function($http){
@@ -83,7 +82,9 @@ angular.module('studionet')
 		var o = {
 			contributions: [],
 			contributionsHash: [], 
-			recent: null
+			recentCount: 10, 
+			recentPosts: [],
+			onlyposts: []
 		};
 
 		// --------- Observers
@@ -111,14 +112,29 @@ angular.module('studionet')
 
 				// orderby date
 				var ordered = $filter('orderBy')(data, 'dateCreated');
+				var onlyposts = $filter('filter')(ordered, {type: "!comment"} );
 
 				angular.copy(ordered, o.contributions);
+				angular.copy(onlyposts, o.onlyposts);
+
+				o.recentPosts = o.onlyposts.slice(-o.recentCount);
+
 				o.contributionsHash = o.contributions.hash();
 
 				notifyObservers();
 
 			});
 		};
+
+		o.getRecent = function(number){
+
+			if(number != undefined){
+				o.recentCount += number;
+				o.recentPosts = o.onlyposts.slice(-o.recentCount);
+			}	
+
+			return o.recentPosts;
+		}
 
 		o.getContribution = function(contribution_id){
 
@@ -195,8 +211,6 @@ angular.module('studionet')
 
 		    	// refresh profile
 		    	profile.getUser();
-
-		    	o.recent = res[0].id;
 
 		    	return res;
 

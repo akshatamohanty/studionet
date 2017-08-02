@@ -1,6 +1,6 @@
 angular.module('studionet')
-.controller('HomepageController', ['$scope', 'profile', 'spaces', 'contributions', 'tags',
-                            function($scope, profile, spaces, contributions, tags){
+.controller('HomepageController', ['$scope', 'profile', 'spaces', 'contributions', 'tags', '$filter',
+                            function($scope, profile, spaces, contributions, tags, $filter){
 
           $scope.$emit('showBench');
           $scope.$emit('hideSearch');
@@ -15,33 +15,15 @@ angular.module('studionet')
           $scope.spaces = spaces.spacesHash;
           $scope.user = profile.user;
 
-
-          // compute the recent posts
-          $scope.recentPosts = [];
-          var latestCount = 0;
-          var getRecent = function(){
-
-            var newcount = latestCount + 10;
-            if(newcount >= contributions.contributions.length)
-              return;
-
-            for(var i=latestCount + 1; i <= newcount; i++){
-              var newpost = contributions.contributions[contributions.contributions.length - i];
-              if(newpost.tags.length > 0 && newpost.type != "comment")
-                $scope.recentPosts.push(contributions.contributions[contributions.contributions.length - i]);
-              else
-                newcount += 1;
-            }
-
-            latestCount = newcount ;
-
-
+          function getRecent(number){
+            $scope.recentPosts = contributions.getRecent(number);
           }
+
           $scope.getRecent = getRecent;
-          contributions.registerObserverCallback(function(){ $scope.recentPosts =[]; latestCount = 0; getRecent(); });
+          contributions.registerObserverCallback(function(){ getRecent(); });
 
           // show the users currently online
-          $scope.usersOnline = [
+        /*  $scope.usersOnline = [
               {"name" : "John", "profile": "http://placehold.it/150x150" },
               {"name" : "Jane", "profile": "http://placehold.it/150x150" },
               {"name" : "Ivan", "profile": "http://placehold.it/150x150" },
@@ -50,9 +32,9 @@ angular.module('studionet')
               {"name" : "Petunia", "profile": "http://placehold.it/150x150" },
               {"name" : "Heidi", "profile": "http://placehold.it/150x150" }
           ];
-
+*/
           // updates the status of the timed tags
-          $scope.getStatus = function(times){
+          /*$scope.getStatus = function(times){
 
               if(times == null)
                 return {style: {"background-color": "#98F398"}};
@@ -81,7 +63,7 @@ angular.module('studionet')
 
               return status;
 
-          }
+          }*/
 
           // gets the space url associated with the tag; 
           // shift this to service

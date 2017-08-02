@@ -1,12 +1,12 @@
 <div class='scroll' ng-init='getRecent()'>
 
-	<h1 class='header'>Recent Posts</h1>
+	<h1 class='header'>Showing {{recentPosts.length}} recent Posts</h1>
 
 	<md-divider></md-divider>
 
 	<div layout="row" layout-xs="column" layout-wrap>
 		<!-- the results when results exist-->
-		<md-card class='pointer mini-post' ng-repeat='post in recentPosts | orderBy:"-dateCreated"' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
+		<md-card class='pointer mini-post' ng-repeat='post in recentPosts | orderBy:"-dateCreated" | filter: {type: "!comment"}' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
 
 		<div class='dragBar'></div>
 
@@ -27,7 +27,7 @@
 
 		</md-card>
 
-		<md-card class='empty-card' md-theme="default" layout-align='center' ng-click='getRecent()'>
+		<md-card class='empty-card' md-theme="default" layout-align='center' ng-click='getRecent(5)'>
 		  <ng-md-icon icon="more_horiz" style="fill: gray" size="48">
 		  </ng-md-icon>
 		</md-card>
