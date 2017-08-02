@@ -44,6 +44,9 @@ angular.module('studionet')
             
             if($scope.contributionData.attachments[0].id == null)
               $scope.contributionData.attachments = [];
+            else{
+              $scope.contributionData.attachments = $scope.contributionData.attachments.map(function(a){ return a.attachment; });
+            }
 
         }
 
@@ -74,7 +77,7 @@ angular.module('studionet')
                     });
               }   
         }
-        
+
         //remove files
         $scope.removeFiles = function (attachment) {
 
