@@ -8,7 +8,8 @@ angular.module('studionet')
           $scope.$emit('clearQuery');
 
           $scope.tags = tags.tagsHash;
-
+          $scope.getPostStatus = profile.getPostStatus;
+          
           // get user
           // user.follows - will give all the user subscriptions along with the personally assigned names
           // user.curates - will give all the user forks/folders along with the personally assigned names

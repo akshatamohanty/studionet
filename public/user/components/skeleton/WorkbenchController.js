@@ -104,25 +104,38 @@ angular.module('studionet')
 
         }
 
-        self.getTimeTillExpiry = function(time){
+        self.getTimeTillExpiry = function(fork){
+
+            var time = fork.timed;
+
             var now = new Date();
             var daysLeft = Math.round( (time[1] - now.getTime())/86400000, 0 ); 
 
-            if(daysLeft < 0)
+            if(daysLeft < 0){
+              fork.priority = 4; 
               return { msg: "The deadline for this space has passed", status: 'inactive'}
+            }
             else if(daysLeft < 5){
               var msg = "";
-              if(daysLeft < 1)
+              if(daysLeft < 1){
+                fork.priority = 1; 
                 msg = "Expires today!";
-              else if (daysLeft == 1)
+              }
+              else if (daysLeft == 1){
+                fork.priority = 1; 
                 msg = "Expires in 1 day";
-              else
+              }
+              else{
+                fork.priority = 2; 
                 msg = "Expires in "  + daysLeft + " days";
+              }
 
               return { msg: msg , status: 'warn'}
             }
-            else 
+            else {
+              fork.priority = 3; 
               return { msg: "Expires in " + daysLeft + " days" , status: 'ok'}
+            }
 
         }
 

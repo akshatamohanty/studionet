@@ -7,6 +7,10 @@
        Replying to Post: {{ ref.title }} 
     </h3>
 
+    <h3 ng-if='editMode' style='margin-bottom: 10px;'>
+       Editing Post: {{ contributionData.title }} 
+    </h3>
+
     <!-- actual form -->
     <div layout='column'>
 
@@ -21,8 +25,6 @@
           </md-radio-group>
         
         </div>
-
-
 
 
         <!-- Title -->
@@ -82,7 +84,8 @@
 
         <!-- actions -->
         <section layout="row" layout-sm="column" layout-align="center center" layout-margin>
-          <md-button class="md-primary md-raised" ng-click='createContribution()' ng-disabled="!(contributionData.body && contributionData.title)" >Save</md-button>
+          <md-button class="md-primary md-raised" ng-if='editMode == false;' ng-click='createContribution()' ng-disabled="!(contributionData.body && contributionData.title)">Save</md-button>
+          <md-button class="md-primary md-raised" ng-if='editMode == true;' ng-click='editContribution()' ng-disabled="!(contributionData.body && contributionData.title)">Save</md-button>
           <md-button class="md-warn raised" ng-click='close()'>Discard</md-button>
         </section>
 

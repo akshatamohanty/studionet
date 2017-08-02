@@ -29,7 +29,7 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
     'OPTIONAL MATCH p2=(u)-[r1:CREATED]->(c:contribution)',
     'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = "" ',
     'WITH u, forks, follows, c, r1, collect (id(t)) as tags',
-    'WITH forks, follows, u, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, type: c.contentType, tags: tags, ref: c.ref }) as contributions',
+    'WITH forks, follows, u, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, edited: r1.lastUpdated, type: c.contentType, tags: tags, ref: c.ref }) as contributions',
     'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[v:VIEWED]-(u1:user) WHERE NOT ID(u)=ID(u1)',
     'WITH forks, follows, u, contributions, count(v) as views',
     'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[r:RATED]-(u3:user) WHERE NOT ID(u)=ID(u3)',

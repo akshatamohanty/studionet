@@ -381,7 +381,7 @@ router.route('/:contributionId')
 
     var query = [
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
-      'OPTIONAL MATCH (t:tag)<-[td:TAGGED]-(c)',
+      'OPTIONAL MATCH (t:tag)<-[td:TAGGED]-(c) WHERE NOT t.name = ""',
       'WITH c, collect( {tag_id: id(t), users: td.by_users} ) as tags',
       'OPTIONAL MATCH (a:attachment)<-[:ATTACHMENT]-(c)',
       'WITH c, tags, collect( { attachment: a, id: id(a) } ) as attachments',
@@ -487,8 +487,9 @@ router.route('/:contributionId')
             newTags = [newTags];
           }
 
-          var tagsToRemove = _.difference(oldTags, newTags);
-          var tagsToAdd = _.difference(newTags, oldTags);
+          // tags will never be modified
+          var tagsToRemove = [];//_.difference(oldTags, newTags);
+          var tagsToAdd = [];//_.difference(newTags, oldTags);
 
           // remove old tags
           if (tagsToRemove.length > 0) {

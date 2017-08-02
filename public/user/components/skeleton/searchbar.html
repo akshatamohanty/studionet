@@ -1,8 +1,7 @@
 <div id='searchbar' layout-align='center' layout='row'>
   
   <div class='tags' flex layout='row'>
-
-    <md-chips ng-model="query.tags" md-autocomplete-snap
+    <md-chips ng-model="query.tags" md-autocomplete-snap flex
               md-transform-chip="ctrl.transformChip($chip)"
               md-removable="true"
               placeholder="Enter a tag"  md-require-match="true">
@@ -20,17 +19,14 @@
           placeholder="Search for a tag...">
         <span ng-class='item.function ? "italics" : "" ' md-highlight-text="ctrl.searchText" flex>{{item.name}}</span>
       </md-autocomplete>
-
-
     </md-chips>
-
   </div>
 
   <div class='dates' flex="20">
   
     <div class='links' ng-show='query.tags.length > 0' ng-click='showDates=!showDates' >
-      <span ng-if='query.dates[0]==undefined'>[Advanced]</span>
-      <span ng-if='query.dates[0]!=undefined'>{{query.dates[0] | date: 'mediumDate'}} - {{query.dates[1] | date: 'mediumDate'}}</span>
+      <span ng-if='query.dates[0]==undefined'>[{{query.tags.length}} tags] [Advanced Options] </span>
+      <span ng-if='query.dates[0]!=undefined'>[{{query.tags.length}} tags] {{query.dates[0] | date: 'mediumDate'}} - {{query.dates[1] | date: 'mediumDate'}}</span>
     </div>
 
     <div class='advanced' layout='column' ng-show='showDates'>

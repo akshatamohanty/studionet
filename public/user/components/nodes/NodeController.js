@@ -1,5 +1,4 @@
 angular.module('studionet')
-
 .controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location',
                                 function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location){ 
 
@@ -64,8 +63,6 @@ angular.module('studionet')
             });
 
         }
-
-
 
 
         $scope.ancestors = [];
@@ -210,6 +207,11 @@ angular.module('studionet')
 
         $scope.reply = function(post){
           $state.go('home.node', {type: "note", tags: [], ref: post });
+        }
+
+
+        $scope.edit = function(post){
+          $state.go('home.edit', {data: post, address: post.id});
         }
 
         $scope.like = function(post_id){

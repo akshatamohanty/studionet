@@ -68,17 +68,20 @@ angular.module('studionet')
           $scope.$watchCollection(function(){
               return $state.params;
           }, function(data){
+
               if(data.tags !== undefined && data.type == undefined){
                 $scope.query.tags = data.tags.split(",").map(function(t){return $scope.getTagString(parseInt(t)); } ); 
-                $scope.query.dates = data.dates ? data.dates.split(",").map(function(t){return new Date(parseInt(t))}) : [];
+                $scope.query.dates = data.dates ? data.dates.split(",").map(function(t){return new Date(parseInt(t))}) : [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ];
               }
 
           });
-
           
-          $scope.query = {tags: [], dates: []};
+          $scope.query = {tags: [], dates: [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ]};
 
           $scope.$watchCollection('query.tags', function(){
+
+              if($scope.query.tags.length == 0)
+                $state.go('home.homepage');
 
               // check if last tag added is  valid
               var last_tag = $scope.query.tags[$scope.query.tags.length-1];

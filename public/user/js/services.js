@@ -112,12 +112,10 @@ angular.module('studionet')
 
 				// orderby date
 				var ordered = $filter('orderBy')(data, 'dateCreated');
-				var onlyposts = $filter('filter')(ordered, {type: "!comment"} );
 
 				angular.copy(ordered, o.contributions);
-				angular.copy(onlyposts, o.onlyposts);
 
-				o.recentPosts = o.onlyposts.slice(-o.recentCount);
+				o.recentPosts = o.contributions.slice(-o.recentCount);
 
 				o.contributionsHash = o.contributions.hash();
 
@@ -128,12 +126,24 @@ angular.module('studionet')
 
 		o.getRecent = function(number){
 
+			var previousCount = o.recentCount;
+
 			if(number != undefined){
 				o.recentCount += number;
-				o.recentPosts = o.onlyposts.slice(-o.recentCount);
+				o.recentPosts = o.contributions.slice(-o.recentCount);
+
 			}	
 
 			return o.recentPosts;
+		}
+
+		o.getFirstDate = function(){
+			return o.contributions[0].dateCreated;
+		}
+
+		o.getLastDate = function(){
+			return (new Date()).getTime();
+			// return o.contributions[ o.contributions.length - 1 ].dateCreated;
 		}
 
 		o.getContribution = function(contribution_id){
@@ -225,13 +235,22 @@ angular.module('studionet')
 		// ---- Updates a contribution
 		o.updateContribution = function(update_contribution){
 
+			// add default parameters
+			if(update_contribution.ref == null)
+				update_contribution.ref = supernode.contribution;
+
+			if(update_contribution.tags.length == 0){
+				update_contribution.tags = [supernode.tag]
+			}
+
+
 			var inlineImages = extractImages(update_contribution);
 			update_contribution.attachments = update_contribution.attachments.concat(inlineImages);
 
 			var formData = new FormData();
 			formData.append('title', update_contribution.title);
 			formData.append('body', update_contribution.body);
-			formData.append('tags', update_contribution.tags);
+			formData.append('tags', update_contribution.tags.join(","));
 			formData.append('contentType', update_contribution.contentType);
 			formData.append('ref', update_contribution.ref);
 
@@ -247,6 +266,9 @@ angular.module('studionet')
 	              data: formData
 				 })
 				.then(function(res) {
+
+					// update the user posts
+					profile.getUser();
 
 					// send success
 					return res;  
@@ -419,6 +441,13 @@ angular.module('studionet')
 				notifyObservers();
 			});
 		};
+
+		o.getTagName = function(tag){
+			if(Number.isInteger(tag))
+				return o.tagsHash[tag].name;
+			else
+				return o.tagsHash[tag.tag_id].name;
+		}
 
 		o.createTag = function(new_tag){
 			

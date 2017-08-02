@@ -57,6 +57,11 @@
 	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
 				</div>
 
+				<div class='action' ng-if='post_details.createdBy == user.id;' ng-click='edit(post_details)'>
+					<ng-md-icon icon="mode_edit" size='20' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
+				</div>
+
 				<div class='action' ng-click='backToTop()'>
 					<ng-md-icon icon="keyboard_arrow_up" size='20' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom">Up</md-tooltip>
@@ -69,10 +74,6 @@
 	             	</a>
 				</div>
 
-				<!-- <div class='action' ng-if='post_details.createdBy == user.id;' ng-click='edit(post_details.id)'>
-					<ng-md-icon icon="mode_edit" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
-				</div> -->
 
 			</div>
 
@@ -87,8 +88,9 @@
 				<img class='author-profile-picture main' src='{{users[post_details.createdBy].avatar}}'>
 				<div class='author-name main'> {{ users[post_details.createdBy].name }}</div>
 			</div>
+			
 			<div class='tags'>
-				<span ng-repeat='tag in post_details.tags' ng-click='goToTagSpace(tag)'>#{{tags[tag.tag_id].name}}</span>
+				<span ng-repeat='tag in post_details.tags' ng-if='tags[tag.tag_id].name.length>0' ng-click='goToTagSpace(tag)'>#{{tags[tag.tag_id].name}}</span>
 			</div>
 
 			<md-divider></md-divider>
