@@ -2,91 +2,199 @@
 @import 'mixins';
 @import 'animations';
 
-$width: 250px;
-$folder-height: 24px;
-$post-size: 50px; 
-
 #workbench-container{
-  //padding-top: 20px; 
-  border-right: 1px solid gray;
-  width: $width;
 
-  @include animate-slide($width);
+    border: 2px solid #D9D9D9;
+    margin-top: 20px;
+    margin-bottom: 20px;
 
-  &.expand{
-    animation: 0.5s slideIn;
-    margin-left: 0;
-  }
+    width: $bench-width;
+    min-width: $bench-width;
+    position: relative;
 
-  &.compress{
-    animation: 0.5s slideOut;
-    margin-left: -$width;
-  }
+    @include animate-slide($bench-width);
+
+    &.expand{
+      animation: 0.5s slideIn;
+      margin-left: 0;
+    }
+
+    &.compress{
+      animation: 0.5s slideOut;
+      margin-left: -$bench-width;
+    }
+
+    #workbench{
+
+      overflow: hidden;
+
+      .header{
+        margin-top: 20px;
+      }
+
+      md-toolbar{
+        z-index: 1;
+      }
+
+      .profile-pic-container{
+        height: $profile-bar-height - 2*$md-padding;
+        width: 100%;
+      }
+
+      .band{
+        padding: $md-padding;
+      }
+
+      .stats{
+        font-size: 12px;
+        font-family: $header-font !important;
+      }
+
+      md-content{
+        
+        height: 700px; // fix
+        overflow: hidden;
+
+        .profile-posts{
+          padding: 0px 20px;
+          overflow: scroll;
+          height: 100%;
+        }
+
+        .folder{
+          margin-top: 5px;
+
+          .folder-title{
+            font-size: 0.5*$folder-height;
+            line-height: $folder-height;
+            font-weight: 400;
+            background-color: #DCDADA;
+
+            span{
+              margin-left: 5px;
+            }
+
+            a{
+              color: blue;
+            }
+
+
+            &.warn{
+              background-color: #D25D51;
+            }
+
+            &.inactive{
+              background-color: #808080;
+              color: #CFCACA;
+            }
+
+            &.ok{
+              background-color: #70FA83;
+            }
+
+          }
+
+          .folder-notes{
+            height: auto;
+            max-height: 200px;
+            overflow: auto;
+            width: 100%;
+            border-color: gray;
+
+            &.open{
+              animation: 0.5s slideIn;
+              overflow: auto;
+              height: auto;
+              min-height: 40px;
+              background-color: lightgoldenrodyellow;
+            }
+
+            &.close{
+              animation: 0.5s slideOut;
+              overflow: hidden;
+              height: 0;
+            }
+
+            .post-box{
+              position: relative;
+              float: left;
+              //display: inline-block;
+              width: 40%;
+              height: $post-size;
+              font-size: 12px;
+
+              overflow: hidden;
+
+              .title{
+                text-align: center;
+                vertical-align: middle;
+                font-size: 11px;
+                line-height: 14px;
+                word-wrap: break-word;
+                margin: 10% auto;
+                height: 80%;
+              }
+
+              &.published{
+                  background-color: gray;
+              }   
+
+              &.unpublished{
+                  background-color: white;
+              }
+
+              &.comment{
+                background-color: red;
+              }
+
+              &.note, &.text{
+                @extend .background;
+                background-color: green;
+                background-image: $note-background;
+              }
+
+              &.question{
+                @extend .background;
+                background-image: $question-background;
+              }
+
+              &.assignment{
+                @extend .background;
+                background-image: $assignment-background;
+              }          
+
+
+
+            }
+
+            .post-box:hover{
+              background-color: gray;
+            }
+
+            
+          }
+
+
+        }
+        
+      }
+
+
+
+    }
+
 
 }
 
-#workbench{
+
+
+/* #workbench{
     [md-fab-speed-dial].md-fab-top-left{
       left: 0px;
     }
 }
 
-.folder{
 
-  .folder-title{
-    border-bottom: 1px solid white;
-    font-size: 0.5*$folder-height;
-    line-height: $folder-height;
-    background-color: gray;
-
-    a{
-      color: blue;
-    }
-  }
-
-  .folder-notes{
-    height: 0;
-    overflow: hidden;
-
-
-    &.open{
-      animation: 0.5s slideIn;
-      overflow: auto;
-      height: auto;
-      min-height: 100px;
-    }
-
-    &.close{
-      animation: 0.5s slideOut;
-      overflow: hidden;
-      height: 0;
-    }
-
-    .post-box{
-      display: inline-block;
-      width: $post-size;
-      height: $post-size;
-      border: 1px solid black;
-      border-radius: 2px;
-      margin: 4px;
-
-      .title{
-        text-align: center;
-        font-size: 10px;
-        line-height: 10px;
-        word-wrap: break-word;
-        margin: 0 auto;
-      }
-
-      &.hover{
-        background-color: gray;
-      }
-    }
-    
-  }
-
-
-}
 
 .search-bar{
   border: 1px solid white;
@@ -110,3 +218,4 @@ $post-size: 50px;
   height: $post-size;
   width: $post-size;
 }
+ */

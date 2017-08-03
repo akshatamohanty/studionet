@@ -1,83 +1,99 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', 'profile', 'contributions', 'spaces', '$state',
-                               function($scope, profile, contributions, spaces, $state){
+.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', '$stateParams', 'users', '$state', '$mdToast',
+                               function($scope, $mdToast, profile, contributions, spaces, routerUtils, tags, $stateParams, users, $state, $mdToast){
 
           $scope.showBench = true;
           $scope.searchActive = false;
 
           // to control show and hide of search bar and work bench
-          $scope.$on('hideBench', function(){ $scope.showBench = false });
-          $scope.$on('hideSearch', function(){ $scope.searchActive = false });
-          $scope.$on('showBench', function(){ $scope.showBench = true });
-          $scope.$on('showSearch', function(){ $scope.searchActive = true });
+          $scope.$on('hideBench', function(){ if($scope.showBench == true ) $scope.showBench = false });
+          $scope.$on('hideSearch', function(){ if($scope.searchActive == true) $scope.searchActive = false });
+          $scope.$on('showBench', function(){ if($scope.showBench == false) $scope.showBench = true });
+          $scope.$on('showSearch', function(){ if($scope.searchActive == false) $scope.searchActive = true });
 
+          $scope.$on('clearQuery', function(){ $scope.query = {tags: [], dates: []}; $scope.showDates = false;  });
+
+          // global references -- good practice???
           $scope.posts = contributions.contributionsHash; 
-          $scope.spaces = spaces.spacesHash;
+          contributions.registerObserverCallback(function(){ $scope.posts = contributions.contributionsHash;  });
 
+          $scope.spaces = spaces.spacesHash;
+          spaces.registerObserverCallback(function(){ console.log("updating spaces"); $scope.spaces = spaces.spacesHash; });
+
+          // user profile
           $scope.user = profile.user;
 
-          $scope.goTo = function(url){
-            $state.go('home.search-results', { 'referer':'home.homepage', 'tags': url});
+          // subscribe to changes in user profile
+          profile.registerObserverCallback(function(){ $scope.user = profile.user; });
+
+          $scope.goToSpace = routerUtils.goToSpace;
+          $scope.goToProfile = routerUtils.goToProfile;
+          $scope.goToNode = routerUtils.goToNode;
+          $scope.goToSearch = routerUtils.goToSearch;
+          $scope.getSpaceURL = spaces.getSpaceURL;
+
+          $scope.goToSpaceWithArgs = function(query){
+            // send only the tag ids 
+            routerUtils.goToSpaceWithArgs( query.tags.map(function(t){ return t.id }), query.dates );
+          } 
+
+          $scope.getTagString = function(id){ return tags.tagsHash[id]; };
+          $scope.getUserName = function(user_id){return users.usersHash[user_id].name };
+          $scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
+
+
+
+          // background of the cards 
+          $scope.getPostBackground = function(post){
+
+            if(post.attachments == undefined)
+              return {};
+
+            if(post.attachments[0].id == null)
+              return {};
+
+            var path = undefined;
+            for(var i=0; i < post.attachments.length; i++){
+              path = routerUtils.getThumb(post.id, post.attachments[i]);
+              if(path.startsWith("./img/") == false)
+                break;
+            }
+
+            return {"background-image": "url(" + path + ")" };
+
           }
 
-          $scope.goToProfile = function(url){
-            $state.go('home.profile-details', { 'referer':'home.homepage', 'address': 1});
-          }
 
-          $scope.goToNode = function(node){
-            $state.go('home.node-details', { 'referer':'home.homepage', 'address': node })
-          };
+          // search functionality
+          $scope.$watchCollection(function(){
+              return $state.params;
+          }, function(data){
+
+              if(data.tags !== undefined && data.type == undefined){
+                $scope.query.tags = data.tags.split(",").map(function(t){return $scope.getTagString(parseInt(t)); } ); 
+                $scope.query.dates = data.dates ? data.dates.split(",").map(function(t){return new Date(parseInt(t))}) : [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ];
+              }
+
+          });
+          
+          $scope.query = {tags: [], dates: [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ]};
+
+          $scope.$watchCollection('query.tags', function(){
+
+              if($scope.query.tags.length == 0)
+                $state.go('home.homepage');
+
+              // check if last tag added is  valid
+              var last_tag = $scope.query.tags[$scope.query.tags.length-1];
+
+              if(last_tag == undefined || last_tag.id == undefined)
+                return; 
+              else
+                $scope.goToSpaceWithArgs($scope.query);
+          
+          })
+
+
+          $scope.createTag = tags.createTag;
 
 }]);
-
-
-// Controls for the new node
-angular.module('studionet')
-  .controller('FabCtrl', function($scope, $mdDialog, $timeout) {
-    var self = this;
-
-    self.hidden = false;
-    self.isOpen = false;
-    self.hover = false;
-
-    // On opening, add a delayed property which shows tooltips after the speed dial has opened
-    // so that they have the proper position; if closing, immediately hide the tooltips
-    $scope.$watch('demo.isOpen', function(isOpen) {
-      if (isOpen) {
-        $timeout(function() {
-          $scope.tooltipVisible = self.isOpen;
-        }, 600);
-      } else {
-        $scope.tooltipVisible = self.isOpen;
-      }
-    });
-
-    self.items = [
-      { name: "Note", icon: "note", direction: "bottom" },
-      { name: "Question", icon: "comment", direction: "top" },
-      { name: "Assignment", icon: "assignment", direction: "bottom" }
-    ];
-
-    self.openDialog = function($event, item) {
-      // Show the dialog
-      $mdDialog.show({
-        clickOutsideToClose: true,
-        controller: function($mdDialog) {
-          // Save the clicked item
-          this.item = item;
-
-          // Setup some handlers
-          this.close = function() {
-            $mdDialog.cancel();
-          };
-          this.submit = function() {
-            $mdDialog.hide();
-          };
-        },
-        controllerAs: 'dialog',
-        templateUrl: 'dialog.html',
-        targetEvent: $event
-      });
-    };
-  });
-

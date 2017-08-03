@@ -1,4 +1,14 @@
 <div layout="column" layout-align='center center' layout-fill layout-padding style='min-height: 300px;'>
-	<h3 class='md-display'>Write your query <br>{{search.query}}</h3>
-		<ng-include src="'/user/components/filters/filter.html'"></ng-include>
+	<h3 class='md-display'>Write your query <br>{{ query.tags }}</h3>
+
+	<md-input-container>
+		<form name="myForm" ng-submit="createTag(myForm.new_tag.$modelValue)">
+			<label>Create a new tag</label> {{myForm.$valid}}
+			<input type="text" ng-model="new_tag" name="new_tag" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" required>
+	    	<span ng-show="myForm.new_tag.$error.pattern">Spaces and special characters are not allowed in tags</span>
+	    	<md-button type="submit" value="submit" class="md-raised" ng-disabled="newtag.length==0 || myForm.new_tag.$error.pattern" aria-label="description" md-no-ink="true" md-ripple-size="auto">Create</md-button>
+		</form>
+	</md-input-container>
+	
+
 </div>

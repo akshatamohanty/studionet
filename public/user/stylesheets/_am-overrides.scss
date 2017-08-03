@@ -1,0 +1,38 @@
+md-content{
+  background: transparent;
+}
+
+.md-show{
+  height: auto;
+}
+
+
+// -- text Angular
+
+.textAngular .btn-toolbar{
+  background-color: transparent;
+  padding: 0px 0px 10px 0px;
+}
+
+.textAngular .btn-default{
+  border: 1px solid #ccc;
+}
+
+.textAngular .btn-default{
+  border: 0px;
+  margin: 0px 0px 2px 2px;
+}
+
+.ta-scroll-window.form-control{
+  border: 1px solid #CCC;
+}
+
+md-input-container{
+	margin: 0px;
+	width: 100%;
+}
+
+.md-chip-input-container{
+  margin: 0px !important;
+  font-size: 12px;
+}

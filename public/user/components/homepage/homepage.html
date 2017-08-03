@@ -1,94 +1,48 @@
-<div layout='column' layout-align='top center'>
-    
-    <!-- timed tags -->
-    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
-      <h3 class='container-heading'>
-          Timed Spaces
-          <span class='md-caption' style='float: right' ng-click='timed_expand=!timed_expand'>
-            {{ timed_expand ? "Less" : "More"}}
-          </span>
-      </h3>
-      <md-divider md-inset></md-divider>
-      <div ng-class='timed_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat="space in user.subscribed_to" ng-show='spaces[space].time'>
-            <a ui-sref='home.search-results({"tags": spaces[space].tags.join(","), dates: spaces[space].time.join(",")})'>
-              <div style='margin: 12px; height: auto;'> 
-                <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
-                <div style='font-size: 16px;margin-bottom: 10px;'>{{spaces[space].name}}</div>
-                <div style='font-size: 10px;margin: 0px;'>
-                    <span ng-repeat="tag in spaces[space].tags">#{{tags[tag].name}} </span>
-                </div>
-              </div>
-            </a>
-         </div>
-      </div>
-    </md-card>
+<div class='scroll' ng-init='getRecent()'>
 
-    <!-- subscriptions -->
-    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
-      <h3 class='container-heading'>
-          Your Subscriptions
-          <span class='md-caption' style='float: right' ng-click='subs_expand=!subs_expand'>
-            {{ subs_expand ? "Less" : "More"}}
-          </span>
-      </h3>
-      <md-divider md-inset></md-divider>
-      <div ng-class='subs_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat='space in user.subscribed_to'>
-            <a ui-sref='home.search-results({"tags": spaces[space].tags.join(","), dates: spaces[space].time.join(",")})'>
-              <div style='margin: 12px; height: auto;'> 
-                <div style='font-size: 12px;margin-bottom: 5px;font-weight: 600;'>Space</div>
-                <div style='font-size: 16px;margin-bottom: 10px;'>{{spaces[space].name}}</div>
-                <div style='font-size: 10px;margin: 0px;'>
-                    <span ng-repeat="tag in spaces[space].tags">#{{tags[tag].name}} </span>
-                </div>
-              </div> 
-            </a>
-         </div>
-      </div>
-    </md-card>
+	<h1 class='header'>Showing {{recentPosts.length}} recent Posts</h1>
 
-    <!-- recent posts -->
-    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
-      <h3 class='container-heading'>
-                Recent Posts
-                <span class='md-caption' style='float: right' ng-click='post_expand=!post_expand'>
-                  {{ post_expand ? "Less" : "More"}}
-                </span>
-      </h3>
-      <md-divider md-inset></md-divider>
-      <div ng-class='post_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat='post in recentPosts'>
-              <a ui-sref='home.node-details({"address" : post.id})'>
-                <div style='border: 1px dashed white; margin: 12px; height: auto;'> 
-                  <div style='font-size: 16px;margin-bottom: 10px;'>{{ post.title }}</div>
-                  <div style='font-size: 12px;margin-bottom: 5px;margin: 0px;'><em>{{post.dateCreated | date : 'mediumDate'}}</em></div>
-                </div> 
-              </a>
-         </div>
-      </div>
-    </md-card>
+	<md-divider></md-divider>
 
+	<div layout="row" layout-xs="column" layout-wrap>
+		<!-- the results when results exist-->
+		<md-card class='pointer mini-post' ng-repeat='post in recentPosts | orderBy:"-dateCreated" | filter: {type: "!comment"}' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)'> 
 
-    <!-- users online -->
-    <md-card class='shortcut-container swipe-down swipe-up'   ng-hide='searchMode' md-theme="default">
-      <h3 class='container-heading'>
-                Online Users
-                <span class='md-caption' style='float: right' ng-click='user_expand=!user_expand'>
-                  {{ user_expand ? "Less" : "More"}}
-                </span>
-      </h3>
-      <md-divider md-inset></md-divider>
-      <div ng-class='user_expand ? "full-height" : "fixed-height"' layout='row' layout-wrap layout-fill style='overflow: hidden;'>
-         <div class='shortcut-div' ng-repeat='user in usersOnline'>
-              <a ui-sref='home.profile-details({"address" : user.name})'>
-                <div style='border: 1px dashed white; margin: 12px; height: auto; text-align: center;'> 
-                  <div style='font-size: 16px;margin-bottom: 10px;'>{{ user.name }}</div>
-                  <div style='font-size: 12px;margin-bottom: 5px;margin: 0px;'><em>{{user.handle}}</em></div>
-                </div> 
-              </a>
-         </div>
-      </div>
-    </md-card>
-                
+		<div class='dragBar'></div>
+
+        <md-tooltip md-direction="bottom" md-autohide="true"> You {{getPostStatus(post.id)}} this post </md-tooltip>
+        
+        <div class='action-bar' style='position: absolute;height: 30px; width: 30px;right: 0px; '>
+          <ng-md-icon icon="bookmark_outline" style="fill: #8FE266" size="16" ng-if='getPostStatus(post.id) == "viewed"'>
+          </ng-md-icon>
+          <ng-md-icon icon="create" style="fill: #2919F7" size="16" ng-if='getPostStatus(post.id) == "created"'>
+          </ng-md-icon>
+          <ng-md-icon icon="thumb_up" style="fill: #EFE821" size="16" ng-if='getPostStatus(post.id) == "liked"'>
+          </ng-md-icon>
+        </div>
+
+		<md-content layout-wrap>
+		    <div class='poster' ng-style='getPostBackground(post)'>
+		      <div class='post-title' ng-if='post.attachments[0].id == null'>{{post.title}}</div>
+		    </div>
+
+		    <md-divider></md-divider>
+
+		    <div class='post-details'>
+		        <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>
+		        <div class='author-avatar'>{{getUserAvatar(post.createdBy)}}</div>
+		        <div class='author-name'>{{getUserName(post.createdBy)}}</div> 
+		        <div class='small'>{{post.dateCreated |  date: 'mediumDate' }} </div>
+		    </div>
+		</md-content>
+
+		</md-card>
+
+		<md-card class='empty-card' md-theme="default" layout-align='center' ng-click='getRecent(5)'>
+		  <ng-md-icon icon="more_horiz" style="fill: gray" size="48">
+		  </ng-md-icon>
+		</md-card>
+
+	</div>
+
 </div>

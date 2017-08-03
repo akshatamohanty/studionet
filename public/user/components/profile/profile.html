@@ -1,45 +1,123 @@
-<!-- back button -->
-<a onclick='history.back()' style='display: block;'><u>Back</u></a>
+<div class='scroll'>
 
-<!-- profile -->
-<h3 class='md-display'>{{profile}}</h3>
+    <!-- back button -->
+    <a onclick='history.back()' style='display: block;'><u>Back</u></a>
+
+    <!-- profile -->
+    <!-- <h3 class='md-display'>{{user.name}}</h3>
     <br>
       <hr class="style1">
-    <br>
-<div layout="row" layout-sm="column">
+    <br> -->
 
-    <!-- Top Post Window  -->
-    <div flex>
-        <div class="container">
-            <div layout="row" style="height:100%;">
-                <div layout="column">
-                    <div layout="row" layout-wrap>
-                          <div flex="30">
+    <div layout="row" layout-sm="column">
+        
+        <md-card flex='45' md-padding class='profile-card'>
 
-                          </div>
-                          <div flex="45">
-                            [flex="45"]
-                          </div>
-                          <div flex="25">
-                            [flex="25"]
-                          </div>
-                    </div>
+            <div class='headline'>
+                <h1>{{ user.level | level }}<span>{{ user.name }}</span></h1>
+            </div>
 
-                    <hr width="100%">
+            <!-- Details section -->
+            <div>
+                Last Seen : {{user.lastLoggedIn | date: 'medium'}}
+            </div>
 
-                    <!-- Saved Tag -->
-                    <p>TAGSPACE 1</p>
-                    <div class="rcornerTopPost">
+            <div class="detailContainer" layout="row">
 
-                    </div>
+                <div flex='70'>
+                    <div class='detail'>Number of subscribers:</div>
+                    <div class='detail'>Post Created: {{user.created.length}}</div>
+                    <div class='detail'>Comments Posted:</div>
+                    <div class='detail'>Upvotes:</div>
+                </div>
+
+                <div flex='30'>
+                    <img src='{{user.avatar}}'>
+                </div>
+
+            </div>
+
+            <md-divider></md-divider>
+
+            <!-- Progress Bar -->
+            <div class="rcornertop">
+
+                <span ng-repeat='level in levels' ng-class=' user.role == level.id ? "selected" : "" '>{{level.name}}</span>
+
+                <!-- use an angular progress bar -->
+                <!-- <div>
+                        <label>Current Value</label>
+                        <input type="number" ng-model="curVal" min="0" max="100">
+
+                        <br><br>
+
+                        <progress-bar cur-val='{{curVal}}' max-val='{{maxVal}}'></progress-bar>
+
+                </div> -->
+            </div>
+
+            <md-divider></md-divider>            
+
+            <!--Badge Layer -->
+            <h3>Badges Earned</h3>
+            <div layout="row" class="rcornermiddle">
+                <div ng-repeat='Badge in Badge'>
+                     <div flex class="badge">
+                     </div>
                 </div>
             </div>
-        </div>
+
+            <md-divider></md-divider>
+
+            <!-- Tags Section -->
+            <div class="rcornerbottom">
+                <div class="cloud-container">
+                       <ng-tag-cloud class="custom-1" cloud-width="250" cloud-height="250" cloud-data="data"></ng-tag-cloud>
+                </div>
+            </div>
+
+        </md-card>
+
+        <md-card flex='45' class='profile-card'>
+            <div layout="row" layout-wrap>
+                  <div flex="30" class="left">
+                    <md-card>
+                        <md-card-content>
+                            <h2>Card headline</h2>
+                            <p>Card content</p>
+                        </md-card-content>
+                        <md-card-footer>
+                            Card footer
+                        </md-card-footer>
+                    </md-card>
+                  </div>
+                  <div flex="45">
+                    <div>
+                       <p> PostTitle</p>
+                        <p>Views</p>
+                        <p>Upvotes</p>
+                        <p>Bookmark</p>
+                    </div>
+                  </div>
+                  <div flex="25" class="rcornerbadgeTopPost">
+                        <div >
+
+                        </div>
+                  </div>
+            </div>
+
+            <md-divider></md-divider>
+
+            <p>TAGSPACE 1</p>
+            <div class="rcornerTopPost">
+
+            </div>
+
+        </md-card>
+
     </div>
 
 
 </div>
-
-
 
 

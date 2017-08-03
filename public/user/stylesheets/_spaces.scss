@@ -2,5 +2,115 @@
 
 .empty-card { 
 	@include blank-card(150px); 
-	background-color: transparent;
+	position: relative;
+
+	md-content{
+		background-color: transparent;
+
+		#addNode{
+			line-height: 50px;
+		}
+
+		.space-name{
+			font-size: 12px;
+			font-weight: 600;
+			font-family: $text-font;
+		}
+	}
+
+	md-content:hover{
+		background-color: #D1D1D1;
+		cursor: move;
+	}
+}
+
+	
+.mini-post{
+	max-width: 200px;
+	position: relative;
+
+	.viewed{
+		background-color: #D4D0D0 !important;
+	}
+
+	.created{
+		background-color: #6EDD68 !important;
+	}
+
+	.liked{
+		background-color: #DBF064 !important;
+	}
+
+	.poster{
+		height: 60%;
+		min-height: 50px;
+		background-position: center; 
+		background-size: cover;
+		background-repeat: no-repeat;
+		overflow: hidden;
+
+		.post-title{
+			font-size: 18px;
+			font-weight: 300px;
+			line-height: 28px;
+			padding: 30px 10px 10px 10px;
+			vertical-align: middle;
+			margin: 0 auto;
+			text-align: center;
+			max-height: 40px;
+			overflow: auto;
+		}
+	}
+	
+	.post-details{
+		padding: 5px 10px;
+
+		height: 40%;
+
+		.post-title{
+			margin: 5px 0px 5px 0px;
+			font-size: 14px;
+		}
+
+		.author-name{
+			margin: 0px;
+			font-size: 12px;
+		}
+
+		.small{
+			font-size: 10px;
+			font-style: italic;
+		}
+	}
+
+}
+
+.space_sidebar{
+	
+	.header{
+		@extend .header;
+
+		font-size: 20px;
+		line-height: 24px;
+
+		margin-bottom: 10px;
+	}
+
+	.details{
+		font-weight: 400;
+		font-size: 14px;
+		font-family: $header-font;
+	}
+	
+}
+
+.results-container{
+	.tags{
+  		margin-bottom: 20px;
+	}
+
+	.subheader{
+		font-size: 12px;
+		color: gray;
+	}
 }

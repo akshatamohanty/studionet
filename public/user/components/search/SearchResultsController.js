@@ -1,57 +1,271 @@
 angular.module('studionet')
-.controller('SearchResultsController', ['$scope', '$state', '$stateParams', 'profile', function($scope, $state, $stateParams, profile){
+.controller('SearchResultsController', ['$scope', '$mdToast', '$mdDialog', 'routerUtils', 'tags', 'users', 'profile', 'spaces', 
+										function($scope, $mdToast, $mdDialog, routerUtils, tags, users, profile, spaces){
 
+	
+	// error handling - if URL is not valid, return to search page
+	if( $scope.$resolve.location.status == -1 ){
+
+		//todo: display an error message
+		
+
+		//navigate to previous page
+		history.back();
+		
+	}
+
+
+	// -------------- 
+	// ui-actions - This state shows the workbench as well as the search bar
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
 
-	var tags = $stateParams.tags;
-	var dates = $stateParams.dates;
-	var users = $stateParams.users;
+	
+	// --------------- general functions
+	$scope.getTagString = function(id){ return tags.tagsHash[id] };
+	$scope.getUserName = function(user_id){return users.usersHash[user_id].name };
+	$scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
+	$scope.getPostStatus = profile.getPostStatus;
 
-	// TODO: Functionality to display the cards matching a query / tagspace
-	/*var tags = $stateParams.tags && $stateParams.tags.length > 0 ? $stateParams.tags.split(",") : null;
-	var dates = $stateParams.dates ? $stateParams.dates.split(",") : null;
-	var users = $stateParams.users ? $stateParams.users.split(",") : null;*/
+	// ----------------- location data mapping
 
-	if( tags || dates || users )
-		console.log(tags, dates, users);
-		//$scope.location = "/space/tags=" + tags.join(",") + (dates || users ? "?" : "") + (dates ? "dates=" + dates.join(",") + "&" : "") + (users ? "&users=" + users.join(",") : "");
-	else
-		$state.go('home.search');
+	//	$scope.$resolve.location - contains data about the current space
+	//	location.status - Gives the status based on the following cases
+	//  Case: URL is invalid  | -1
+	//	Case: URL is valid but there is no space associated with it | 0
+	// 	Case: URL is valid and there is a space associated with it, but the user has not followed / curated it | 1
+	//  Case: URL is valid and there is a space associated with it, the user has followed it | 2
+	// 	Case: URL is valid and there is a space associated with it, the user has curated it | 3
+	//  Case: URL is valid and there is a space associated with it, the user has curated as well as followed it | 4 
+	//
+	// 	map the data to the page components 
+	
+	$scope._tags = $scope.$resolve.location.tags;
+	$scope._dates = $scope.$resolve.location.dates;
+	$scope.status = $scope.$resolve.location.status;
+	$scope.space_name = $scope.$resolve.location.name;
+	$scope.about_space = $scope.$resolve.location.about;
+	$scope.expired = false;
 
-	$scope.posts = [
-		{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
-		{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
-		{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
-		{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
-		{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
-		{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
-		{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
-		{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"},
-		{"id": "1", "title": "Hello World 1", "author": 2, "rating": "gold", "size": "xl"},
-		{"id": "2", "title": "Hello World 2", "author": 2, "rating": "silver", "size": "md"},
-		{"id": "3", "title": "Hello World 3", "author": 2, "rating": "gold", "size": "xl"},
-		{"id": "4", "title": "Hello World 4", "author": 2, "rating": "plastic", "size": "xl"},
-		{"id": "5", "title": "Hello World 5", "author": 2, "rating": "bronze", "size": "sm"},
-		{"id": "6", "title": "Hello World 6", "author": 2, "rating": "silver", "size": "md"},
-		{"id": "7", "title": "Hello World 7", "author": 2, "rating": "plastic", "size": "xs"},
-		{"id": "8", "title": "Hello World 8", "author": 2, "rating": "bronze", "size": "md"}
-	]
+	var space = $scope.$resolve.location.details;
+	
+	// map these only if a space exists 
+	if($scope.status > 0){
+		// person who first saved this space
+		$scope.founder = $scope.$resolve.location.details.by; 
 
-	$scope.leaders = [
-		{name: "Harry Potter", handle: "@harry"},
-		{name: "Draco Malfoy", handle: "@malfoy"},
-		{name: "Ron Weasley", handle: "@weasley"}
-	]
+		// people who have forked this space
+		$scope.followers = $scope.$resolve.location.details.followers;
+		$scope.curators = $scope.$resolve.location.details.curators;
 
-	// person who first saved this space
-	$scope.founder = {'id':123, 'name':'Samatha Dawes'};
+		//http://localhost:3000/user/#/space?tags=407,426,4402&dates=1498273886030,1499273886030
 
-	// people who have forked this space
-	$scope.forks = [ 2, 3, 4, 6, 7, 8, 9]
+		$scope.expired = ( space.timed.length == 2 && ( space.timed[1] < (new Date()) ) ) ? true : false;
 
-	$scope.saveSpace = function(){
-		profile.user.subscribed_to.push(4123)
 	}
+
+	// ------------- Dealing with search results
+
+	if( $scope.$resolve.search_results.length == 0 ){
+
+		// todo: display a no results message
+
+	}	
+
+	$scope.posts = $scope.$resolve.search_results.data; 
+
+	// compute the suggested tags
+	// 
+	// 
+	var suggested_tags = [];
+	for(var i=0; i < $scope.posts.length; i++){
+		var post = $scope.posts[i];
+		post.tags.forEach(function(t){
+
+			if( suggested_tags[t.id] == undefined )
+				suggested_tags[t.id] = t.tagged_by.length;
+			else
+				suggested_tags[t.id] += t.tagged_by.length;
+			
+		})
+	}
+	$scope.suggested_tags = [];
+	for( key in suggested_tags ){
+		if( suggested_tags.hasOwnProperty(key) && $scope._tags.indexOf(parseInt(key)) == -1 ){
+			$scope.suggested_tags.push({ id: key, count: suggested_tags[key] })
+		}
+	}
+
+
+	// compute leaders based on the posts 
+	// 
+	// 
+
+
+	// background of the cards 
+	$scope.getPostBackground = function(post){
+
+		if(post.attachments == undefined)
+			return {};
+
+		if(post.attachments[0].id == null)
+			return {};
+
+		var path = undefined;
+		for(var i=0; i < post.attachments.length; i++){
+			path = routerUtils.getThumb(post.id, post.attachments[i]);
+			if(path.startsWith("./img/") == false)
+				break;
+		}
+
+		return {"background-image": "url(" + path + ")" };
+
+	}
+
+
+	$scope.addTagToSearch = function(tag_id){
+		$scope._tags.push(parseInt(tag_id));
+		routerUtils.goToSpaceWithArgs($scope._tags, $scope._dates);
+	}
+
+	$scope.goToTagSpace = function(tag_id){
+		routerUtils.goToSpaceWithArgs([tag_id], []);
+	}
+
+
+	// ------------- location based functions
+	$scope.newnodepath =  {type: "note", tags: $scope._tags, ref: null};
+	
+	//
+	//	tags a contribution with the tags of the space
+	//
+	$scope.addNodeToSpace = function(item){
+
+		// check if the item is already present in the results 
+		// return if it does
+		for(var i=0; i < $scope.posts.length; i++){
+			if( $scope.posts[i].id == item.id ){
+					var toast = $mdToast.simple()
+						      .textContent('Oops... This post already exists here!')
+						      .position("bottom right")
+
+					$mdToast.show(toast);	
+					return;
+			}
+
+		}
+
+		// tag the node with the tags of the space
+		profile.tagContribution(item.id, $scope._tags)
+				.success(function(data){
+
+						var data = data[0];
+
+	   					item.tags = data.tags; 
+	   					data.contribution.tags = data.tags
+
+	   					// add the node to results
+	   					$scope.posts.push(data.contribution);
+						
+						// if item isn't in the time frame, show failure alert
+						var toast = $mdToast.simple()
+						      .textContent('Successfully added to this space')
+						      .position("bottom right")
+
+						$mdToast.show(toast);
+
+
+				})
+				.error(function(){
+
+						var toast = $mdToast.simple()
+						      .textContent('Hmm.... Something went wrong')
+						      .position("bottom right")
+
+						$mdToast.show(toast);
+				
+				}) 
+
+	}
+
+	$scope.fork = function(){
+
+		// check if the space is present in the users forks
+		if($scope.status > 0){
+
+			var user_forks = profile.user.forked;
+
+			for(var i=0; i< user_forks.length; i++){
+				if(user_forks[i].id == space.id){
+	      			var toast = $mdToast.simple()
+				      .textContent('Oops.. this space is already in your saved spaces')
+				      .position("bottom left")
+
+					$mdToast.show(toast);
+					return;
+				}	
+			}
+		}
+
+	    // Appending dialog to document.body to cover sidenav in docs app
+	    var confirm = $mdDialog.prompt()
+	      .title('What do you want to name your collection?')
+	      //.textContent('Bowser is a common name.')
+	      .placeholder('text')
+	      .ariaLabel('text')
+	      .initialValue( $scope._tags.map(function(t){ return $scope.getTagString(t).name }).join("_").replace(" ", "-") )
+	      .ok('Create')
+	      .cancel('Cancel');
+
+	    $mdDialog.show(confirm).then(function(result) {
+
+	    	// there is an existing space
+	    	if ($scope.status > 0){
+	    		// creating fork to existing space
+	    		spaces.forkSpace({name: result, space: space.id})
+	    	}
+	    	else{
+	    			// create the space if space doesn't exist
+			      	spaces.createSpace($scope._tags, $scope._dates).then(function(data){
+
+			      		var space_id = data.data[0].id;
+
+			      		// fork the space
+			      		spaces.forkSpace({name: result, space: space_id}).success(function(){
+			      			var toast = $mdToast.simple()
+						      .textContent('Successfully forked this space!')
+						      .position("bottom left")
+
+							$mdToast.show(toast);
+			      		})
+
+				      }, function(){
+
+				      		var toast = $mdToast.simple()
+						      .textContent('Oops...something went wrong! Please try again.')
+						      .position("bottom left")
+
+							$mdToast.show(toast);
+
+				      })
+
+			    
+
+
+	    	}
+	    }, function() {
+			
+	    	// canceled fork creation
+			//$scope.status = 'You didn\'t name your dog.';
+				    
+		});
+
+	}
+
+	$scope.subscribe = function(){
+		alert("subscription doens't work yet")
+	}
+
+
 
 }]);
