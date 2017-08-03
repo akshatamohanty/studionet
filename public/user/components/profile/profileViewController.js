@@ -1,10 +1,10 @@
 angular.module('studionet')
-.controller('profileViewController', function($q, $scope, $interval, profile, tags) {
+.controller('profileViewController', function($q, $scope, $interval, tags, userProfile) {
 
       $scope.getTagName = tags.getTagName;
 
+      $scope.user = userProfile;
 
-      $scope.user = profile.user;
       $scope.user.role = 1;
       $scope.user.points = 40;
 
@@ -18,14 +18,12 @@ angular.module('studionet')
       // todo: compute most popular contribution of the user 
       $scope.topcontribution = $scope.user.contributions[0]; 
 
-
-
       // todo: compute the number of comments by the user
 
 
       // todo: compute the most popular tags used by the user using the user.contributions
       // count the number of times the user has used a particular tag and reassign $scope.data
-      var all_posts = profile.user.contributions;
+      var all_posts = $scope.user.contributions;
       $scope.data = [
             {text: "Ipsum", weight: 9},  // three properties - id (tag id), text (tag name), weight (count of tag in the users' posts)
             {text: "Dolor", weight: 6},

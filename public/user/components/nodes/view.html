@@ -74,8 +74,6 @@
 		             	<md-tooltip md-direction="bottom">Back</md-tooltip>
 	             	</a>
 				</div>
-
-
 			</div>
 
 
@@ -86,8 +84,10 @@
 					{{ post_details.title }}
 			</div>
 			<div layout="row">
-				<img class='author-profile-picture main' src='{{users[post_details.createdBy].avatar}}'>
-				<div class='author-name main'> {{ users[post_details.createdBy].name }}</div>
+				<a ui-sref='home.profile-details({address: post_details.createdBy})'>
+					<img class='author-profile-picture main' src='{{users[post_details.createdBy].avatar}}'>
+					<div class='author-name main'> {{ users[post_details.createdBy].name }}</div>
+				</a>
 			</div>
 			
 			<div class='tags'>

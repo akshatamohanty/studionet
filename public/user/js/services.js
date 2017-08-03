@@ -372,35 +372,25 @@ angular.module('studionet')
 		// Takes in two arguments - userID anf from DB
 		// Fetches details about a particular user from the database 
 		// get user from the hash and trigger data request for additional info about the user from the server
-		o.getUser = function(user_id, fromDB){
+		o.getUser = function($stateParams){
 			
-			var user = o.usersHash[user_id];
+			var user_id = $stateParams.address; 
 
-			// trigger for user data
-			if(fromDB){
+			if(user_id == undefined)
+				return;
 
-				var url = '/api/users/' + user_id;
-				
-				return $http.get(url).then(function(res){
-					if(res.status == 200){
-						var data = res.data;
-						var user = o.usersHash[data.id];
-
-						for(prop in data){
-							if(data.hasOwnProperty(prop)){
-								user[prop] = data[prop];
-							}
-						}		
-						return res;
-					}
-					else{
-						console.log("Error fetching user data");
-					}
-				});
+			console.log(user_id);
+			var url = '/api/users/' + user_id;
 			
-			}
-			else
-				return user;
+			return $http.get(url).then(function(res){
+				if(res.status == 200){
+					return res.data;
+				}
+				else{
+					console.log("Error fetching user data");
+				}
+			});
+
 		}
 
 		// ---- Sets updated user-information
