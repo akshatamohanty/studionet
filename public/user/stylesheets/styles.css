@@ -670,6 +670,7 @@ div.ng-tag-cloud span {
   .profile-card .headline {
     border-bottom: 1px solid gray; }
     .profile-card .headline h1 span {
+      font-family: "Raleway", sans-serif;
       font-size: 12px;
       margin-left: 20px; }
   .profile-card .profile-img-sm {
@@ -688,16 +689,11 @@ div.ng-tag-cloud span {
   border: 2px solid #B22222;
   height: 60px; }
 
-/* md-card.md-default-theme .md-card-image, md-card .md-card-image {
-    border-radius: 25px 25px 0 0;
-}
- */
 .rcornertop {
   border-radius: 25px;
   border: 2px solid #f2f2f2;
-  /* padding: 20px;
-  width: 720px;
-  height: 150px; */ }
+  /*  padding: 20px;*/
+  height: 50px; }
 
 .rcornermiddle {
   border-radius: 25px;
@@ -709,9 +705,8 @@ div.ng-tag-cloud span {
 .rcornerTopPost {
   border-radius: 25px;
   border: 2px solid #f2f2f2;
-  /* padding: 20px;
-  width: 720px;
-  height: 400px; */ }
+  padding: 20px;
+  height: 400px; }
 
 .rcornerbottom {
   border-radius: 25px;
@@ -723,30 +718,18 @@ div.ng-tag-cloud span {
 .rcornerbadgeTopPost {
   border-radius: 25px;
   border: 2px solid #f2f2f2;
-  /* padding: 20px;
-  width: 80px;
+  padding: 15px;
+  /* width: 80px;
   height: 60px; */ }
-
-.progress-bar {
-  width: 720px;
-  height: 18px;
-  border-style: solid;
-  border-width: 1px;
-  /*border-radius: 8px;*/
-  background-color: #ff4000;
-  border-color: #aaa; }
-
-.progress-bar-bar {
-  width: 0px;
-  background-color: #ff8000;
-  height: 100%;
-  color: #fff;
-  font-weight: normal; }
 
 /* #left {
     float:left;
     width:100px;
 } */
+.progressLinear md-progress-linear {
+  padding-top: 10px;
+  margin-bottom: 20px; }
+
 #center {
   display: inline-block;
   width: 100px; }
@@ -757,6 +740,44 @@ div.ng-tag-cloud span {
 
 #separation {
   height: 80px; }
+
+.coin p {
+  font-family: "Open Sans", sans-serif;
+  font-style: italic;
+  position: absolute;
+  font-size: 28px;
+  z-index: 700;
+  top: -19px;
+  left: 19px; }
+
+.coin.bronze p {
+  color: #dfb667; }
+
+.coin.silver p {
+  color: #a0a0a0; }
+
+.coin.gold p {
+  color: #f2d732; }
+
+.coin {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  position: relative;
+  margin: 5px;
+  top: 6px;
+  border-radius: 50px;
+  z-index: 500;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1); }
+
+.bronze {
+  background: linear-gradient(45deg, #dfb667 0%, #f9f3e8 56%, #e7c074 96%); }
+
+.silver {
+  background: linear-gradient(45deg, #a0a0a0 0%, #e8e8e8 56%); }
+
+.gold {
+  background: linear-gradient(45deg, #f2d70c 0%, white 56%, #fceb00 96%); }
 
 /* .headline {
     font-family: Calibri, "Helvetica", san-serif;
