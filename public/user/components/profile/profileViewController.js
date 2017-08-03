@@ -1,19 +1,16 @@
 angular.module('studionet')
+.controller('profileViewController', function($q, $scope, $interval, profile) {
 
-.controller('profileViewController', function($q, $scope, $interval) {
+  $scope.user = profile.user;
+  $scope.user.role = 1;
 
   $scope.curVal= 0;
 
   $scope.maxVal = 100;
 
-    $scope.level = [
-              {"NOVICE" : 16},
-              {"COFFEE BOY" : 32 },
-              {"ARCHI INTERN" : 48 },
-              {"JR. ARCHITECT" : 60 },
-              {"ARCHITECT" : 80 },
-              {"LEAD ARCHITECT" : 100 },
-        ];
+  $scope.levels = [ 
+            { name: "NOVICE", id: 1}, { name: "COFFEE BOY", id: 2},  { name: "ARCHI INTERN", id: 3},  { name: "JR. ARCHITECT", id: 4},
+            { name: "ARCHITECT", id: 5}, { name: "LEAD ARCHITECT", id: 6}      ];
 
     $scope.Badge = [
               {"Name" : "Badge1"},
@@ -31,7 +28,6 @@ angular.module('studionet')
 
 
 })
-
 .directive('progressBar', [function () {
 
     return {

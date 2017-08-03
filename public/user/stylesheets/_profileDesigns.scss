@@ -3,6 +3,44 @@ $badge-border: #B22222;
 $progress-bar : rgb(255, 64, 0);
 $progress-bar-bar : rgb(255, 128, 0);
 
+@import 'tagCloud';
+
+.profile-card{
+  padding: $max-padding/2;
+
+  .headline{
+
+      border-bottom: 1px solid gray;
+
+      h1{
+        span{
+          font-size: 12px;
+          margin-left: 20px; 
+        }
+      }
+  }
+
+  .profile-img-sm{
+    width: $profile-height-sm;
+    height: $profile-width-sm;
+    border-radius: 50%;
+  }
+
+  .detailContainer{
+
+  }
+
+  .selected {
+    font-weight: 600;
+    border: 1px solid green;
+  }
+
+
+
+}
+
+
+
 .badge {
     border-radius: 25px;
     background: #ffffff;
@@ -12,49 +50,50 @@ $progress-bar-bar : rgb(255, 128, 0);
     height: 60px;
 }
 
-md-card.md-default-theme .md-card-image, md-card .md-card-image {
+
+/* md-card.md-default-theme .md-card-image, md-card .md-card-image {
     border-radius: 25px 25px 0 0;
 }
-
+ */
 .rcornertop {
     border-radius: 25px;
     border: 2px solid $border-color;
-    padding: 20px;
+    /* padding: 20px;
     width: 720px;
-    height: 150px;
+    height: 150px; */
 }
 
 .rcornermiddle {
     border-radius: 25px;
     border: 2px solid $border-color;
-    padding: 20px;
+    /* padding: 20px;
     width: auto;
-    height: auto;
+    height: auto; */
 }
 
 .rcornerTopPost {
     border-radius: 25px;
     border: 2px solid $border-color;
-    padding: 20px;
+    /* padding: 20px;
     width: 720px;
-    height: 400px;
+    height: 400px; */
 }
 
 .rcornerbottom {
     border-radius: 25px;
     border: 2px solid $border-color;
-    padding: 20px;
+    /* padding: 20px;
     width: 720px;
-    height: 200px;
+    height: 200px; */
 }
 
 .rcornerbadgeTopPost {
     border-radius: 25px;
     border: 2px solid $border-color;
-    padding: 20px;
+    /* padding: 20px;
     width: 80px;
-    height: 60px;
-}
+    height: 60px; */
+} 
 
 .progress-bar {
   width: 720px;
@@ -75,10 +114,10 @@ md-card.md-default-theme .md-card-image, md-card .md-card-image {
   /*border-radius: 8px;*/
 }
 
-#left {
+/* #left {
     float:left;
     width:100px;
-}
+} */
 
 #center {
     display: inline-block;
@@ -90,20 +129,18 @@ md-card.md-default-theme .md-card-image, md-card .md-card-image {
     width:100px;
 }
 
-#detailContainer {
-    width:100%;
-}
+
 #separation {
     height: 80px;
 }
 
-.headline {
+/* .headline {
     font-family: Calibri, "Helvetica", san-serif;
     line-height: 1em;
     color: white;
     font-size: 20px;
-}
-h1:after {
+} */
+/* h1:after {
     content:' ';
     display:block;
     border:2px solid #d0d0d0;
@@ -113,4 +150,4 @@ h1:after {
     box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
     -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
     -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
-}
+} */

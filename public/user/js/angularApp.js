@@ -122,18 +122,6 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			}*/
 		})
 
-		/*.state('home.progress', {
-           url: 'profile/:address/progress',
-           templateUrl: "/user/components/profile/progressbatch.html",
-           controller: 'BadgeprogressController'
-       })
-
-		.state('home.progress', {
-           url: 'profile/:address/progress',
-           templateUrl: "/user/components/progress/progressbatch.html",
-           controller: 'BadgeprogressController'
-       })*/
-
 		//	Note Details - Note (http://studionet.nus.edu.sg/user/#/note/:id)
 		//	This state is when the user is viewing a note with a given ID.
 		//	The state should resolve the contents of the note, the children and the parents of the note.
@@ -168,12 +156,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.profile', {
 			url: 'profile',
 			templateUrl: "/user/components/profile/profile.html",
-			controller: 'MyProfileController'
+			controller: 'profileViewController'
 		})
+
 		.state('home.profile-edit', {
 			url: 'profile/edit',
 			template: "/user/components/profile/profile.html",
-			controller: 'MyProfileController'
+			controller: 'profileViewController'
 		})
 		//	Profile Details - Note (http://studionet.nus.edu.sg/user/#/profile/:user_id)
 		//	Displays all the user information, badges, posts of a particular user
@@ -182,17 +171,20 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		.state('home.profile-details', {
 			url: 'profile/:address',
 			templateUrl: '/user/components/profile/profile.html',
-			controller: 'ProfileController'/*,
+			controller: 'profileViewController',
 			resolve: {
 				userProfile: ['profile', function(profile){
-					return profile.getUser() && profile.getActivity();
+					return profile.getUser();
 				}]
-			}*/
+			}
 		})
-		.state('home.profile-progress', {
-			url: 'profile/:address/progress',
-			template: "displays user profile progress here"
-		})
+
+		.state('home.progress', {
+           url: 'profile/:address/progress',
+           templateUrl: "/user/components/profile/progressbatch.html",
+           controller: 'BadgeprogressController'
+      	})
+
 		.state('home.leaderboard', {
 			url: 'leaderboard',
 			template: "displays a leaderboard for users"

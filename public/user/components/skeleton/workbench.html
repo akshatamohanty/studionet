@@ -3,7 +3,7 @@
 <md-toolbar class='md-hue-2' layout='column'>
     
     <div class='md-accent band pointer'> 
-      <a ui-sref='home.homepage'>
+      <a ui-sref='home.profile-details({address: user.id})'>
         <div layout='row' layout-fill layout-margin>
           <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
           <div>     
