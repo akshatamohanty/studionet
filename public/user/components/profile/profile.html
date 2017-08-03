@@ -10,7 +10,7 @@
     <br> -->
 
     <div layout="row" layout-sm="column">
-        
+
         <md-card flex='45' md-padding class='profile-card'>
 
             <div class='headline'>
@@ -25,10 +25,12 @@
             <div class="detailContainer" layout="row">
 
                 <div flex='70'>
+                    <br>
+                    <br>
                     <div class='detail'>Number of subscribers:</div>
                     <div class='detail'>Post Created: {{user.created.length}}</div>
                     <div class='detail'>Comments Posted:</div>
-                    <div class='detail'>Upvotes:</div>
+                    <div class='detail' id="center">Upvotes:</div>
                 </div>
 
                 <div flex='30'>
@@ -40,7 +42,7 @@
             <md-divider></md-divider>
 
             <!-- Progress Bar -->
-            <div class="rcornertop">
+            <div>
 
                 <span ng-repeat='level in levels' ng-class=' user.role == level.id ? "selected" : "" '>{{level.name}}</span>
 
@@ -54,9 +56,12 @@
                         <progress-bar cur-val='{{curVal}}' max-val='{{maxVal}}'></progress-bar>
 
                 </div> -->
+                <div class="progressLinear">
+                 <md-progress-linear md-mode="determinate" value="{{vm.determinateValue}}"></md-progress-linear>
+                </div>
             </div>
 
-            <md-divider></md-divider>            
+            <md-divider></md-divider>
 
             <!--Badge Layer -->
             <h3>Badges Earned</h3>
@@ -91,17 +96,20 @@
                         </md-card-footer>
                     </md-card>
                   </div>
-                  <div flex="45">
+                  <div flex="45" class="center">
                     <div>
                        <p> PostTitle</p>
+
                         <p>Views</p>
                         <p>Upvotes</p>
                         <p>Bookmark</p>
                     </div>
                   </div>
-                  <div flex="25" class="rcornerbadgeTopPost">
+                  <div flex="25" class="rcornerbadgeTopPost" layout="column">
                         <div >
-
+                           <div class="coin gold"><p>1</p></div>
+                           <div class="coin silver"><p>2</p></div>
+                           <div class="coin bronze"><p>3</p></div>
                         </div>
                   </div>
             </div>
