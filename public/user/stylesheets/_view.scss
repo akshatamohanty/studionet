@@ -122,6 +122,12 @@
 				svg{
 					fill: rgba(29, 31, 41, 0.5);
 				}
+
+				&.selected {
+					svg{
+						fill: blue !important;
+					}
+				}
 			}
 
 			.action:hover{
@@ -129,6 +135,7 @@
 					fill: blue !important;
 				}
 			}
+
 		}
 
 		.post-actions:hover{

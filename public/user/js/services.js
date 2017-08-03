@@ -82,7 +82,7 @@ angular.module('studionet')
 		var o = {
 			contributions: [],
 			contributionsHash: [], 
-			recentCount: 10, 
+			recentCount: 0, 
 			recentPosts: [],
 			onlyposts: []
 		};
@@ -115,8 +115,6 @@ angular.module('studionet')
 
 				angular.copy(ordered, o.contributions);
 
-				o.recentPosts = o.contributions.slice(-o.recentCount);
-
 				o.contributionsHash = o.contributions.hash();
 
 				notifyObservers();
@@ -126,13 +124,25 @@ angular.module('studionet')
 
 		o.getRecent = function(number){
 
-			var previousCount = o.recentCount;
+			if(number == undefined)
+				number = 10;
 
-			if(number != undefined){
-				o.recentCount += number;
-				o.recentPosts = o.contributions.slice(-o.recentCount);
+			var i=0;
+			while( i < number ){
 
-			}	
+				var k =  o.contributions.length - o.recentCount - 1;
+				if( k < 0 )
+					break;
+
+				var c = o.contributions[k]; 
+				if(c.type !== "comment" && c.tags.length > 0){
+					o.recentPosts.push(c);
+					i++;
+				}
+
+				o.recentCount++;
+
+			}
 
 			return o.recentPosts;
 		}
@@ -162,6 +172,9 @@ angular.module('studionet')
 				// ------------- extract the images
 				var inlineImagePattern = new RegExp('src="studionet-inline-img-', "g");
 				res.body = res.body.replace(inlineImagePattern, 'src="../api/contributions/' + contribution_id + '/attachments?name=studionet-inline-img-');
+
+				// add status if present
+				res.status = o.contributionsHash[res.id].status ? o.contributionsHash[res.id].status : [];
 
 				return res;
 				// ------------- compute the reading time
@@ -307,7 +320,7 @@ angular.module('studionet')
 		o.likeContribution = function(id){
 			return $http.post('/api/contributions/' + id + '/rate', {'rating': 5} ).success(function(data){
 			
-
+				o.contributionsHash[id].status.push("liked");
 
 			});
 		};
@@ -318,7 +331,11 @@ angular.module('studionet')
 			});
 		};
 
-
+		o.bookmarkContribution = function(contribution_id){
+			return $http.post('/api/contributions/' + contribution_id + '/bookmark').success(function(data){
+				profile.getUser();
+			});
+		};
 
 		return o;
 	}])
@@ -548,7 +565,7 @@ angular.module('studionet')
 	}])
 
 
-	.factory('spaces', ['$http', 'tags', 'profile', function($http, tags, profile){
+	.factory('spaces', ['$http', 'tags', 'profile', 'contributions', function($http, tags, profile, contributions){
 
 		var o ={
 			spaces: [],
@@ -752,7 +769,8 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
-								profile.getUser();
+								// also bookmark the contribution
+								contributions.bookmarkContribution(contribution_id);
 								return data;
 						});
 
@@ -771,7 +789,8 @@ angular.module('studionet')
 			user: {},
 			created: [],
 			viewed: [],
-			liked: []
+			liked: [],
+			bookmarked: []
 		};
 
 		// ----------------- Observers of this service which re-run when this data is refreshed
@@ -826,8 +845,10 @@ angular.module('studionet')
 						o.viewed.push(action.end);
 					else if(action.type == "CREATED")
 						o.created.push(action.end);
-					else if(action.type == "RATED" || action.type == "BOOKMARKED")
+					else if(action.type == "RATED")
 						o.liked.push(action.end)
+					else if(action.type == "BOOKMARKED")
+						o.bookmarked.push(action.end);
 
 				}
 
@@ -865,16 +886,21 @@ angular.module('studionet')
 		// 	Get the relationship of the user to the post
 		// 	
 		// 
-		o.getPostStatus = function(post_id){
-			
-			if(o.created.indexOf(post_id) > -1)
-				return "created";
-			else if(o.viewed.indexOf(post_id) > -1)
-				return "viewed";
-			else if(o.liked.indexOf(post_id) > -1)
-				return "liked"
-			else 
-				return {}
+		o.getPostStatus = function(post){
+
+			var post_id = post.id;
+			var status = [];
+
+			var options = ["created", "bookmarked", "liked", "viewed"];
+
+			options.map(function(opt){
+				if(o[opt].indexOf(post_id) > -1)
+					status.push(opt);
+			})
+
+			post.status = status;
+
+			return status;
 
 		}	
 
