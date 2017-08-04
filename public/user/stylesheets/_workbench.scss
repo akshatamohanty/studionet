@@ -96,24 +96,49 @@
 
           .folder-notes{
             height: auto;
-            max-height: 200px;
+            max-height: 150px;
             overflow: auto;
             width: 100%;
             border-color: gray;
 
             &.open{
-              animation: 0.5s slideIn;
-              overflow: auto;
-              height: auto;
-              min-height: 40px;
-              background-color: lightgoldenrodyellow;
+             height:130px;
+  transition:height 0.35s ease;
+  overflow:hidden;
+  position:relative;
             }
 
             &.close{
-              animation: 0.5s slideOut;
-              overflow: hidden;
-              height: 0;
+             height:0;
+  transition:height 0.35s ease;
+  overflow:hidden;
+  position:relative;
             }
+
+
+.open.ng-hide-add {
+  animation-name: hide;
+  -webkit-animation-name: hide;  
+
+  animation-duration: .5s; 
+  -webkit-animation-duration: .5s;
+
+  animation-timing-function: ease-in;  
+  -webkit-animation-timing-function: ease-in;  
+}
+
+
+
+.close.ng-hide-remove {
+  animation-name: show;
+  -webkit-animation-name: show;  
+
+  animation-duration: .5s; 
+  -webkit-animation-duration: .5s;
+
+  animation-timing-function: ease-out;  
+  -webkit-animation-timing-function: ease-out;  
+}
 
             .post-box{
               position: relative;

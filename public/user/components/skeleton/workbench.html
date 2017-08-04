@@ -15,6 +15,7 @@
         <md-divider style="margin-bottom: 10px;"></md-divider>
         
         <div class='stats md-hue-3 accordion' layout='row'>
+        <div class='stats md-hue-3' layout='row'>
             <div flex>
               <ng-md-icon icon="book" size='14' style="fill: #AFAFAF"></ng-md-icon>{{user.contributions.length}}
               <md-tooltip md-direction="bottom">No. of posts</md-tooltip>
@@ -54,7 +55,7 @@
 
       <div class='folder'>
         <div class='folder-notes' ng-class='bench.my_nodes ? "open" : "close" '>
-            <md-card class='post-box' ng-class='node.tags.length ? "published" : "unpublished" ' 
+            <md-card class='post-box move' ng-class='node.tags.length ? "published" : "unpublished" ' 
                 ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"}' 
                 ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'" ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                 <div class='title'>
