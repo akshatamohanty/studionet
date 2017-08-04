@@ -1,16 +1,24 @@
 <!-- header toolbar -->
 <!-- user details come from the skeleton : fix later -->
-<md-toolbar class='md-hue-2' layout='column'>
+<md-toolbar class='md-hue-2 profile-header' layout='column'>
     
     <div class='md-accent band pointer'> 
-      <a ui-sref='home.profile-details({address: user.id})'>
-        <div layout='row' layout-fill layout-margin>
-          <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
-          <div>     
-              <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.name}}</div>
-              <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>{{user.level | level}}</div>
-          </div>
+
+        <div class='action' style='position: absolute; right: 10px; top: 10px;' ng-click='bench.editProfile()'>
+                <ng-md-icon icon="mode_edit" size='15' style="fill: #5A5A5A"></ng-md-icon>
+                <md-tooltip md-direction="bottom">Edit</md-tooltip>
         </div>
+
+        <a ui-sref='home.profile-details({address: user.id})'>
+          
+          <div layout='row' layout-fill layout-margin>
+            <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
+            <div>     
+                <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.name}}</div>
+                <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>{{user.level | level}}</div>
+            </div>
+          </div>
+        </a>
 
         <md-divider style="margin-bottom: 10px;"></md-divider>
         
@@ -28,7 +36,6 @@
               <md-tooltip md-direction="bottom">No. of likes</md-tooltip>
             </div>
         </div> 
-      </a>
     </div>
 
 </md-toolbar>

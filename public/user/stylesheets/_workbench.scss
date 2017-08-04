@@ -32,23 +32,48 @@
         margin-top: 20px;
       }
 
+
       md-toolbar{
         z-index: 1;
       }
 
-      .profile-pic-container{
-        height: $profile-bar-height - 2*$md-padding;
-        width: 100%;
+      .profile-header{
+
+        .action{
+            position: absolute; 
+            right: 10px; 
+            top: 10px;
+            z-index: 2;
+
+            svg{
+              fill: #CFCBCB;
+            }
+        }
+
+        .action:hover{
+
+            border: 1px solid black;
+
+            svg{
+              fill: #222;
+            }
+        }
+
+        .profile-pic-container{
+          height: $profile-bar-height - 2*$md-padding;
+          width: 100%;
+        }
+
+        .band{
+          padding: $md-padding;
+        }
+
+        .stats{
+          font-size: 12px;
+          font-family: $header-font !important;
+        }
       }
 
-      .band{
-        padding: $md-padding;
-      }
-
-      .stats{
-        font-size: 12px;
-        font-family: $header-font !important;
-      }
 
       md-content{
         

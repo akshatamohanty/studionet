@@ -158,23 +158,17 @@ angular.module('studionet')
 
 		o.getContribution = function(contribution_id){
 
-			if(contribution_id == null){
+			if(contribution_id == null)
 				console.log("Contribution Id is null");
-			}
 
 			return $http.get('/api/contributions/' + contribution_id).success(function(res){
 
-				// ------------- replace tag IDs with the actual tag
-				/*res.tags = res.tags.map(function(t){
-					return tags.tagsHash[t];
-				});*/
-				
 				// ------------- extract the images
 				var inlineImagePattern = new RegExp('src="studionet-inline-img-', "g");
 				res.body = res.body.replace(inlineImagePattern, 'src="../api/contributions/' + contribution_id + '/attachments?name=studionet-inline-img-');
 
 				// add status if present
-				res.status = o.contributionsHash[res.id].status ? o.contributionsHash[res.id].status : [];
+				res.status = o.contributionsHash[res.id] ? o.contributionsHash[res.id].status : [];
 
 				return res;
 				// ------------- compute the reading time
@@ -369,6 +363,10 @@ angular.module('studionet')
 			});
 		};
 
+		o.getUserShort = function(user_id){
+			return o.usersHash[user_id];
+		}
+
 		// Takes in two arguments - userID anf from DB
 		// Fetches details about a particular user from the database 
 		// get user from the hash and trigger data request for additional info about the user from the server
@@ -379,7 +377,6 @@ angular.module('studionet')
 			if(user_id == undefined)
 				return;
 
-			console.log(user_id);
 			var url = '/api/users/' + user_id;
 			
 			return $http.get(url).then(function(res){
@@ -854,16 +851,23 @@ angular.module('studionet')
 				  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 				 })
 				.success(function(data) {
-					
-					o.user = data;
-					users.setUser(o.user);
-
+					o.getUser();
 				})
 		};
 
 		// Todo
-		o.changePicture = function(){
-			
+		o.changePicture = function(avatar){
+            var formData = new FormData();
+            formData.append('avatar', avatar, avatar.name);
+            return $http({
+              method  : 'POST',
+              url     : '/uploads/avatar',
+              headers : { 'Content-Type': undefined, 'enctype':'multipart/form-data; charset=utf-8' },
+              processData: false,
+              data: formData
+            }).success(function(){
+            	o.getUser();
+            })
 		};
 
 

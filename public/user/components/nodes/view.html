@@ -13,8 +13,8 @@
 		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)' ng-if='post_details.parents[parent].id!=null'>
 			<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} </div>
 			<div layout="row">
-				<img class='author-profile-picture linked' src='users[post_details.parents[parent].createdBy].avatar'>
-				<div class='author-name linked'>{{users[post_details.parents[parent].createdBy].name}}</div>
+				<img class='author-profile-picture linked' src='{{getUser(post_details.parents[parent].createdBy).avatar}}'>
+				<div class='author-name linked'>{{getUser(post_details.parents[parent].createdBy).name}}</div>
 			</div>
 		</md-card>
 
@@ -74,6 +74,14 @@
 		             	<md-tooltip md-direction="bottom">Back</md-tooltip>
 	             	</a>
 				</div>
+
+				<div class='action'>
+					<a ng-click='goToSpaceWithArgs(query)'>
+						<ng-md-icon icon="first_page" size='20' style="fill: #5A5A5A"></ng-md-icon>
+		             	<md-tooltip md-direction="bottom">Back to Search</md-tooltip>
+	             	</a>
+				</div>
+
 			</div>
 
 
@@ -85,13 +93,13 @@
 			</div>
 			<div layout="row">
 				<a ui-sref='home.profile-details({address: post_details.createdBy})'>
-					<img class='author-profile-picture main' src='{{users[post_details.createdBy].avatar}}'>
-					<div class='author-name main'> {{ users[post_details.createdBy].name }}</div>
+					<img class='author-profile-picture main' src='{{getUser(post_details.createdBy).avatar}}'>
+					<div class='author-name main'> {{ getUser(post_details.createdBy).name }}</div>
 				</a>
 			</div>
 			
 			<div class='tags'>
-				<span ng-repeat='tag in post_details.tags' ng-if='tags[tag.tag_id].name.length>0' ng-click='goToTagSpace(tag)'>#{{tags[tag.tag_id].name}}</span>
+				<span ng-repeat='tag in post_details.tags' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag)'>#{{getTagName(tag.tag_id)}}</span>
 			</div>
 
 			<md-divider></md-divider>
@@ -135,9 +143,9 @@
 
 					<md-divider></md-divider>
 
-	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: dateCreated'>
+	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: dateCreated' ng-init='u = getUser(comment.createdBy)'>
 	                    
-	                    <b>{{users[comment.createdBy].nickname ? users[comment.createdBy].nickname : users[comment.createdBy].name}}</b> says:
+	                    <b>{{u.nickname ? u.nickname : u.name}}</b> says:
 
 	                    <div ng-bind-html="comment.body"></div>
 	                    
@@ -162,8 +170,8 @@
 		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.children[child].id)' ng-if='post_details.children[child].id!=null'>
 			<div class='post-title linked'>{{child+1}} | {{post_details.children.length }} {{post_details.children[child].title}} </div>
 			<div layout="row">
-				<img class='author-profile-picture linked' src='users[post_details.children[child].createdBy].avatar'>
-				<div class='author-name linked'>{{users[post_details.children[child].createdBy].name}}</div>
+				<img class='author-profile-picture linked' src='{{getUser(post_details.children[child].createdBy).avatar}}'>
+				<div class='author-name linked'>{{getUser(post_details.children[child].createdBy).name}}</div>
 			</div>
 		</md-card>
 

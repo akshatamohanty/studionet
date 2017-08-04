@@ -1,17 +1,17 @@
 angular.module('studionet')
-.controller('NodeController', [ '$scope', 'attachments', '$stateParams', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location',
-                                function($scope, attachments, $stateParams, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location){ 
+.controller('NodeController', [ '$scope', 'attachments', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location',
+                                function($scope, attachments, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location){ 
 
 
         // change this to resolve 
-        $scope.node_id = $stateParams.address;
+        var post = $scope.$resolve.postDetails.data;
+
+        $scope.node_id = post.id;
         if($scope.node_id == null)
           $state.go('home.homepage');
 
-      	// details of the post displaying
-
-        $scope.users = users.usersHash;
-        $scope.tags = tags.tagsHash;
+        $scope.getUser = users.getUserShort; // gets a short description of the user 
+        $scope.getTagName = tags.getTagName;
 
         $scope.getThumb = routerUtils.getThumb;
         
@@ -114,7 +114,7 @@ angular.module('studionet')
         $scope.setMainPost = setMainPost;
 
         // initial;
-        setMainPost($scope.$resolve.postDetails.data, undefined);
+        setMainPost(post, undefined);
 
         //Uploaded files
         $scope.uplodateFiles = function (files, contributionData){

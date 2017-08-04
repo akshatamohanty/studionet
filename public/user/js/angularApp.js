@@ -28,7 +28,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				userProfile: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}],								//TODO: Resolve system data and user specific call-to-actions
-		    	posts: ['contributions', function(contributions){
+		    	postsPromise: ['contributions', function(contributions){
 					return contributions.getAll();
 				}],
 				spacesPromise: ['spaces', function(spaces){
@@ -67,18 +67,11 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
 		//
-		.state('home.search', {
+		/*.state('home.search', {
 			url: 'search',
 			templateUrl: '/user/components/search/search-mode.html',
 			controller: 'SearchModeController'/*,
-		    resolve: {
-
-				TODO:
-				tags: ['tags', function(tags){
-					return tags.getAll();
-				}]
-			}*/
-		})
+		})*/
 		//	Homepage - Search (http://studionet.nus.edu.sg/user/#/search?tags=["helloworld"])
 		//	Nested in the Skeleton, this route gets activated when the user presses the search button and is in process of typing a query
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
@@ -160,11 +153,11 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			controller: 'profileViewController'
 		})
 
-		.state('home.profile-edit', {
+		/*.state('home.profile-edit', {
 			url: 'profile/edit',
 			template: "/user/components/profile/profile.html",
 			controller: 'profileViewController'
-		})
+		})*/
 		//	Profile Details - Note (http://studionet.nus.edu.sg/user/#/profile/:user_id)
 		//	Displays all the user information, badges, posts of a particular user
 		//	Should resolve profile details before loading

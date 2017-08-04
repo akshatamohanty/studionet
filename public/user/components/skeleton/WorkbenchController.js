@@ -39,6 +39,115 @@ angular.module('studionet')
           self.show = fork_id;
         }
 
+        self.editProfile = function(){
+                  
+                  var confirm = {
+                     parent: angular.element(document.body),
+                     template:
+                           '<md-dialog aria-label="new tag dialog">' +
+                           '  <md-dialog-content layout="row" layout-margin style="min-width: 300px;">\
+                                <div flex="50" class="profile-img-container" style="position: relative; background: url({{profilePic}}); background-size: contain;">\
+                                    <a type="button" ngf-select="uplodateFiles($files)" ngf-multiple="false" style="width:100%; height: 100%;">\
+                                    <div style="position: absolute; top: 10px; right: 10px;"><ng-md-icon icon="mode_edit" size="15" style="fill: #341BED"></ng-md-icon></div>\
+                                    </a>\
+                                </div> ' +
+                                '<md-input-container flex="50" style="margin-top: 30px;">\
+                                      <label>Enter a nickname</label>\
+                                      <input type="text" ng-model="nick" name="nickname" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false">\
+                                </md-input-container>' +
+                           '  </md-dialog-content>' +
+                             '<md-dialog-actions>' +
+                               '   <md-button ng-click="updateProfile()" aria-label="description" md-no-ink="true" md-ripple-size="auto">\
+                                      Save</md-button>' +
+                               '    <md-button ng-click="closeDialog()" class="md-primary">' +
+                               '      Cancel' +
+                               '    </md-button>' +
+                             '</md-dialog-actions>' +
+                           '</md-dialog>',
+                      controller: DialogController
+                  }
+
+                  function DialogController($scope, $mdDialog) {
+                      $scope.user = profile.user;
+                      $scope.nick = profile.user.nickname;
+                      $scope.profilePic = profile.user.avatar;
+                      $scope.profileChanged = false;
+
+                      var profilePicFile = undefined;
+
+                      $scope.uplodateFiles = function(profile_picture){
+                          profilePicFile = profile_picture[0];
+                          $scope.profilePic = profilePicFile;
+
+                          var reader  = new FileReader();
+
+                          if(profilePicFile)
+                            reader.readAsDataURL(profilePicFile);
+
+                          reader.addEventListener("load", function () {
+                            $scope.profilePic = reader.result;
+                            $scope.profileChanged = true;
+                          }, false);
+
+                      }
+
+                      $scope.closeDialog = function(data) {
+                          $mdDialog.hide();
+                      }
+
+                      $scope.updateProfile = function(){
+
+                          // check if profile changed
+                          if($scope.profileChanged == true ){
+                            profile.changePicture(profilePicFile).success(function(){
+
+                               var toast = $mdToast.simple()
+                                        .textContent('Your profile was successfully updated')
+                                        .position("bottom left")
+
+                                  $mdToast.show(toast);
+
+                                  profile.getUser();
+
+                            });
+                          }
+                          else{
+                            console.log("Avatar unchanged");
+                          }
+
+                          // check if name changed
+                          if($scope.nick == profile.user.nickname){
+                            console.log("Same nickname - no need to update");
+                          }
+                          else{
+                            profile.changeName( {'id' : $scope.user.id, 'nickname': $scope.nick } ).then(function(){
+                                  var toast = $mdToast.simple()
+                                        .textContent('Your profile was successfully updated')
+                                        .position("bottom left")
+
+                                  $mdToast.show(toast);
+
+                            }, function(){
+                                  var toast = $mdToast.simple()
+                                        .textContent('Oops.. an error occurred while updating')
+                                        .position("bottom left")
+
+                                  $mdToast.show(toast);
+                            });
+                          }
+
+                          $scope.closeDialog();
+
+                          
+
+                      }
+                  }
+
+                  $mdDialog.show(confirm);
+
+        }
+
+
         self.deleteFork = function(space_id){
                     
             var confirm = $mdDialog.confirm()

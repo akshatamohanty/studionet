@@ -33,6 +33,9 @@ angular.module('studionet')
           $scope.getSpaceURL = spaces.getSpaceURL;
 
           $scope.goToSpaceWithArgs = function(query){
+
+            console.log(query);
+
             // send only the tag ids 
             routerUtils.goToSpaceWithArgs( query.tags.map(function(t){ return t.id }), query.dates );
           } 
@@ -40,7 +43,6 @@ angular.module('studionet')
           $scope.getTagString = function(id){ return tags.tagsHash[id]; };
           $scope.getUserName = function(user_id){return users.usersHash[user_id].name };
           $scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
-
 
 
           // background of the cards 
