@@ -155,6 +155,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Profile - Abstract state
 		.state('home.profile', {
 			url: 'profile',
+			abstract: true,
 			templateUrl: "/user/components/profile/profile.html",
 			controller: 'profileViewController'
 		})
@@ -173,8 +174,8 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			templateUrl: '/user/components/profile/profile.html',
 			controller: 'profileViewController',
 			resolve: {
-				userProfile: ['profile', function(profile){
-					return profile.getUser();
+				userProfile: ['users', '$stateParams', function(users, $stateParams){
+					return users.getUser($stateParams);
 				}]
 			}
 		})

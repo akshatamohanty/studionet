@@ -51,17 +51,22 @@
         
         <div class='dragBar'></div>
 
-        <md-tooltip md-direction="bottom" md-autohide="true"> You {{getPostStatus(post.id)}} this post </md-tooltip>
         
-        <div class='action-bar' style='position: absolute;height: 30px; width: 30px;right: 0px; '>
-          <ng-md-icon icon="bookmark" style="fill: #8FE266" size="16" ng-if='getPostStatus(post.id) == "viewed"'>
+        <div class='action-bar' style='position: absolute;height: 30px; width: 30px; top: 4px; right: -1px; text-align: center;' ng-init='postStatus = getPostStatus(post)[0]'>
+          <ng-md-icon icon="check_circle" style="fill: #8FE266" size="16" ng-if='postStatus == "viewed"'>
           </ng-md-icon>
-          <ng-md-icon icon="create" style="fill: #2919F7" size="16" ng-if='getPostStatus(post.id) == "created"'>
+          <ng-md-icon icon="create" style="fill: #2919F7" size="16" ng-if='postStatus == "created"'>
           </ng-md-icon>
-          <ng-md-icon icon="thumb_up" style="fill: #EFE821" size="16" ng-if='getPostStatus(post.id) == "liked"'>
+          <ng-md-icon icon="thumb_up" style="fill: #C1BB08" size="16" ng-if='postStatus == "liked"'>
           </ng-md-icon>
+          <ng-md-icon icon="bookmark" style="fill: #4D4AC7" size="16" ng-if='postStatus == "bookmarked"'>
+          </ng-md-icon>
+          
+
         </div>
-        
+
+        <md-tooltip md-direction="bottom" md-autohide="true"> You {{getPostStatus(post.id)}} this post </md-tooltip>
+
 
         <md-content layout='column' layout-fill>
 

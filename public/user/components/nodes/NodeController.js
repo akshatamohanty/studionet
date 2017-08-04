@@ -215,12 +215,15 @@ angular.module('studionet')
         }
 
         $scope.like = function(post_id){
+
             contributions.likeContribution(post_id).success(function(){
                   var toast = $mdToast.simple()
                           .textContent('You liked this post!')
                           .position("bottom left")
 
                   $mdToast.show(toast);
+
+                  $scope.post_details.status.push("liked");
             });
         }
 

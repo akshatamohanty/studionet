@@ -766,8 +766,9 @@ router.route('/:contributionId/bookmark')
     var query = [
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
       'MATCH (u:user) WHERE ID(u)={userIdParam}',
-      'CREATE p=(u)-[r:BOOKMARKED]->(c)',
-      'SET r.createdOn={createdOnParam}',
+      'MERGE p=(u)-[r:BOOKMARKED]->(c)',
+      'ON CREATE SET r.createdOn={createdOnParam}',
+      'ON MATCH SET r.updatedOn={createdOnParam}',
       'RETURN c'
     ].join('\n');
 
