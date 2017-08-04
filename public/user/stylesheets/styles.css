@@ -135,6 +135,24 @@ md-input-container {
     height: 0; }
   to {
     height: auto; } }
+.main.ng-enter {
+  /* transition on enter for .5s */
+  transition: 2s;
+  /* start with opacity 0 (invisible) */
+  opacity: 0; }
+
+/* end 'enter' transition on main view */
+.main.ng-enter-active {
+  /* end with opacity 1 (fade in) */
+  opacity: 1; }
+
+.fade.ng-enter {
+  transition: 1s linear all;
+  opacity: 1; }
+
+.fade.ng-enter-active {
+  opacity: 0; }
+
 .ng-enter {
   animation: 1.0 slideIn; }
 
@@ -146,6 +164,24 @@ md-input-container {
     height: 0; }
   to {
     height: auto; } }
+.main.ng-enter {
+  /* transition on enter for .5s */
+  transition: 2s;
+  /* start with opacity 0 (invisible) */
+  opacity: 0; }
+
+/* end 'enter' transition on main view */
+.main.ng-enter-active {
+  /* end with opacity 1 (fade in) */
+  opacity: 1; }
+
+.fade.ng-enter {
+  transition: 1s linear all;
+  opacity: 1; }
+
+.fade.ng-enter-active {
+  opacity: 0; }
+
 #workbench-container {
   border: 2px solid #D9D9D9;
   margin-top: 20px;
