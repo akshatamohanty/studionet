@@ -1,11 +1,11 @@
 // Animations
-.ng-enter{
+/* .ng-enter{
     animation: 1.0 slideIn;
 }
 
 .ng-leave{
     animation: 1.0 slideOut;
-}
+} */
 
 
 @keyframes accordian-slide {
@@ -15,4 +15,20 @@
   to {
     height: auto;
   }
+}
+
+
+// fade animation
+.fade {
+  transition: 300ms linear all;
+  -webkit-transition: 300ms linear all;
+}
+
+.fade.ng-enter.ng-enter-active {
+}
+
+.fade.ng-leave {
+}
+
+.fade.ng-leave.ng-leave-active {
 }

@@ -110,10 +110,11 @@ angular.module('studionet')
 
             var now = new Date();
             var daysLeft = Math.round( (time[1] - now.getTime())/86400000, 0 ); 
+            fork.daysLeft = daysLeft;
 
             if(daysLeft < 0){
               fork.priority = 4; 
-              return { msg: "The deadline for this space has passed", status: 'inactive'}
+              return { msg: "The deadline for this space has passed", status: 'inactive'};
             }
             else if(daysLeft < 5){
               var msg = "";

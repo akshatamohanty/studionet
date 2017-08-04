@@ -124,28 +124,38 @@ md-input-container {
   margin: 0px !important;
   font-size: 12px; }
 
-.ng-enter {
-  animation: 1.0 slideIn; }
+/* .ng-enter{
+    animation: 1.0 slideIn;
+}
 
-.ng-leave {
-  animation: 1.0 slideOut; }
-
+.ng-leave{
+    animation: 1.0 slideOut;
+} */
 @keyframes accordian-slide {
   from {
     height: 0; }
   to {
     height: auto; } }
-.ng-enter {
-  animation: 1.0 slideIn; }
+.fade {
+  transition: 300ms linear all;
+  -webkit-transition: 300ms linear all; }
 
-.ng-leave {
-  animation: 1.0 slideOut; }
+/* .ng-enter{
+    animation: 1.0 slideIn;
+}
 
+.ng-leave{
+    animation: 1.0 slideOut;
+} */
 @keyframes accordian-slide {
   from {
     height: 0; }
   to {
     height: auto; } }
+.fade {
+  transition: 300ms linear all;
+  -webkit-transition: 300ms linear all; }
+
 #workbench-container {
   border: 2px solid #D9D9D9;
   margin-top: 20px;
@@ -475,6 +485,8 @@ md-input-container {
         cursor: pointer; }
         .post-view-section .post-container .post-actions .action svg {
           fill: rgba(29, 31, 41, 0.5); }
+        .post-view-section .post-container .post-actions .action.selected svg {
+          fill: blue !important; }
       .post-view-section .post-container .post-actions .action:hover svg {
         fill: blue !important; }
     .post-view-section .post-container .post-actions:hover {
