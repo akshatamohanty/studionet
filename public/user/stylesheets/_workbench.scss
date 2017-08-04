@@ -127,17 +127,42 @@
             border-color: gray;
 
             &.open{
-              animation: 0.5s slideIn;
-              overflow: auto;
-              height: auto;
-              min-height: 40px;
-              background-color: lightgoldenrodyellow;
+              height:200px;
+              transition:height 0.35s ease;
+              position:relative;
+              border: 1px solid gray;
             }
 
             &.close{
-              animation: 0.5s slideOut;
-              overflow: hidden;
-              height: 0;
+             height:0;
+            transition:height 0.35s ease;
+            overflow:hidden;
+            position:relative;
+            }
+
+
+            .open.ng-hide-add {
+              animation-name: hide;
+              -webkit-animation-name: hide;  
+
+              animation-duration: .5s; 
+              -webkit-animation-duration: .5s;
+
+              animation-timing-function: ease-in;  
+              -webkit-animation-timing-function: ease-in;  
+            }
+
+
+
+            .close.ng-hide-remove {
+              animation-name: show;
+              -webkit-animation-name: show;  
+
+              animation-duration: .5s; 
+              -webkit-animation-duration: .5s;
+
+              animation-timing-function: ease-out;  
+              -webkit-animation-timing-function: ease-out;  
             }
 
             .post-box{

@@ -6,7 +6,7 @@
 
         <div class='action' style='position: absolute; right: 10px; top: 10px;' ng-click='bench.editProfile()'>
                 <ng-md-icon icon="mode_edit" size='15' style="fill: #5A5A5A"></ng-md-icon>
-                <md-tooltip md-direction="bottom">Edit</md-tooltip>
+                <md-tooltip md-delay='150' md-direction="bottom">Edit</md-tooltip>
         </div>
 
         <a ui-sref='home.profile-details({address: user.id})'>
@@ -25,15 +25,15 @@
         <div class='stats md-hue-3' layout='row'>
             <div flex>
               <ng-md-icon icon="book" size='14' style="fill: #AFAFAF"></ng-md-icon>{{user.contributions.length}}
-              <md-tooltip md-direction="bottom">No. of posts</md-tooltip>
+              <md-tooltip md-delay='150' md-direction="bottom">No. of posts</md-tooltip>
             </div>
             <div flex>
               <ng-md-icon icon="visibility" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.views }}
-              <md-tooltip md-direction="bottom">No. of views</md-tooltip>
+              <md-tooltip md-delay='150' md-direction="bottom">No. of views</md-tooltip>
             </div>
             <div flex>
               <ng-md-icon icon="thumb_up" size='14' style="fill: #AFAFAF"></ng-md-icon> {{ user.thumbs }}
-              <md-tooltip md-direction="bottom">No. of likes</md-tooltip>
+              <md-tooltip md-delay='150' md-direction="bottom">No. of likes</md-tooltip>
             </div>
         </div> 
     </div>
@@ -47,7 +47,7 @@
     
     <!-- Your posts -->
     <div>
-      <div class='header'>My posts 
+      <div class='header'>My posts ({{user.contributions.length}}) 
 
             <a ui-sref='home.node({type:"note"})'>
               <ng-md-icon icon="add" size='18' style="fill: green"></ng-md-icon>
@@ -66,10 +66,10 @@
                 ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'" ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                 <div class='title'>
                   {{node.title}} 
-                  <md-tooltip ng-if='node.tags.length == 0 && !bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
+                  <md-tooltip md-delay='150' ng-if='node.tags.length == 0 && !bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
                       Status: Unpublished
                   </md-tooltip>
-                  <md-tooltip ng-if='bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
+                  <md-tooltip md-delay='150' ng-if='bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
                       You just created this node
                   </md-tooltip>
                 </div>
@@ -121,12 +121,15 @@
             ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.timed[0]!=undefined'>
           
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)' ng-mouseover="hover=true" ng-mouseleave="hover=false">
-                  <span ng-click='goToSpace(fork.id)'>{{fork.name}}</span>
-                  <md-tooltip class="tooltip" md-direction="bottom" style='height: auto'>
+                  
+                  <span ng-click='goToSpace(fork.id)'>
+                    {{fork.name}}
+                    <ng-md-icon icon="delete" size='14' style="fill: black" ng-show='hover==true' ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
+                  </span>
+                  <md-tooltip md-delay='150' class="tooltip" md-direction="bottom" style='height: auto'>
                       {{status.msg}}
                   </md-tooltip>
                   <a style='float: right'> 
-                      <ng-md-icon icon="delete" size='14' style="fill: black" ng-show='hover==true' ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
                       <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
                       <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
                   </a>

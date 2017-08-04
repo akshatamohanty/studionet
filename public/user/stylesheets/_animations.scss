@@ -8,30 +8,55 @@
 } */
 
 
-@keyframes accordian-slide {
-  from {
-    height: 0;
-  }
-  to {
-    height: auto;
-  }
+.main.ng-enter {
+    /* transition on enter for .5s */
+    transition: 1s;
+ 
+    /* start with opacity 0 (invisible) */
+    opacity: 0;
+}
+
+/* end 'enter' transition on main view */
+.main.ng-enter-active {
+    /* end with opacity 1 (fade in) */
+    opacity: 1;
 }
 
 
-// fade animation
-.fade {
-  transition: 300ms linear all;
-  -webkit-transition: 300ms linear all;
+
+.fade.ng-enter {
+  transition: 1s linear all;  
+  opacity: 1;
 }
 
-.fade.ng-enter.ng-enter-active {
-
+.fade.ng-enter-active {
+  opacity: 0;
 }
 
-.fade.ng-leave {
 
+.accordion {
+    width: 80%;
+    margin: 1em auto;
+.accordion-toggle {
+    padding: 1em;
+    border-top: 1px solid #DBDBDB;
+    border-left: 1px solid #DBDBDB;
+    border-right: 1px solid #DBDBDB;
+    margin: 0 auto;
+    text-align: center;
+    cursor: pointer;
+}
+.last-child {
+    border-bottom: 1px solid #DBDBDB;
+}
+.accordion-content {
+    padding: 1em;
+    background-color: #F6EBF5;
+    display: block;
+}
+.accordion-content.default {
+    display: none;
+}
 }
 
-.fade.ng-leave.ng-leave-active {
 
-}

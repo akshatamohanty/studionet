@@ -447,6 +447,10 @@ angular.module('studionet')
 		};
 
 		o.getTagName = function(tag){
+
+			if(tag == null)
+				return;
+
 			if(Number.isInteger(tag))
 				return o.tagsHash[tag].name;
 			else

@@ -25,7 +25,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				spProfile: ['supernode', function(supernode){
 					return supernode.getSupernodes();
 				}],
-				userProfile: ['profile', function(profile){
+				profilePromise: ['profile', function(profile){
 					return profile.getUser() && profile.getActivity();
 				}],								//TODO: Resolve system data and user specific call-to-actions
 		    	postsPromise: ['contributions', function(contributions){
@@ -125,9 +125,6 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			url: 'node/:address',
 			templateUrl: '/user/components/nodes/view.html',
 			controller: 'NodeController',
-			params:{
-				address: null
-			},
 			resolve: {
 				postDetails: ['contributions', '$stateParams', function(contributions, $stateParams){
 					return contributions.getContribution($stateParams.address);
@@ -148,7 +145,6 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Profile - Abstract state
 		.state('home.profile', {
 			url: 'profile',
-			abstract: true,
 			templateUrl: "/user/components/profile/profile.html",
 			controller: 'profileViewController'
 		})

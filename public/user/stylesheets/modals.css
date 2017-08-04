@@ -61,12 +61,12 @@
     height: 100%;
     //max-height: 90vh;
     padding: 25px 30px !important;
-    background-color: white;
+    background-color: BLACK;
     //overflow-y: scroll !important;
 }
 
 .modal-section{
-  margin-top: 15px;
+  margin-top: 5px;
 }
 
 
@@ -201,12 +201,12 @@
 
 // --- comments
 div.modal-section.comments{
-  margin: 25px !important;
+  //margin: 25px !important;
   max-height: 150px;
 }
 
 div.comment{
-  margin-bottom: 15px !important;
+  //margin-bottom: 15px !important;
 }
 
 .comment-author-name{

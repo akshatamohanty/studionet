@@ -35,8 +35,10 @@ angular.module('studionet')
         }
 
         self.openFork = function(fork_id){
-          console.log(fork_id);
-          self.show = fork_id;
+          if(fork_id == self.show)
+            self.show = undefined;
+          else
+            self.show = fork_id;
         }
 
         self.editProfile = function(){
