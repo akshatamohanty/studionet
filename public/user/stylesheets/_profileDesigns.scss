@@ -31,6 +31,10 @@ $progress-bar-bar : rgb(255, 128, 0);
 
   }
 
+  .topmargin{
+    margin-top: 20px;
+  }
+
   .selected {
     font-weight: 600;
     border: 1px solid green;
@@ -92,8 +96,8 @@ $progress-bar-bar : rgb(255, 128, 0);
     width:100px;
 } */
 .progressLinear md-progress-linear {
-  padding-top: 10px;
-  margin-bottom: 20px; }
+  margin-top: 10px;
+}
 
 #center {
     display: inline-block;

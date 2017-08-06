@@ -677,6 +677,8 @@ div.ng-tag-cloud span {
     width: 30px;
     height: 30px;
     border-radius: 50%; }
+  .profile-card .topmargin {
+    margin-top: 20px; }
   .profile-card .selected {
     font-weight: 600;
     border: 1px solid green; }
@@ -727,8 +729,7 @@ div.ng-tag-cloud span {
     width:100px;
 } */
 .progressLinear md-progress-linear {
-  padding-top: 10px;
-  margin-bottom: 20px; }
+  margin-top: 10px; }
 
 #center {
   display: inline-block;
@@ -778,23 +779,5 @@ div.ng-tag-cloud span {
 
 .gold {
   background: linear-gradient(45deg, #f2d70c 0%, white 56%, #fceb00 96%); }
-
-/* .headline {
-    font-family: Calibri, "Helvetica", san-serif;
-    line-height: 1em;
-    color: white;
-    font-size: 20px;
-} */
-/* h1:after {
-    content:' ';
-    display:block;
-    border:2px solid #d0d0d0;
-    border-radius:4px;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
-    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
-    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .05);
-} */
 
 /*# sourceMappingURL=styles.css.map */

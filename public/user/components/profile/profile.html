@@ -25,9 +25,8 @@
             <div class="detailContainer" layout="row">
 
                 <!-- todo: remove br and add a margin -->
-                <div flex='70'>
-                    <br>
-                    <br>
+                <div flex='70' class = 'topmargin'>
+
                     <div class='detail'>Posts Created: {{user.contributions.length}}</div>
 
                     <!-- compute number of contributions of type "comment" in the user.contributions array and place here -->
@@ -51,16 +50,6 @@
 
                 <span ng-repeat='level in levels' ng-class=' user.role == level.id ? "selected" : "" '>{{level.name}}</span>
 
-                <!-- use an angular progress bar -->
-                <!-- <div>
-                        <label>Current Value</label>
-                        <input type="number" ng-model="curVal" min="0" max="100">
-
-                        <br><br>
-
-                        <progress-bar cur-val='{{curVal}}' max-val='{{maxVal}}'></progress-bar>
-
-                </div> -->
 
                 <!-- todo: stylize this progress bar : check the css used in the angular material demo; add a top margin -->
                 <div class="progressLinear">
@@ -97,7 +86,7 @@
                   <div flex="30" class="left">
                     <md-card>
                         <md-card-content>
-                            
+
                             <!-- post title -->
                             <h2>{{ topcontribution.title }}</h2>
 
