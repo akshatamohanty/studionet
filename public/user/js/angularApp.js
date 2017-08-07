@@ -49,6 +49,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Check if any notifications for the user and navigate to notifications page, if yes
 		//
 		.state('home.homepage', {
+			cache: false,
 			url: 'home',
 			templateUrl: '/user/components/homepage/homepage.html',
 			controller: 'HomepageController'
@@ -77,6 +78,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Needs to resolve the tag spaces and any additional data required to guide the user to a query
 		//
 		.state('home.search-results', {
+			cache: false,
 			url: 'space?tags&dates',
 			templateUrl: '/user/components/search/search-results.html',
 			params: {
@@ -122,6 +124,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	If the user chooses to reply, the view should navigate to home.note, while preserving the back/forward states for easy navigation. After saving the user, should navigate back to the original note.
 		//
 		.state('home.node-details', {
+			cache: false,
 			url: 'node/:address',
 			templateUrl: '/user/components/nodes/view.html',
 			controller: 'NodeController',
@@ -159,6 +162,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Should resolve profile details before loading
 		//
 		.state('home.profile-details', {
+			cache: false,
 			url: 'profile/:address',
 			templateUrl: '/user/components/profile/profile.html',
 			controller: 'profileViewController',
@@ -174,6 +178,13 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
            templateUrl: "/user/components/profile/progressbatch.html",
            controller: 'BadgeprogressController'
       	})
+
+      	.state('home.history', {
+           url: 'profile/:address/history',
+           templateUrl: "/user/components/profile/history.html",
+           controller: 'HistoryController'
+      	})
+
 
 		.state('home.leaderboard', {
 			url: 'leaderboard',

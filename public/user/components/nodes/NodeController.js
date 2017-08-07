@@ -227,6 +227,21 @@ angular.module('studionet')
             });
         }
 
+        $scope.unlike = function(post_id){
+
+            contributions.unlikeContribution(post_id).success(function(){
+                  var toast = $mdToast.simple()
+                          .textContent('You unliked this post!')
+                          .position("bottom left")
+
+                  $mdToast.show(toast);
+
+                  if($scope.post_details.status.indexOf("liked") > -1)
+                    $scope.post_details.status.splice($scope.post_details.status.indexOf("liked"));
+            });
+
+        }
+
         // ------------------Function: - Delete
         $scope.delete = function(contributionId, comment){
             

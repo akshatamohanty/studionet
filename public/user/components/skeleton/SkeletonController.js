@@ -1,6 +1,7 @@
 angular.module('studionet')
-.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', '$stateParams', 'users', '$state', '$mdToast',
+.controller('SkeletonController', ['$scope', '$mdToast', 'profile', 'contributions', 'spaces', 'routerUtils', 'tags', '$stateParams', 'users', '$state', '$mdToast', 
                                function($scope, $mdToast, profile, contributions, spaces, routerUtils, tags, $stateParams, users, $state, $mdToast){
+
 
           $scope.showBench = true;
           $scope.searchActive = false;
@@ -70,17 +71,20 @@ angular.module('studionet')
 
               if(data.tags !== undefined && data.type == undefined){
                 $scope.query.tags = data.tags.split(",").map(function(t){return $scope.getTagString(parseInt(t)); } ); 
-                $scope.query.dates = data.dates ? data.dates.split(",").map(function(t){return new Date(parseInt(t))}) : [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ];
+                $scope.query.dates = data.dates ? data.dates.split(",").map(function(t){return new Date(parseInt(t))}) : [/* new Date(contributions.getFirstDate()), new Date(contributions.getLastDate())*/ ];
               }
 
           });
           
-          $scope.query = {tags: [], dates: [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ]};
+          //$scope.query = {tags: [], dates: [ new Date(contributions.getFirstDate()), new Date(contributions.getLastDate()) ]};
+          $scope.query = {tags: [], dates: []};
 
           $scope.$watchCollection('query.tags', function(){
 
-              if($scope.query.tags.length == 0)
+              if($scope.query.tags.length == 0){
+                $scope.query.dates = [];
                 $state.go('home.homepage');
+              }
 
               // check if last tag added is  valid
               var last_tag = $scope.query.tags[$scope.query.tags.length-1];

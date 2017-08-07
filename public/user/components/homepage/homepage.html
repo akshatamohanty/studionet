@@ -12,7 +12,7 @@
 		<div class='dragBar'></div>
 
         
-        <div class='action-bar' style='position: absolute;height: 30px; width: 30px; top: 4px; right: -1px; text-align: center;' ng-init='postStatus = getPostStatus(post)[0]'>
+        <div class='action-bar' style='position: absolute;height: 30px; width: 30px; top: 4px; right: -1px; text-align: center;' ng-init='postStatus = getPostStatus(post)[0];'>
 	          <ng-md-icon icon="check_circle" style="fill: #8FE266" size="16" ng-if='postStatus == "viewed"'>
 	          </ng-md-icon>
 	          <ng-md-icon icon="create" style="fill: #2919F7" size="16" ng-if='postStatus == "created"'>

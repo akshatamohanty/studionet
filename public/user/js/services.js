@@ -77,6 +77,199 @@ angular.module('studionet')
 		return fn;
 	}])
 
+
+
+	//--------------------- Profile
+	.factory('profile', ['$http', 'users', function($http, users){
+		
+		var o ={
+			user: {},
+			created: [],
+			viewed: [],
+			liked: [],
+			bookmarked: []
+		};
+
+		// ----------------- Observers of this service which re-run when this data is refreshed
+		var observerCallbacks = [];
+
+		// register an observer
+		o.registerObserverCallback = function(callback){
+		   observerCallbacks.push(callback);
+		};
+
+		// call this when you know 'foo' has been changed
+		var notifyObservers = function(){
+			angular.forEach(observerCallbacks, function(callback){
+		    	 callback();
+		    });
+		};
+
+
+		// ----------------- Refreshes User 
+		// profile.user: Basic details about the user - 
+		// 				canEdit, avatar, name, id, addedOn, filterNames, filters, joinedOn, lastLogged In, nickname
+		// 				contributions(with id, rating, rateCount, views, title), 
+		// 				groups(id, role, joinedOn)
+		// 				tags, 
+		// 				
+		// profile.getUser() : This service refreshes the above data 
+		// 
+		o.getUser = function(){
+			return $http.get('/api/profile/').success(function(data){
+				angular.copy(data, o.user);
+				o.getActivity();
+
+				console.log(o.user.notifications);
+
+				notifyObservers();
+			});
+		};
+
+
+		// ----------------- Fetches all activity for the user
+		// End refers to the contribution (later, link) Id 
+		// [ [ {"start":8,"end":4623,"type":"CREATED","properties":{},"id":5224},{"start":8,"end":4622,"type":"CREATED","properties":{},"id":5220} ] ]
+		// CREATED : 
+		// VIEWED : "properties":{"lastViewed":1487044949737,"views":1}
+		// RATED : "properties":{"rating":3,"lastRated":1486385685468}
+		o.getActivity = function(){
+			return $http.get('/api/profile/activity').success(function(data){
+				
+				var activity = data[0];
+				for(var i=0; i < activity.length; i++){
+
+					var action =  activity[i];
+
+					if(action.type == "VIEWED")
+						o.viewed.push(action.end);
+					else if(action.type == "CREATED")
+						o.created.push(action.end);
+					else if(action.type == "RATED")
+						o.liked.push(action.end)
+					else if(action.type == "BOOKMARKED")
+						o.bookmarked.push(action.end);
+
+				}
+
+			});
+		};
+
+		// Todo
+		o.changeName = function(user){
+		  	return $http({
+				  method  : 'PUT',
+				  url     : '/api/profile/',
+				  data    : user,  // pass in data as strings
+				  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+				 })
+				.success(function(data) {
+					o.getUser();
+				})
+		};
+
+		// Todo
+		o.changePicture = function(avatar){
+            var formData = new FormData();
+            formData.append('avatar', avatar, avatar.name);
+            return $http({
+              method  : 'POST',
+              url     : '/uploads/avatar',
+              headers : { 'Content-Type': undefined, 'enctype':'multipart/form-data; charset=utf-8' },
+              processData: false,
+              data: formData
+            }).success(function(){
+            	o.getUser();
+            })
+		};
+
+
+		o.showProfile = function(){
+
+		}
+
+		// 
+		// 
+		// 	Get the relationship of the user to the post
+		// 	
+		// 
+		o.getPostStatus = function(post){
+
+			var post_id = post.id;
+			var status = [];
+
+			var options = ["created", "bookmarked", "liked", "viewed"];
+
+			options.map(function(opt){
+				if(o[opt].indexOf(post_id) > -1)
+					status.push(opt);
+			})
+
+			post.status = status;
+
+			return status;
+
+		}	
+
+		//
+		//
+		//	update user activity lists 
+		//
+		o.updateContribution = function(post_id, list, activity){
+
+			if(activity == undefined){	
+				// add to list
+				o[list].push(post_id);
+			}
+			else if(activity == -1){
+				console.log("removing from list");
+				// remove from list
+				var index = o[list].indexOf(post_id);
+				if(index > -1){
+					o[list].splice(index, 1);
+				}
+			}
+		}
+
+		//
+		//
+		//	Allow user to tag a contribution
+		//
+		o.tagContribution = function(contribution_id, tag_array){
+
+			// get all the posts for this query
+			return $http({
+						  method  : 'POST',
+						  url     : '/api/contributions/' + contribution_id + '/tag',
+						  data    : { tags: tag_array },  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+
+							//refresh user profile
+							o.getUser();
+
+							return data;
+						});
+		}
+
+		//
+		//	clear notifications
+		//
+		//
+		//
+		o.deleteNotifications = function(){
+			return $http.delete('/api/profile/notifications').success(function(data){
+				o.user.notifications = [];
+				notifyObservers();
+			});
+		}
+
+
+		return o;
+
+	}])
+
 	.factory('contributions', ['$http', '$filter', 'profile', 'tags', 'supernode', function($http, $filter, profile, tags, supernode){
 
 		var o = {
@@ -313,15 +506,27 @@ angular.module('studionet')
 
 		o.likeContribution = function(id){
 			return $http.post('/api/contributions/' + id + '/rate', {'rating': 5} ).success(function(data){
-			
 				o.contributionsHash[id].status.push("liked");
+				profile.updateContribution(id, "liked");
+			});
+		};
 
+		o.unlikeContribution = function(id){
+			return $http.delete('/api/contributions/' + id + '/rate').success(function(data){
+				
+				var index = o.contributionsHash[id].status.indexOf("liked");
+
+				if(index > -1){
+					o.contributionsHash[id].status.splice(index, 1);
+				}
+
+				profile.updateContribution(id, "liked", -1);
 			});
 		};
 
 		o.viewContribution = function(id){
 			return $http.post('/api/contributions/' + id + '/view').success(function(data){
-
+				profile.updateContribution(id, "viewed");
 			});
 		};
 
@@ -471,88 +676,6 @@ angular.module('studionet')
 		}
 
 		return o;
-	}])
-
-
-	//----------------  Groups List
-	.factory('groups', ['$http', 'supernode', 'profile', function($http, supernode, profile){
-		
-		var o = {
-			groups: [],
-		};
-
-		// --------- Observers
-		var observerCallbacks = [];
-
-		// register an observer
-		o.registerObserverCallback = function(callback){
-		   observerCallbacks.push(callback);
-		};
-
-		// call this when you know graph has been changed
-		var notifyObservers = function(){
-			angular.forEach(observerCallbacks, function(callback){
-		    	 callback();
-		    });
-		};
-
-		o.getAll = function(){
-			return $http.get('/api/groups').success(function(data){
-				angular.copy(data, o.groups);
-				notifyObservers();
-			});
-		};
-
-		o.getGroupActivity = function(group_id){
-			return $http.get('/api/groups/' + group_id ).success(function(data){
-				return data;
-			});
-		};
-
-		o.createGroup = function(groupData){
-			
-			var params = {
-			      name: groupData.name,
-			      description: groupData.description,
-			      restricted: false,
-			      groupParentId: supernode.group
-			};
-
-			return $http.post('/api/groups', params).success(function(data){
-
-				return $http.post('/api/groups/' + data.id + '/users', {users: groupData.users}).success(function(data){
-
-					// todo : fix this to a socket connection
-					o.getAll();
-
-				}).error(function(err){
-					console.log(err);
-				});
-
-				
-			}).error(function(err) {
-				console.log(err);
-			});;
-
-		};
-
-		o.deleteGroup = function(group_id){
-
-			return $http.delete('/api/groups/' + group_id)
-				.success(function(res) {
-					console.log(res);
-					o.getAll();
-					return;  
-			    })
-			    .error(function(error){
-			    	//alert(error);
-					throw error;
-			    })
-		
-		}
-
-		return o;
-
 	}])
 
 
@@ -772,162 +895,6 @@ angular.module('studionet')
 
 	}])
 
-
-	//--------------------- Profile
-	.factory('profile', ['$http', 'users', function($http, users){
-		
-		var o ={
-			user: {},
-			created: [],
-			viewed: [],
-			liked: [],
-			bookmarked: []
-		};
-
-		// ----------------- Observers of this service which re-run when this data is refreshed
-		var observerCallbacks = [];
-
-		// register an observer
-		o.registerObserverCallback = function(callback){
-		   observerCallbacks.push(callback);
-		};
-
-		// call this when you know 'foo' has been changed
-		var notifyObservers = function(){
-			angular.forEach(observerCallbacks, function(callback){
-		    	 callback();
-		    });
-		};
-
-
-		// ----------------- Refreshes User 
-		// profile.user: Basic details about the user - 
-		// 				canEdit, avatar, name, id, addedOn, filterNames, filters, joinedOn, lastLogged In, nickname
-		// 				contributions(with id, rating, rateCount, views, title), 
-		// 				groups(id, role, joinedOn)
-		// 				tags, 
-		// 				
-		// profile.getUser() : This service refreshes the above data 
-		// 
-		o.getUser = function(){
-			return $http.get('/api/profile/').success(function(data){
-				angular.copy(data, o.user);
-				o.getActivity();
-				notifyObservers();
-			});
-		};
-
-
-		// ----------------- Fetches all activity for the user
-		// End refers to the contribution (later, link) Id 
-		// [ [ {"start":8,"end":4623,"type":"CREATED","properties":{},"id":5224},{"start":8,"end":4622,"type":"CREATED","properties":{},"id":5220} ] ]
-		// CREATED : 
-		// VIEWED : "properties":{"lastViewed":1487044949737,"views":1}
-		// RATED : "properties":{"rating":3,"lastRated":1486385685468}
-		o.getActivity = function(){
-			return $http.get('/api/profile/activity').success(function(data){
-				
-				var activity = data[0];
-				for(var i=0; i < activity.length; i++){
-
-					var action =  activity[i];
-
-					if(action.type == "VIEWED")
-						o.viewed.push(action.end);
-					else if(action.type == "CREATED")
-						o.created.push(action.end);
-					else if(action.type == "RATED")
-						o.liked.push(action.end)
-					else if(action.type == "BOOKMARKED")
-						o.bookmarked.push(action.end);
-
-				}
-
-			});
-		};
-
-		// Todo
-		o.changeName = function(user){
-		  	return $http({
-				  method  : 'PUT',
-				  url     : '/api/profile/',
-				  data    : user,  // pass in data as strings
-				  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
-				 })
-				.success(function(data) {
-					o.getUser();
-				})
-		};
-
-		// Todo
-		o.changePicture = function(avatar){
-            var formData = new FormData();
-            formData.append('avatar', avatar, avatar.name);
-            return $http({
-              method  : 'POST',
-              url     : '/uploads/avatar',
-              headers : { 'Content-Type': undefined, 'enctype':'multipart/form-data; charset=utf-8' },
-              processData: false,
-              data: formData
-            }).success(function(){
-            	o.getUser();
-            })
-		};
-
-
-		o.showProfile = function(){
-
-		}
-
-		// 
-		// 
-		// 	Get the relationship of the user to the post
-		// 	
-		// 
-		o.getPostStatus = function(post){
-
-			var post_id = post.id;
-			var status = [];
-
-			var options = ["created", "bookmarked", "liked", "viewed"];
-
-			options.map(function(opt){
-				if(o[opt].indexOf(post_id) > -1)
-					status.push(opt);
-			})
-
-			post.status = status;
-
-			return status;
-
-		}	
-
-
-		//
-		//
-		//	Allow user to tag a contribution
-		//
-		o.tagContribution = function(contribution_id, tag_array){
-
-			// get all the posts for this query
-			return $http({
-						  method  : 'POST',
-						  url     : '/api/contributions/' + contribution_id + '/tag',
-						  data    : { tags: tag_array },  
-						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
-						 })
-						.success(function(data) {
-
-							//refresh user profile
-							o.getUser();
-
-							return data;
-						});
-		}
-
-
-		return o;
-	}])
 
 	// ------------------- Links
 	.factory('links', ['$http', function($http){

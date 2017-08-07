@@ -14,13 +14,63 @@ angular.module('studionet')
             self.autocompleteDemoRequireMatch = true;
             self.transformChip = transformChip;
             self.runSearch = runSearch;
+            self.showAdvanced = showAdvanced;
           } 
 
           init();
           tags.registerObserverCallback(function(){ init(); } );
 
+
+          function showAdvanced (){
+                  var confirm = {
+                     parent: angular.element(document.body),
+                     template:
+                           '<md-dialog aria-label="new tag dialog" style="height: 200px; width: 350px;">' +
+                           '  <md-dialog-content style="padding: 30px;">\
+                                  <div class="advanced" layout="column">\
+                                    <md-content layout-padding layout-wrap layout-align="center end">\
+                                      <md-datepicker md-max-date="query.dates[1]" ng-model="query.dates[0]" required></md-datepicker>\
+                                      <br>\
+                                      <md-datepicker md-min-date="query.dates[0]" ng-model="query.dates[1]" required></md-datepicker>\
+                                      <br>\
+                                    </md-content>\
+                                  </div>' +
+                           '  </md-dialog-content>' +
+                           '  <md-dialog-actions>' +
+                           '   <md-button ng-click="save()" class="md-primary">Save</md-button>' +
+                           '    <md-button ng-click="clear()" class="md-primary">' +
+                           '      Clear' +
+                           '    </md-button>' +
+                           '  </md-dialog-actions>' +
+                           '</md-dialog>',
+                      locals:{dataToPass: $scope.query},            
+                      controller: DialogController
+                  }
+
+                  function DialogController($scope, $mdDialog, dataToPass, contributions) {
+
+                    $scope.query = dataToPass;
+
+                    if($scope.query.dates.length == 0)
+                      $scope.query.dates = [new Date(contributions.getFirstDate()), new Date(contributions.getLastDate())];
+
+                    $scope.clear = function(){
+                      $scope.query.dates = []; 
+                      $mdDialog.hide($scope.query);
+                    }
+
+                    $scope.save = function(){
+                      $mdDialog.hide($scope.query);
+                    }
+
+                  }
+
+                  $mdDialog.show(confirm).then(function(answer){ runSearch() });
+
+          }
+
+
           function runSearch(){
-            console.log("running search");
             $scope.goToSpaceWithArgs($scope.query);
           }
 

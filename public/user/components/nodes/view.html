@@ -47,7 +47,7 @@
 	             	<md-tooltip md-direction="bottom">Comment</md-tooltip>
 				</div>
 
-				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
+				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='post_details.status.indexOf("liked") > -1 ? unlike(post_details.id) : like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
 					<ng-md-icon icon="thumb_up" size='20' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") > -1'> You've liked this post!</md-tooltip>
 	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") == -1'> Like this post!</md-tooltip>

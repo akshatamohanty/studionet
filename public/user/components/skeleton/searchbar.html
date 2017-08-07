@@ -24,9 +24,9 @@
 
   <div class='dates' flex="20">
   
-    <div class='links' ng-show='query.tags.length > 0' ng-click='showDates=!showDates' >
+    <div class='links' ng-show='query.tags.length > 0' ng-click='ctrl.showAdvanced()' >
       <span ng-if='query.dates[0]==undefined'>[{{query.tags.length}} tags] [Advanced Options] </span>
-      <span ng-if='query.dates[0]!=undefined'>[{{query.tags.length}} tags] {{query.dates[0] | date: 'mediumDate'}} - {{query.dates[1] | date: 'mediumDate'}}</span>
+      <span ng-if='query.dates[0]!=undefined'>{{query.dates[0] | date: 'mediumDate'}} - {{query.dates[1] | date: 'mediumDate'}} ({{query.tags.length}} tags) </span>
     </div>
 
     <div class='advanced' layout='column' ng-show='showDates'>

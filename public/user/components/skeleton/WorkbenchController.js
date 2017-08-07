@@ -189,7 +189,7 @@ angular.module('studionet')
                             
                             // if item isn't in the time frame, show failure alert
                             var toast = $mdToast.simple()
-                                  .textContent('Successfully added to your fork')
+                                  .textContent('Successfully added to your folder')
                                   .position("bottom left")
 
                             $mdToast.show(toast);

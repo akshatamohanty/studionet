@@ -178,6 +178,33 @@ router.get('/activity', auth.ensureAuthenticated, function(req, res){
 
 });
 
+
+
+// route: /api/profile/notifications
+// get the contributions that this user created
+router.delete('/notifications', auth.ensureAuthenticated, function(req, res){
+  
+  var query = [
+    'MATCH (u:user) WHERE ID(u)={userIdParam}',
+    'SET u.notifications = []',
+    'RETURN u'
+  ].join('\n');
+
+  var params = {
+     userIdParam: parseInt(req.user.id)
+  }
+
+  db.query(query, params, function(error, result){
+    if (error)
+      console.log('Error clearing notifications for user ' + req.user.id);
+    else
+      res.send(result);
+  });
+
+});
+
+
+
 // route: /api/profile/tags
 // get the tags that this user created
 router.get('/tags', auth.ensureAuthenticated, function(req, res){

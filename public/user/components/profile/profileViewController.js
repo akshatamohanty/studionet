@@ -45,7 +45,6 @@ angular.module('studionet')
       // todo: compute the most popular tags used by the user using the user.contributions
       // count the number of times the user has used a particular tag and reassign $scope.data
       var all_posts = $scope.user.contributions;
-      console.log($scope.user.contributions[0].tags);
       $scope.data = [
             {text: "Ipsum", weight: 9},  // three properties - id (tag id), text (tag name), weight (count of tag in the users' posts)
             {text: "Dolor", weight: 6},
