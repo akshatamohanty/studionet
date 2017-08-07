@@ -25,6 +25,7 @@
             <div class="detailContainer" layout="row">
 
                 <!-- todo: remove br and add a margin -->
+                <!--   topmargin class in _profiledesign added -->
                 <div flex='70' class = 'topmargin'>
 
                     <div class='detail'>Posts Created: {{user.contributions.length}}</div>
@@ -52,6 +53,7 @@
 
 
                 <!-- todo: stylize this progress bar : check the css used in the angular material demo; add a top margin -->
+                <!--  Corrected the top margin -->
                 <div class="progressLinear">
                  <md-progress-linear md-mode="determinate" value="{{user.points}}"></md-progress-linear>
                 </div>
@@ -122,7 +124,13 @@
 
             <!-- todo: list out all the forks with names and tags from the property user.forked -->
             <div class="rcornerTopPost">
-                <div ng-repeat='fork in user.forked'> {{ $index }} </div>
+                <div ng-repeat='fork in user.forked'>
+                    <md-list-item class="md-2-line">
+                        <div class="md-list-item-text">
+                        <p>{{ $index }}</p>
+                        </div>
+                    </md-list-item>
+                </div>
             </div>
 
         </md-card>
