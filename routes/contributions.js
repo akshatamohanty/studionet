@@ -72,8 +72,8 @@ router.route('/')
       'WITH c',
       'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
       'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
-      'WITH c',
-      'OPTIONAL MATCH (auth:user)-[:CREATED]->(parent:contribution) WHERE ID(parent)={contributionRefParam} and ID(auth)<>{createdByParam} SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
+      'WITH c, c1',
+      'OPTIONAL MATCH (auth:user)-[:CREATED]->(c1) WHERE NOT ID(auth)={createdByParam} SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
       'WITH c',
       'UNWIND {tagsParam} as tagID',
       'OPTIONAL MATCH (t:tag) WHERE ID(t)=tagID',
@@ -97,7 +97,7 @@ router.route('/')
       totalRatingParam: 0,
       rateCountParam: 0,
       viewsParam: 0,
-      notifParam: "u" + req.user.id + "c" + req.params.contributionId + "t" + Date.now() + "ty" + (req.body.refType == "COMMENT_FOR" ? 3 : 4)
+      notifParam: "u" + req.user.id + "c" + req.body.ref + "t" + Date.now() + "ty" + (req.body.refType == "COMMENT_FOR" ? 3 : 4)
     };
 
     db.query(query, params, function(error, result){

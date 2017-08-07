@@ -27,7 +27,7 @@ angular.module('studionet')
                                         tags: $stateParams.tags.length > 0 ? $stateParams.tags : [],
                                         refType: "RELATED_TO", 
                                         contentType: $stateParams.type, 
-                                        ref:  $stateParams.ref
+                                        ref:  $stateParams.ref  ? $stateParams.ref.id : null
                                       };
         }
         else{
@@ -101,7 +101,7 @@ angular.module('studionet')
 
                 var msg = 'Yay! You just created a new post!';
 
-                if($scope.contributionData.tags.length > 0 ){
+                if($scope.contributionData.tags.length > 0 && $scope.getTagName($scope.contributionData.tags[0])!=""){
                   msg = 'Yay! You just created a new post tagged with ' + $scope.contributionData.tags.map(function(t){  return $scope.getTagName(t); }).join(", ");
                 }
                   

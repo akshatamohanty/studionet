@@ -120,8 +120,6 @@ angular.module('studionet')
 				angular.copy(data, o.user);
 				o.getActivity();
 
-				console.log(o.user.notifications);
-
 				notifyObservers();
 			});
 		};
@@ -349,6 +347,10 @@ angular.module('studionet')
 			// return o.contributions[ o.contributions.length - 1 ].dateCreated;
 		}
 
+		o.getContributionShort = function(contribution_id){
+			return o.contributionsHash[contribution_id];
+		}
+
 		o.getContribution = function(contribution_id){
 
 			if(contribution_id == null)
@@ -394,6 +396,7 @@ angular.module('studionet')
 
 			if(new_contribution.tags.length == 0)
 				new_contribution.tags = [supernode.tag]
+			console.log(new_contribution);
 
 
 			// extract inline images

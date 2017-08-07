@@ -149,7 +149,6 @@ angular.module('studionet')
 
         }
 
-
         self.deleteFork = function(space_id){
                     
             var confirm = $mdDialog.confirm()
@@ -250,6 +249,92 @@ angular.module('studionet')
             }
 
         }
+
+        self.showNotifications = function(ev) {
+
+            // Appending dialog to document.body to cover sidenav in docs app
+            var confirm = $mdDialog.confirm({
+                                 templateUrl: '/user/components/skeleton/notifications.html',
+                                 clickOutsideToClose:true, 
+                                 controller: NotificationsController
+                            })
+
+            function NotificationsController($scope, $mdDialog, users, contributions, routerUtils, profile, $mdToast) {
+
+                $scope.notifications = profile.user.notifications;
+                $scope.getUser = users.getUserShort;
+                $scope.getContribution = contributions.getContributionShort;
+
+                $scope.goToNode = routerUtils.goToNode;
+
+                $scope.close = function(){
+                  $mdDialog.hide();
+                }
+
+                $scope.clear = function(){
+                    profile.deleteNotifications().success(function(){
+                        $mdDialog.hide();
+
+                        var toast = $mdToast.simple()
+                                  .textContent('Your notifications were cleared.')
+                                  .position("bottom left")
+
+                        $mdToast.show(toast);
+
+                    });
+                }
+
+                $scope.getNotification = function(notif){
+
+                  var notif_obj = {};
+
+                  var user_split = notif.split("c"); 
+                  var user = parseInt(user_split[0].substr(1));
+                  notif_obj.user = user;
+
+                  var type_split = user_split[1].split("ty");
+                  notif_obj.type = parseInt(type_split[1]);
+
+                  switch(notif_obj.type){
+                    case 1: 
+                      notif_obj.message = "viewed "; break;
+                    case 2: 
+                      notif_obj.message = "liked "; break;
+                    case 3: 
+                      notif_obj.message = "commented on"; break;
+                    case 4: 
+                      notif_obj.message = "replied to "; break;
+                    case 5:
+                      notif_obj.message = "linked a post to "; break;
+                    default: 
+                      notif_obj.message = "Error fetching action";
+                  }
+
+
+                  var time_split = type_split[0].split("t");
+                  notif_obj.time = time_split[1]; 
+
+                  notif_obj.contribution = parseInt(time_split[0]);
+
+                  return notif_obj;
+
+                }
+
+                $scope.clearNotifications = function(){
+                  console.log("clear notifications");
+                }
+                    
+            }
+
+            $mdDialog.show(confirm).then(function() {
+
+
+            }, function() {
+
+
+            });
+
+        };
 
   });
 

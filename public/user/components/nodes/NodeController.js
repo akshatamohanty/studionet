@@ -191,7 +191,7 @@ angular.module('studionet')
 
                         $mdToast.show(toast);
 
-                        $state.reload();
+                        //$state.reload();
 
 
                   }, function(error){

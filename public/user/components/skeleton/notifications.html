@@ -1,0 +1,21 @@
+<md-toolbar class='md-sticky' layout="row" class="md-hue-2">
+  <div class="md-toolbar-tools">
+    <span flex='90'>Your Notifications</span>
+    <md-button flex='10' ng-click='clear()' ng-if='notifications.length > 0'>Clear All</md-button>
+  </div>
+</md-toolbar>
+
+<md-content md-padding md-margin>
+  <md-list flex ng-if='notifications.length > 0'>
+    <md-subheader class="md-no-sticky">{{notifications.length}} notifications</md-subheader>
+    <md-list-item class="md-2-line" ng-repeat='note in notifications' ng-init='note = getNotification(note); user = getUser(note.user);'>
+      <img ng-src={{user.avatar}} class="md-avatar" />
+      <div class="md-list-item-text">
+        <p>{{user.nickname ? user.nickname : user.name}} {{ note.message }} your post <span class='pointer' ng-click='goToNode(note.contribution);close();'><a><i><u>{{ getContribution(note.contribution).title }}</u></i></a></span> on {{note.time | date: 'mediumDate'}}</p>
+      </div> 
+    </md-list-item>
+  </md-list>
+
+  <p style='text-align: center' ng-if='notifications.length == 0'> You are all caught up! </p>
+
+</md-content>

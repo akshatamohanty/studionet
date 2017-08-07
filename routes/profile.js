@@ -53,7 +53,8 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
               thumbs: thumbs,\
               contributions: contributions,\
               follows: follows,\
-              forked: forks \
+              forked: forks, \
+              notifications: u.notifications \
     }'
   ].join('\n');
 

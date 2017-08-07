@@ -571,7 +571,7 @@ md-input-container {
         .post-view-section .post-container .post-actions .action.selected svg {
           fill: blue !important; }
       .post-view-section .post-container .post-actions .action:hover svg {
-        fill: blue !important; }
+        fill: #6E6EE6 !important; }
     .post-view-section .post-container .post-actions:hover {
       background: rgba(184, 181, 181, 0.7);
       z-index: 2; }
