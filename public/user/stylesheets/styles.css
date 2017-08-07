@@ -760,6 +760,8 @@ div.ng-tag-cloud span {
     width: 30px;
     height: 30px;
     border-radius: 50%; }
+  .profile-card .topmargin {
+    margin-top: 20px; }
   .profile-card .selected {
     font-weight: 600;
     border: 1px solid green; }
@@ -810,8 +812,7 @@ div.ng-tag-cloud span {
     width:100px;
 } */
 .progressLinear md-progress-linear {
-  padding-top: 10px;
-  margin-bottom: 20px; }
+  margin-top: 10px; }
 
 #center {
   display: inline-block;
