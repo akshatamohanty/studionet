@@ -748,23 +748,41 @@ div.ng-tag-cloud {
 div.ng-tag-cloud span {
   padding: 0; }
 
-.profile-card {
-  padding: 15px; }
-  .profile-card .headline {
-    border-bottom: 1px solid gray; }
-    .profile-card .headline h1 span {
+.profile-container {
+  font-size: 12px;
+  font-family: "Open Sans", sans-serif;
+  color: #929191; }
+  .profile-container .profile-card {
+    padding: 15px;
+    max-height: 80%;
+    overflow: hidden; }
+    .profile-container .profile-card .headline h1 span {
       font-family: "Raleway", sans-serif;
       font-size: 12px;
       margin-left: 20px; }
-  .profile-card .profile-img-sm {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%; }
-  .profile-card .topmargin {
-    margin-top: 20px; }
-  .profile-card .selected {
-    font-weight: 600;
-    border: 1px solid green; }
+    .profile-container .profile-card .section {
+      margin-top: 30px; }
+    .profile-container .profile-card md-progress-linear.md-default-theme .md-bar, .profile-container .profile-card md-progress-linear .md-bar {
+      background-color: #5079F0; }
+    .profile-container .profile-card md-progress-linear .md-container {
+      border: 1px solid #9398F9; }
+    .profile-container .profile-card .level {
+      background-color: #C7C4C4;
+      padding: 2px 10px;
+      color: gray;
+      border-right: 1px solid white;
+      vertical-align: middle; }
+      .profile-container .profile-card .level.current {
+        font-weight: 600;
+        background-color: #C8C5C5;
+        color: blue;
+        border: 1px solid #333232; }
+      .profile-container .profile-card .level.achieved {
+        background-color: #DDD;
+        color: green; }
+      .profile-container .profile-card .level.pending {
+        background-color: #AEAEAE;
+        color: #8E8D8D; }
 
 .badge {
   border-radius: 25px;
@@ -814,36 +832,21 @@ div.ng-tag-cloud span {
 .progressLinear md-progress-linear {
   margin-top: 10px; }
 
-#center {
-  display: inline-block;
-  width: 100px; }
-
-#right {
-  float: right;
-  width: 100px; }
-
-#separation {
-  height: 80px; }
-
-.coin p {
-  font-family: "Open Sans", sans-serif;
+/* .coin p{
+  font-family: $text-font;
   font-style: italic;
   position: absolute;
   font-size: 28px;
   z-index: 700;
   top: -19px;
-  left: 19px; }
+  left: 19px;
+  } */
+/* 
+.coin.bronze p{  color: rgba(223,182,103,1);}
+.coin.silver p{  color: rgba(160,160,160,1);}
+.coin.gold p{  color: rgba(242,215,50,1);}
 
-.coin.bronze p {
-  color: #dfb667; }
-
-.coin.silver p {
-  color: #a0a0a0; }
-
-.coin.gold p {
-  color: #f2d732; }
-
-.coin {
+.coin{
   width: 40px;
   height: 40px;
   display: inline-block;
@@ -852,15 +855,22 @@ div.ng-tag-cloud span {
   top: 6px;
   border-radius: 50px;
   z-index: 500;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1); }
+  box-shadow:  2px 2px 2px 1px rgba(0, 0, 0, .1);
+  }
 
-.bronze {
-  background: linear-gradient(45deg, #dfb667 0%, #f9f3e8 56%, #e7c074 96%); }
+.bronze{
+  background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%);
+  }
 
-.silver {
-  background: linear-gradient(45deg, #a0a0a0 0%, #e8e8e8 56%); }
 
-.gold {
-  background: linear-gradient(45deg, #f2d70c 0%, white 56%, #fceb00 96%); }
+.silver{
+  background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
+  }
+
+
+.gold{
+background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+}
+ */
 
 /*# sourceMappingURL=styles.css.map */

@@ -1,9 +1,20 @@
 
 // Custom filter
 app.filter('level', [function() {
-    return function(level) {
-        if(level == undefined)
+    return function(points) {
+        if(points == undefined)
           return "Newbie";
+
+        var levels = [ { name: "Novice", id: 1, points: 10}, { name: "Coffee Boy", id: 2, points: 50},  { name: "Intern", id: 3, points: 150},  { name: "Junior Architect", id: 4, points: 500},
+                { name: "Architect", id: 5, points: 1000}, { name: "Lead Architect", id: 6, points: 5000}        ];
+
+        var id = 0;
+        for(var i=0; i < levels.length - 1; i++){
+           if( points > levels[i].points )
+                id = i+1;
+        }
+
+        return levels[id].name;
     };
 }])
 

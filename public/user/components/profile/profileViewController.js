@@ -1,95 +1,73 @@
 angular.module('studionet')
-.controller('profileViewController', function($q, $scope, $interval, tags, userProfile) {
+.controller('profileViewController', function($q, $scope, $interval, tags, userProfile, profile, routerUtils) {
 
       $scope.getTagName = tags.getTagName;
-
       $scope.user = userProfile;
-      $scope.user.role = 1;
-      $scope.user.points = 40;57
+      $scope.getPostStatus = profile.getPostStatus;
+      $scope.goToSpace = routerUtils.goToSpace;
 
-      $scope.levels = [ { name: "NOVICE", id: 1}, { name: "COFFEE BOY", id: 2},  { name: "ARCHI INTERN", id: 3},  { name: "JR. ARCHITECT", id: 4},
-                        { name: "ARCHITECT", id: 5}, { name: "LEAD ARCHITECT", id: 6}        ];
+      $scope.levels = [ { name: "Novice", id: 1, points: 10}, { name: "Coffee Boy", id: 2, points: 50},  { name: "Intern", id: 3, points: 150},  { name: "Junior Architect", id: 4, points: 500},
+                        { name: "Architect", id: 5, points: 1000}, { name: "Lead Architect", id: 6, points: 5000}        ];
 
       $scope.Badge = [
                 {"Name" : "Badge1"},
           ];
 
       // todo: compute most popular contribution of the user
-     /* $scope.topcontribution = $scope.user.contributions[0];*/
-
-        $scope.topcontribution = function(){
-
-            for(var i=0; i < $scope.user.contributions.length; i++){
-              var topcontribution = $scope.user.contributions[i];
-              if ($scope.topcontribution[i].likes >=4 && $scope.topcontribution[i].bookmarks >=3) {
-                $scope.topcontribution = $scope.user.contributions[i];
-              }
-              else{
-                 $scope.topcontribution = $scope.user.contributions[0];
-              }
-            }
-          }
-
-      // todo: compute the number of comments by the user
-      var numberofcomments = [];
-      var countofcomments = 0;
-      for(var i=0; i< $scope.user.contributions.length; i++){
-         numberofcomments = $scope.user.contributions[i];
-        if(numberofcomments.type == "comments"){
-            countofcomments++;
-        }
+      $scope.topcontribution = $scope.user.contributions[0];
+      function getScore(contribution){
+        return contribution.views/10 + contribution.likes/5 + contribution.bookmarks/2;
       }
 
-
-      // todo: compute the most popular tags used by the user using the user.contributions
-      // count the number of times the user has used a particular tag and reassign $scope.data
-      var all_posts = $scope.user.contributions;
-
-      /*generate a hashmap from the array*/
       var hashmap = {};
-      all_posts.forEach(function(element) {
+      $scope.user.contributions.forEach(function(element) {
 
-          if(hashmap[element.id]!==null && hashmap[element.id]!=undefined){
-             if(!Array.isArray(hashmap[element.id])){
-                 var tempObj = hashmap[element.tags];
+          if(element.type == "comment")
+            return;
 
-                 // json.stringify your object if you
-                 // want to  serialise your hashmap for external use
+          // compute tags
+          var tags = element.tags; 
+          tags.forEach(function(tag){
 
-                 hashmap[element.id] = [tempObj];
-             }
+              if(hashmap[tag] != undefined)
+                hashmap[tag].weight++;
+              else
+                hashmap[tag] = {text: $scope.getTagName(tag), weight: 1, id: tag};
 
-             hashmap[element.id].push(element);
+          })
 
-          }
-          else{
-              // if you want to serialise your hashmap for external use
-              hashmap[element.id] = JSON.stringify(element);
-              // if not, you could just do without JSON.stringify
-              hashmap[element.id] = element;
-          }
+          // compare for top contribution
+          if( getScore($scope.topcontribution) <  getScore(element) )
+            $scope.topcontribution = element;
 
       });
-      console.log(hashmap);
 
-      /*     var tagCountArray = [];
-      for(var i=0; i< $scope.user.contributions.length; i++){
-          tagCountArray = $scope.user.contributions[i];
-        for(var j=0; j< tagCountArray.tags.length; j++){
-            var map = tagCountArray.tags.reduce(function(prev, cur) {
-            prev[cur] = (prev[cur] || 0) + 1;
-            return prev;
-            }, {});
-        }
+      // data conversion for tag clound
+      $scope.data = [];
+      for( tagId in hashmap)
+        $scope.data.push(hashmap[tagId]);
+
+
+      // functions for levels
+      var currentLevel = 0;
+      $scope.getLevelStatus = function(level_idx){    
+
+        var status = "pending";
+
+          if( $scope.user.points > $scope.levels[level_idx].points )
+            status = "achieved";
+          else if( $scope.user.points <= $scope.levels[level_idx].points && (level_idx - 1 > -1 ? $scope.user.points > $scope.levels[level_idx - 1].points : true) ){
+            currentLevel = level_idx;
+            status = "current";
+          }
+
+          return "'" + status + "'";
+
       }
-      console.log(map);*/
 
-          $scope.data = [
-            {text: "Ipsum", weight: 9},  // three properties - id (tag id), text (tag name), weight (count of tag in the users' posts)
-            {text: "Dolor", weight: 6},
-            {text: "Sit", weight: 7},
-            {text: "Amet", weight: 5}
-      ];
-
+      // function for progress bar
+      $scope.getLevelPercent = function(){
+          return 100*($scope.user.points / $scope.levels[currentLevel].points)
+      }
 
 });

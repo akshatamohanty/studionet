@@ -5,42 +5,72 @@ $progress-bar-bar : rgb(255, 128, 0);
 
 @import 'tagCloud';
 
-.profile-card{
-  padding: $max-padding/2;
+.profile-container{
 
-  .headline{
+    font-size: 12px;
+    font-family: $text-font;
+    color: #929191;
 
-      border-bottom: 1px solid gray;
+    .profile-card{
+      padding: $max-padding/2;
+      max-height: 80%;
+      overflow: hidden;
 
-      h1{
-        span{
-          font-family: $header-font;
-          font-size: 12px;
-          margin-left: 20px;
-        }
+      .headline{
+
+          h1{
+            span{
+              font-family: $header-font;
+              font-size: 12px;
+              margin-left: 20px;
+            }
+          }
       }
-  }
 
-  .profile-img-sm{
-    width: $profile-height-sm;
-    height: $profile-width-sm;
-    border-radius: 50%;
-  }
+      .section{
+        margin-top: 30px;
+      }   
+      
+      md-progress-linear.md-default-theme .md-bar, md-progress-linear .md-bar{
+        background-color: #5079F0;
+      }
 
-  .detailContainer{
+      md-progress-linear .md-container{
+        border: 1px solid #9398F9;
+      }
 
-  }
 
-  .topmargin{
-    margin-top: 20px;
-  }
+      .level{
+        background-color: #C7C4C4;
+        padding: 2px 10px;
+        color: gray;
+        border-right: 1px solid white;
+        vertical-align: middle;
+  
+        &.current {
+          font-weight: 600;
+          background-color: #C8C5C5;
+          color: blue;
+          border: 1px solid #333232;
+        }
 
-  .selected {
-    font-weight: 600;
-    border: 1px solid green;
-  }
+        &.achieved{
+          background-color: #DDD;
+          color: green;
+        }
+
+        &.pending{
+          background-color: #AEAEAE;
+          color: #8E8D8D;
+        }
+
+      }
+
+    }
 
 }
+
+
 
 
 .badge {
@@ -99,22 +129,10 @@ $progress-bar-bar : rgb(255, 128, 0);
   margin-top: 10px;
 }
 
-#center {
-    display: inline-block;
-    width:100px;
-}
-
-#right {
-    float:right;
-    width:100px;
-}
 
 
-#separation {
-    height: 80px;
-}
 
-.coin p{
+/* .coin p{
   font-family: $text-font;
   font-style: italic;
   position: absolute;
@@ -122,8 +140,8 @@ $progress-bar-bar : rgb(255, 128, 0);
   z-index: 700;
   top: -19px;
   left: 19px;
-  }
-
+  } */
+/* 
 .coin.bronze p{  color: rgba(223,182,103,1);}
 .coin.silver p{  color: rgba(160,160,160,1);}
 .coin.gold p{  color: rgba(242,215,50,1);}
@@ -153,4 +171,4 @@ $progress-bar-bar : rgb(255, 128, 0);
 .gold{
 background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
 }
-
+ */

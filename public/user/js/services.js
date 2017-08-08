@@ -120,6 +120,9 @@ angular.module('studionet')
 				angular.copy(data, o.user);
 				o.getActivity();
 
+				// compute user points
+				o.user.points = Math.round(o.user.views/20 + o.user.thumbs/5); 
+
 				notifyObservers();
 			});
 		};
@@ -589,6 +592,7 @@ angular.module('studionet')
 			
 			return $http.get(url).then(function(res){
 				if(res.status == 200){
+					res.data.points = Math.round(res.data.views/20 + res.data.thumbs/5); 
 					return res.data;
 				}
 				else{
