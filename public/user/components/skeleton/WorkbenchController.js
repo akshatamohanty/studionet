@@ -191,38 +191,40 @@ angular.module('studionet')
 
             var _tags = spaces.getSpaceById(space.id).tags;
 
-            profile.tagContribution(item.id, _tags)
-                    .success(function(data){
+            // add the contribution to the users fork
+            spaces.addToFork(space.id, item.id).then(function(){
+                
+                // if item isn't in the time frame, show failure alert
+                var toast = $mdToast.simple()
+                      .textContent('Successfully added to your folder')
+                      .position("bottom left")
+                      .action('UNDO')
+                      .highlightAction(true)
+                      .highlightClass('md-accent')
 
-                        // add the contribution to the users fork
-                        spaces.addToFork(space.id, item.id).then(function(){
-                            
-                            // if item isn't in the time frame, show failure alert
-                            var toast = $mdToast.simple()
-                                  .textContent('Successfully added to your folder')
-                                  .position("bottom left")
+                // toast with undo action
+                $mdToast.show(toast).then(function(response){
+                      // user pressed undo button
+                      if ( response == 'ok' ) {
+                          console.log("post will not be tagged");
+                          spaces.removeFromFork(space.id, item.id);
 
-                            $mdToast.show(toast);
+                      }
+                      else{
+                          console.log("post will be tagged");
+                          profile.tagContribution(item.id, _tags);
+                      }
+                });
 
-                        }, function(){
+            }, function(){
 
-                              var toast = $mdToast.simple()
-                                    .textContent('Hmm.... Something went wrong')
-                                    .position("bottom left")
+                  var toast = $mdToast.simple()
+                        .textContent('Hmm.... Something went wrong')
+                        .position("bottom left")
 
-                              $mdToast.show(toast);
-                        });
-                    })
-                    .error(function(){
-
-                        var toast = $mdToast.simple()
-                              .textContent('Hmm.... Something went wrong')
-                              .position("bottom left")
-
-                        $mdToast.show(toast);
-                    
-                    }) 
-
+                  $mdToast.show(toast);
+            });
+        
         }
 
         self.getTimeTillExpiry = function(fork){
@@ -299,12 +301,10 @@ angular.module('studionet')
 
                   var notif_obj = {};
 
-                  var user_split = notif.split("c"); 
-                  var user = parseInt(user_split[0].substr(1));
-                  notif_obj.user = user;
-
-                  var type_split = user_split[1].split("ty");
-                  notif_obj.type = parseInt(type_split[1]);
+                  notif_obj.user = parseInt(notif.match(/u(\d*)/)[1]);
+                  notif_obj.contribution = parseInt(notif.match(/c(\d*)/)[1]);
+                  notif_obj.time = parseInt(notif.match(/t(\d*)/)[1]);
+                  notif_obj.type = parseInt(notif.match(/ty(\d*)/)[1]);
 
                   switch(notif_obj.type){
                     case 1: 
@@ -317,15 +317,13 @@ angular.module('studionet')
                       notif_obj.message = "replied to "; break;
                     case 5:
                       notif_obj.message = "linked a post to "; break;
+                    case 6:
+                      notif_obj.message = "bookmarked "; break;
+                    case 7:
+                      notif_obj.message = "mentioned you in "; break;
                     default: 
-                      notif_obj.message = "Error fetching action";
+                      notif_obj.message = "Error fetching action: " + notif_obj.type;
                   }
-
-
-                  var time_split = type_split[0].split("t");
-                  notif_obj.time = time_split[1]; 
-
-                  notif_obj.contribution = parseInt(time_split[0]);
 
                   return notif_obj;
 

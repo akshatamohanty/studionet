@@ -399,16 +399,23 @@ angular.module('studionet')
 
 			if(new_contribution.tags.length == 0)
 				new_contribution.tags = [supernode.tag]
-			console.log(new_contribution);
-
 
 			// extract inline images
 			var inlineImages = extractImages(new_contribution); 
 			new_contribution.attachments = new_contribution.attachments.concat(inlineImages);
 
+			// extract users
+			var regexp = /user-tag u(\d*)/g;
+			var match, matches = [];
+			while ((match = regexp.exec(new_contribution.body)) != null) {
+			  matches.push(parseInt(match[1]));
+			}
+			new_contribution.users = matches;
+
 			var formData = new FormData();
 			formData.append('title', new_contribution.title);
 			formData.append('body', new_contribution.body);
+			formData.append('users', new_contribution.users.join(","));
 			formData.append('tags', new_contribution.tags.join(","));
 			formData.append('refType', new_contribution.refType);
 			formData.append('contentType', new_contribution.contentType);
@@ -427,6 +434,8 @@ angular.module('studionet')
 
 		    	// refresh profile
 		    	profile.getUser();
+
+		    	o.getAll();
 
 		    	return res;
 
@@ -453,9 +462,18 @@ angular.module('studionet')
 			var inlineImages = extractImages(update_contribution);
 			update_contribution.attachments = update_contribution.attachments.concat(inlineImages);
 
+			// extract users
+			var regexp = /user-tag u(\d*)/g;
+			var match, matches = [];
+			while ((match = regexp.exec(update_contribution.body)) != null) {
+			  matches.push(parseInt(match[1]));
+			}
+			update_contribution.users = matches;
+
 			var formData = new FormData();
 			formData.append('title', update_contribution.title);
 			formData.append('body', update_contribution.body);
+			formData.append('users', update_contribution.users.join(","));
 			formData.append('tags', update_contribution.tags.join(","));
 			formData.append('contentType', update_contribution.contentType);
 			formData.append('ref', update_contribution.ref);
@@ -476,6 +494,8 @@ angular.module('studionet')
 					// update the user posts
 					profile.getUser();
 
+					o.getAll();
+
 					// send success
 					return res;  
 				})	
@@ -484,9 +504,6 @@ angular.module('studionet')
 		// ---- Deletes a contribution
 		// Confirmation Testing happens here
 		o.deleteContribution = function(contribution_id){
-
-			var r = confirm("Are you sure you want to delete your node? This action cannot be undone.");
-	        if (r == true) {
 
 		        return $http({
 						method  : 'delete',
@@ -498,16 +515,13 @@ angular.module('studionet')
 
 					// refresh profile
 					profile.getUser();
-
 					o.getAll();
 
 			    })
 			    .error(function(error){
 					throw error;
 			    })	
-			}
-			else
-				console.log("Error Deleting");
+			    
 		}
 
 		o.likeContribution = function(id){
@@ -891,10 +905,24 @@ angular.module('studionet')
 						 })
 						.success(function(data) {
 								// also bookmark the contribution
+								// todo: make this internal
 								contributions.bookmarkContribution(contribution_id);
 								return data;
 						});
 
+		}
+
+		o.removeFromFork = function(space_id, contribution_id){
+			return $http({
+						  method  : 'DELETE',
+						  url     : '/api/spaces/' + space_id + '/remove',
+						  data    : { contribution: contribution_id },  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+								profile.getUser();
+								return data;
+						});
 		}
 
 		return o;
@@ -992,61 +1020,6 @@ angular.module('studionet')
 		return o;
 	}])
 
-
-
-
-// -------------- Experimental directive
-// http://embed.plnkr.co/aWBXtk4a5mCNWZFEebiP/ 
-angular.module('studionet').directive('myAwns', ['users', function(users) {
-    var directiveDefinitionObject = {
-      restrict: 'E',
-      templateUrl: "./templates/textAngularWithMentio.html",
-      require: '^ngModel',
-      scope: {
-        ngModel: '=',
-      },
-      controller: function($scope, $q, $http) {
-        $scope.setup = function(element) {
-          element.attr('mentio', 'mentio');
-          element.attr('mentio-typed-term', 'typedTerm');
-          element.attr('mentio-require-leading-space', 'true');
-          element.attr('mentio-id', "'htmlContent'");
-        };
-
-        $scope.searchPeople = function(term) {
-          	var peopleList = [];
-            
-            if(users.users.length == 0)
-            	users.getAll().then(function(){ return populatePeopleList(); });
-            else
-            	return populatePeopleList();
-
-
-            function populatePeopleList(){
-	            angular.forEach(users.users, function(item) {
-	              if (item.name.toUpperCase().indexOf(term.toUpperCase()) >= 0) {
-	                peopleList.push(item);
-	              }
-	            });
-	            $scope.people = peopleList;
-            	return $q.when(peopleList);
-            }
-        
-        };
-
-        $scope.getPeopleText = function(item) {
-          return '@[<strong>' + item.name + '</strong>]';
-        };
-
-        $scope.getPeopleTextRaw = function(item) {
-          return '[@' + item.name + '~' + item.id + ']';
-        };
-      }
-    };
-
-    return directiveDefinitionObject;
-
-  }]);
 
 
 // --- extraction of images 

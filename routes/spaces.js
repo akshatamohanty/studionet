@@ -119,19 +119,26 @@ router.route('/:spaceId/fork')
 
   .delete(auth.ensureAuthenticated, function(req, res){
 
-      console.log("im here");
-      
+      // delete the relationship between user and space
+      // delete redundant bookmarks
+      // delete the space if this was the only user
       var query = [ 
-                    "MATCH (u:user)-[f:FORKED]->(s:space) WHERE ID(u) = {userIdParam} and ID(s) = {spaceIdParam}",
-                    "DELETE f",
+                    "MATCH (u:user)-[frk:FORKED]->(s:space) WHERE ID(u)={userIdParam} and ID(s)={spaceIdParam}",
+                    "DELETE frk",
+                    "WITH u, s",
+                    "OPTIONAL MATCH (s)<-[f:FORKED]-(:user)",
+                    "WITH u, s, count(f) as frk_count",
+                    "WHERE frk_count = 0 DETACH DELETE s",
+                    "WITH u",
+                    "MATCH (u)-[forked:FORKED]->(sp:space)",
+                    "MATCH (u)-[b:BOOKMARKED]->(c:contribution)  WHERE NOT ID(c) in forked.posts",
+                    "DELETE b"
                   ].join(" ");
 
       var params = {
         spaceIdParam : parseInt(req.params.spaceId),
         userIdParam : parseInt(req.user.id),
       };
-
-      console.log(params);
 
       db.query(query, params, function(error, result){
         if (error){
@@ -191,6 +198,43 @@ router.route('/:spaceId/subscribe')
                       '   SET f.posts = coalesce(f.posts,[]) + {contributionIdParam}',
                       ')',
                       "RETURN s" 
+                    ].join(" ");
+
+        var params = {
+          contributionIdParam: parseInt(req.body.contribution),
+          spaceIdParam : parseInt(req.params.spaceId),
+          userIdParam : parseInt(req.user.id),
+        }
+
+        db.query(query, params, function(error, result){
+          if (error){
+            console.log('Error forking the space: ', error);
+          }
+          else{
+            res.send(result);
+          }
+        });
+        
+
+    });
+
+  // route: /api/spaces/:spaceId
+  // remove the id from posts property of space
+  // delete bookmark
+  // note: removal of tags incase of undo is handled in the frontend. however, tags should remain 
+  router.route('/:spaceId/remove')
+
+    // return all spaces
+    .delete(auth.ensureAuthenticated, function(req, res){
+        var query = [ 
+                      "MATCH (u:user)-[f:FORKED]->(s:space) WHERE ID(u)={userIdParam} AND ID(s)={spaceIdParam} AND EXISTS(f.posts)",
+                      "SET f.posts = FILTER(x IN f.posts WHERE x <> {contributionIdParam})",
+                      "WITH s, u, f",
+                      "MATCH (u)-[b:BOOKMARKED]->(c:contribution) WHERE ID(c)={contributionIdParam}",
+                      "OPTIONAL MATCH (u)-[frk:FORKED]->(sp:space) WHERE id(c) in sp.posts",
+                      "WITH s, u, b, f, count(frk) as forks",
+                      "WHERE forks=0 DELETE b",
+                      "RETURN f"
                     ].join(" ");
 
         var params = {

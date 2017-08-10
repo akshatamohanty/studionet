@@ -39,10 +39,11 @@
         </div>
 
 
-        <md-input-container class="md-block" text="Enter your text here" style="border-width:5px;  border-style:grove;">
-          <text-angular ng-model="contributionData.body" class="textAngular"></text-angular>
+        <md-input-container class="md-block" text="Enter your text here" style="border-width:5px;  border-style:grove; max-width: 100%; width: 600px; overflow-x: scroll">
+          <!-- <text-angular ng-model="contributionData.body" class="textAngular"> -->
+          <my-awns ng-model="contributionData.body"></my-awns>
         </md-input-container>
-              
+
 
         <!-- attachments -->
         <section>
@@ -62,27 +63,6 @@
           </div>
         </section>
 
-        <!-- tags -->
-        <!-- <div class='modal-section1S'>
-          <h5> Tags <small>( {{ contributionData._tags.length || 0 }} tag(s) added) </small></h5>
-          <tags-input class='tags-input' class="bootstrap"
-            type='text'
-            ng-model="contributionData._tags"
-            display-property='name'
-            placeholder="Add a tag"
-            replace-spaces-with-dashes="false"
-            template='tag-item-template'>
-          <auto-complete source="loadTags($query)"
-                         min-length="0"
-                         debounce-delay="0"
-                         max-results-to-show="10000"
-                         load-on-down-arrow="true"
-                         load-on-focus="true"
-                         template="tags-template"></auto-complete>
-          </tags-input>
-        </div> -->
-
-        <!-- actions -->
         <section layout="row" layout-sm="column" layout-align="center center" layout-margin>
           <md-button class="md-primary md-raised" ng-if='editMode == false;' ng-click='createContribution()' ng-disabled="!(contributionData.body && contributionData.title)">Save</md-button>
           <md-button class="md-primary md-raised" ng-if='editMode == true;' ng-click='editContribution()' ng-disabled="!(contributionData.body && contributionData.title)">Save</md-button>
@@ -91,5 +71,4 @@
 
 
     </div>
-
 </div>

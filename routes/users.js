@@ -100,7 +100,7 @@ router.route('/')
     });
 
   });
-
+  
 // route: /api/users/:userId
 router.route('/:userId')
 

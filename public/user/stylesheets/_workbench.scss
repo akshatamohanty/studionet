@@ -71,6 +71,12 @@
         .stats{
           font-size: 12px;
           font-family: $header-font !important;
+
+          .selected{
+            svg{
+              fill: #0626EB;
+            }
+          }
         }
       }
 

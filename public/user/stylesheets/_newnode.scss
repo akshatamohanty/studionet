@@ -1,3 +1,38 @@
 .inline-radio{
 	display: inline-block; margin-right: 10px;
 }
+
+.textAngular{
+	background: transparent !important;
+}
+
+.user-tag{
+	font-weight: 600;
+	background-color:  #D2D1D1;
+	padding: 4px;
+	border-radius: 2px;
+}
+
+
+
+mentio-menu{
+	background-color: white;
+	max-height: 300px;
+	overflow: scroll;
+
+	.list-group{
+		list-style: none;
+		padding: 0px;
+		margin: 0px;
+
+		.list-group-item{
+
+			padding : 5px; 
+
+			&.active{
+				background-color: #D2D1D1;
+				border: 1px solid black;
+			}
+		}
+	}
+}

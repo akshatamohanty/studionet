@@ -1,7 +1,10 @@
 angular.module('studionet')
-.controller('NodeController', [ '$scope', 'attachments', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location',
-                                function($scope, attachments, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location){ 
+.controller('NodeController', [ '$scope', 'attachments', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location', 'routerUtils',
+                                function($scope, attachments, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location, routerUtils){ 
 
+        $scope.goToTagSpace = function(tag){
+          routerUtils.goToSpaceWithArgs([tag],[]);
+        } 
 
         // change this to resolve 
         var post = $scope.$resolve.postDetails.data;
@@ -161,7 +164,11 @@ angular.module('studionet')
 
         }
 
-        $scope.comment = function(post_id){
+        $scope.comment = function(post){
+
+            var post_id = post.id;
+            var post_title = post.title;
+
             // Appending dialog to document.body to cover sidenav in docs app
             var confirm = $mdDialog.prompt()
               .title('Chit Chat')
@@ -175,13 +182,14 @@ angular.module('studionet')
             $mdDialog.show(confirm).then(function(result) {
                   
                   var new_comment = { 
+                                  users: [],
                                   attachments: [], 
                                   tags: [],
                                   refType: "COMMENT_FOR", 
                                   ref:  post_id,
                                   contentType: "comment",
                                   body: result,
-                                  title: "Re: " + post_id
+                                  title: "Re: " + post_title
                                 };
 
                   contributions.createContribution( new_comment ).then(function(res){
@@ -245,7 +253,7 @@ angular.module('studionet')
         // ------------------Function: - Delete
         $scope.delete = function(contributionId, comment){
             
-            contributions.deleteContribution(contributionId).success(function(data){
+            contributions.deleteContribution(contributionId).then(function(data){
               var msg = 'Your contribution was deleted';
                   // display success message
                   // navigate after 3 seconds
@@ -261,11 +269,21 @@ angular.module('studionet')
                   );
 
                 if(comment == true){
-                  $state.reload();
+                    // reload view if contribution was comment
+                    $state.reload();
                 }
                 else{
+                    // navigate back to homepage
                     history.back();
                 }
+            }, function(){
+
+                  var toast = $mdToast.simple()
+                          .textContent('Oops.. something went wrong!')
+                          .position("bottom left")
+
+                  $mdToast.show(toast);
+
             });
 
         };

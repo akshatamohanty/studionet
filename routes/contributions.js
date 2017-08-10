@@ -65,7 +65,7 @@ router.route('/')
     var query = [
       'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
       + ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
-      + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
+      + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam}, mentions: {mentionedUsersParam},'
       + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
       'MATCH (u:user) WHERE id(u)={createdByParam}',
       'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c)',
@@ -74,6 +74,9 @@ router.route('/')
       'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
       'WITH c, c1',
       'OPTIONAL MATCH (auth:user)-[:CREATED]->(c1) WHERE NOT ID(auth)={createdByParam} SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
+      'WITH c, c1',
+      'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
+      'SET mentioned.notifications = coalesce(mentioned.notifications,[]) + ({mentionedParam} + id(c))',
       'WITH c',
       'UNWIND {tagsParam} as tagID',
       'OPTIONAL MATCH (t:tag) WHERE ID(t)=tagID',
@@ -87,6 +90,7 @@ router.route('/')
       tagsParam: req.body.tags.split(",").map(function(t){ return parseInt(t)}), //because form data has text string for tags   
       contributionTitleParam: req.body.title,
       contributionBodyParam: req.body.body,
+      mentionedUsersParam: req.body.users.length > 0 ? req.body.users.split(",").map(function(t){ return parseInt(t) }) : [],
       contributionRefParam: parseInt(req.body.ref), 
       lastUpdatedParam: currentDate,
       dateCreatedParam: currentDate,
@@ -97,7 +101,8 @@ router.route('/')
       totalRatingParam: 0,
       rateCountParam: 0,
       viewsParam: 0,
-      notifParam: "u" + req.user.id + "c" + req.body.ref + "t" + Date.now() + "ty" + (req.body.refType == "COMMENT_FOR" ? 3 : 4)
+      notifParam: "u" + req.user.id + "c" + req.body.ref + "t" + Date.now() + "ty" + (req.body.refType == "COMMENT_FOR" ? 3 : 4),
+      mentionedParam: "u" + req.user.id + "t" + Date.now() + "ty7" + "c",
     };
 
     db.query(query, params, function(error, result){
@@ -473,11 +478,15 @@ router.route('/:contributionId')
             'MATCH (c3:contribution) WHERE ID(c3)={contributionIdParam}',
             'SET c3.title = {contributionTitleParam}',
             'SET c3.body = {contributionBodyParam}',
+            'SET c3.mentions = {mentionedUsersParam}',
             'SET c3.tags = {tagsParam}',
             'SET c3.ref = {contributionRefParam}',
             'SET c3.lastUpdated = {lastUpdatedParam}',
             'SET c3.edited = {editedParam}',
             'SET c3.contentType = {contentTypeParam}',
+            'WITH c3',
+            'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
+            'SET mentioned.notifications = coalesce(mentioned.notifications,[]) + {mentionedParam}'
           ];
 
           if (!(oldTags instanceof Array)) {
@@ -533,6 +542,8 @@ router.route('/:contributionId')
             editedParam: true,
             createdByParam: req.user.id,
             contentTypeParam: req.body.contentType,
+            mentionedUsersParam: req.body.users.length > 0 ? req.body.users.split(",").map(function(t){ return parseInt(t) }) : [],
+            mentionedParam: "u" + req.user.id + "t" + Date.now() + "ty7" + "c" + req.params.contributionId,
           };
 
           db.query(query, params, function(error, result){
@@ -639,18 +650,20 @@ router.route('/:contributionId')
     .then(function(result){
       var query = [
         'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+        'OPTIONAL MATCH (:user)-[fork:FORKED]->(:space) WHERE {contributionIdParam} in fork.posts SET fork.posts = FILTER(x IN fork.posts WHERE x <> {contributionIdParam})',
+        'WITH c',
         'OPTIONAL MATCH (c)-[r:TAGGED]->(t:tag)',
         'DETACH DELETE c',
         'WITH t',
-        'OPTIONAL MATCH (t)<-[r1:TAGGED]-()',
+        'OPTIONAL MATCH (t)<-[r1:TAGGED|CONTAINS]-()',
         'WITH t, CASE WHEN count(r1)>0 THEN [] ELSE [1] END as array',
-        'FOREACH (x in array | DETACH DELETE t)'
+        'FOREACH (x in array | DETACH DELETE t)',
       ].join('\n');
 
       db.query(query, params, function(error, result){
         if (error) {
-          console.log('[ERROR] Error deleting leaf with contribution id ' + req.params.contributionId + ' for this user.');
-          res.send('Cannot delete this leaf');
+          console.log('[ERROR] Error deleting leaf with contribution id ' + req.params.contributionId + ' for this user');
+          res.status(400).send('Cannot delete this leaf');
         }
         else {
           req.app.get('socket').emit('node_deleted', req.params.contributionId);
@@ -808,7 +821,7 @@ router.route('/:contributionId/bookmark')
       'ON CREATE SET r.createdOn={createdOnParam}',
       'ON MATCH SET r.updatedOn={createdOnParam}',
       'WITH c',
-      'MATCH (auth:user) WHERE ID(auth)=c.createdBy',
+      'MATCH (auth:user) WHERE ID(auth)=c.createdBy and ID(auth)<>{userIdParam}',
       'SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
       'RETURN c'
     ].join('\n');
@@ -817,7 +830,7 @@ router.route('/:contributionId/bookmark')
       userIdParam: req.user.id,
       contributionIdParam: parseInt(req.params.contributionId),
       createdOnParam: Date.now(),
-      notifParam: "u" + req.user.id + "c" + req.params.contributionId + "t" + Date.now() + "ty" + 3
+      notifParam: "u" + req.user.id + "c" + req.params.contributionId + "t" + Date.now() + "ty" + 6
     };
 
     db.query(query, params, function(error,result){

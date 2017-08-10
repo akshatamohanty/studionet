@@ -42,7 +42,7 @@
 	             	<md-tooltip md-direction="bottom">Reply</md-tooltip>
 				</div>
 
-				<div class='action' ng-click='comment(post_details.id)'>
+				<div class='action' ng-click='comment(post_details)'>
 					<ng-md-icon icon="chat_bubble" size='20' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom">Comment</md-tooltip>
 				</div>
@@ -99,7 +99,11 @@
 			</div>
 			
 			<div class='tags'>
-				<span ng-repeat='tag in post_details.tags' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag)'>#{{getTagName(tag.tag_id)}}</span>
+				<span class='pointer' ng-repeat='tag in post_details.tags | orderBy : "users"' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag.tag_id)'>#{{getTagName(tag.tag_id)}}
+				<md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
+				  	{{ tag.users.length }} user(s) tagged this post as {{getTagName(tag.tag_id)}}
+				</md-tooltip>
+				</span>
 			</div>
 
 			<md-divider></md-divider>
