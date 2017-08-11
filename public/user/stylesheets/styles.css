@@ -651,12 +651,17 @@ mentio-menu {
     			padding: 5px;
     			height: 30px;
     			width: 30px;
-    
+
     		} */
     /* .md-datepicker-input-container{
     	margin-left: 0px;
     	font-size: 10px;
     } */ }
+
+    .md-datepicker-input-mask{
+      overflow:hidden;
+    }
+
     #searchbar .dates .links {
       color: blue;
       font-size: 12px;
@@ -866,7 +871,7 @@ div.ng-tag-cloud span {
   top: -19px;
   left: 19px;
   } */
-/* 
+/*
 .coin.bronze p{  color: rgba(223,182,103,1);}
 .coin.silver p{  color: rgba(160,160,160,1);}
 .coin.gold p{  color: rgba(242,215,50,1);}
