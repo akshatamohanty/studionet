@@ -7,6 +7,15 @@ var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','
 										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree',
 										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists' , 'ngTagCloud']);
 
+/*app.run(function($rootScope, $state, $location){
+	$rootScope.$on("$locationChangeStart", function(event, next, current) { 
+		if(next==current){
+		    event.preventDefault();
+		    $location.path(next)
+		}
+	});
+})
+*/
 // angular routing
 app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', function($stateProvider, $urlRouterProvider, tagsInputConfigProvider){
 
@@ -49,7 +58,6 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 		//	Check if any notifications for the user and navigate to notifications page, if yes
 		//
 		.state('home.homepage', {
-			cache: false,
 			url: 'home',
 			templateUrl: '/user/components/homepage/homepage.html',
 			controller: 'HomepageController'
@@ -128,6 +136,9 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			url: 'node/:address',
 			templateUrl: '/user/components/nodes/view.html',
 			controller: 'NodeController',
+			params:{
+				address: null,
+			},
 			resolve: {
 				postDetails: ['contributions', '$stateParams', function(contributions, $stateParams){
 					return contributions.getContribution($stateParams.address);
@@ -194,6 +205,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 	$urlRouterProvider.otherwise('home');
 
 }]);
+
 
 // Configuration options for Angular Material and Plugins
 app.config(['$mdThemingProvider', function($mdThemingProvider){

@@ -316,10 +316,18 @@ angular.module('studionet')
 			});
 		};
 
+		// if number is undefined return the current recentPosts
+		// if number is given, return current posts + some number
 		o.getRecent = function(number){
 
-			if(number == undefined)
-				number = 10;
+			if(number == undefined){
+				if(o.recentCount > 0){
+					return o.recentPosts;
+				}
+				else{
+					number = 10;
+				}
+			}
 
 			var i=0;
 			while( i < number ){
@@ -356,8 +364,13 @@ angular.module('studionet')
 
 		o.getContribution = function(contribution_id){
 
-			if(contribution_id == null)
+			if(contribution_id == null){
 				console.log("Contribution Id is null");
+			}
+
+			if(typeof(contribution_id)  !== "number"){
+				contribution_id = parseInt(contribution_id);
+			}
 
 			return $http.get('/api/contributions/' + contribution_id).success(function(res){
 

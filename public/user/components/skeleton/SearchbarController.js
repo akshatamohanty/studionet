@@ -15,10 +15,17 @@ angular.module('studionet')
             self.transformChip = transformChip;
             self.runSearch = runSearch;
             self.showAdvanced = showAdvanced;
+            self.enter = enter;
           } 
 
           init();
           tags.registerObserverCallback(function(){ init(); } );
+
+          function enter($event){
+            // on pressing enter, re-run query
+            if($event.keyCode == 13)
+              runSearch();
+          }
 
 
           function showAdvanced (){
@@ -115,13 +122,13 @@ angular.module('studionet')
                                 <md-input-container style="margin: 0 auto; width: 100%;">\
                                   <form name="myForm" ng-submit="createTag(myForm.new_tag.$modelValue)">\
                                     <label>Create a new tag..</label>\
-                                    <input type="text" ng-model="new_tag" name="new_tag" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" required>\
+                                    <input type="text" ng-model="new_tag" name="new_tag" ng-pattern="/^[a-zA-Z0-9_]*$/" ng-trim="false" required>\
                                       <span ng-show="myForm.new_tag.$error.pattern">Spaces and special characters are not allowed in tags</span>\
                                   </form>    \
                                 </md-input-container>' +
                            '  </md-dialog-content>' +
                            '  <md-dialog-actions>' +
-                           '   <md-button type="submit" value="submit" ng-click="createTag(myForm.new_tag.$modelValue)" ng-disabled="newtag.length==0 || myForm.new_tag.$error.pattern" aria-label="description" md-no-ink="true" md-ripple-size="auto">\
+                           '   <md-button type="submit" value="submit" ng-click="createTag(myForm.new_tag.$modelValue)" ng-disabled="newtag.length==0 || myForm.new_tag.$error.pattern || exists(new_tag)" aria-label="description" md-no-ink="true" md-ripple-size="auto">\
                                   Create</md-button>' +
                            '    <md-button ng-click="closeDialog()" class="md-primary">' +
                            '      Cancel' +
@@ -133,6 +140,16 @@ angular.module('studionet')
 
                   function DialogController($scope, $mdDialog, tags) {
                     $scope.new_tag = new_tag.name;
+                    $scope.exists = function(ntag){
+                      for(var i=0; i<tags.tags.length; i++){
+                          if(tags.tags[i].name == ntag){
+                            return true;
+                          }
+                      }
+
+                      return false;
+                    }
+
                     $scope.closeDialog = function(data) {
                         $mdDialog.hide();
                     }

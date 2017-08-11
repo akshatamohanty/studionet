@@ -36,7 +36,7 @@
               <md-tooltip md-delay='150' md-direction="bottom">Likes</md-tooltip>
             </div>
             <div flex ng-click='bench.showNotifications()' ng-class="user.notifications.length > 0 ? 'selected' : 'unselected'">
-              <ng-md-icon icon="notifications" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.notifications.length }}
+              <ng-md-icon icon="notifications" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.notifications.length || 0 }}
               <md-tooltip md-delay='150' md-direction="bottom">Notifications</md-tooltip>
             </div>
         </div> 
@@ -124,12 +124,8 @@
         <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)'
             ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.timed[0]!=undefined'>
           
-            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)' ng-mouseover="hover=true" ng-mouseleave="hover=false">
-                  
-                  <span ng-click='goToSpace(fork.id)'>
-                    {{fork.name}}
-                    <ng-md-icon icon="delete" size='14' style="fill: black" ng-show='hover==true' ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
-                  </span>
+            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)'>
+                  {{fork.name}}
                   <md-tooltip md-delay='150' class="tooltip" md-direction="bottom" style='height: auto'>
                       {{status.msg}}
                   </md-tooltip>
@@ -140,10 +136,17 @@
             </div>
 
             <div class='folder-notes' ng-class='bench.show == fork.id ? "open" : "close" ' 
-                dnd-list dnd-drop='bench.addNodeToFork(item, fork)'>
+                dnd-list dnd-drop='bench.addNodeToFork(item, fork)'  dnd-allowed-types="['post']">
+
+                <div style='display: block; border-bottom: 1px solid #ddd; text-align:right;'>
+                  <ng-md-icon icon="open_in_new" size='14' style="fill: #444"  ng-click='goToSpace(fork.id)'></ng-md-icon>
+                  <ng-md-icon icon="delete" size='14' style="fill: #444" ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
+                </div>
+
                 <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='posts[node_id]' dnd-type="'post'">
                     <div class='title'>{{ posts[node_id].title }}</div>
                 </md-card>
+
             </div>
 
         </div>
@@ -170,10 +173,8 @@
         <div class='folder' 
             ng-repeat='fork in user.forked' ng-if='fork.timed[0]==undefined'>
 
-            <div class='folder-title pointer' ng-click='bench.openFork(fork.id)' ng-mouseover="hover=true" ng-mouseleave="hover=false">
-                    <span ng-click='goToSpace(fork.id)'>{{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}})</i>
-                      <ng-md-icon icon="delete" size='14' style="fill: black"  ng-show='hover==true' ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
-                    </span>
+            <div class='folder-title pointer' ng-click='bench.openFork(fork.id)'>
+                    {{ fork.name }} <i style='font-size: 10px'>({{fork.posts.length || 0}})</i>
                     <a style='float: right'> 
                         <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
                         <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
@@ -182,9 +183,16 @@
 
             <div class='folder-notes' ng-class='bench.show == fork.id ? "open" : "close" '  
                 dnd-list dnd-drop='bench.addNodeToFork(item, fork)' dnd-allowed-types="['post']">
+                
+                <div style='display: block; border-bottom: 1px solid #ddd; text-align:right;'>
+                  <ng-md-icon icon="open_in_new" size='14' style="fill: #444"  ng-click='goToSpace(fork.id)'></ng-md-icon>
+                  <ng-md-icon icon="delete" size='14' style="fill: #444" ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
+                </div>
+
                 <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='posts[node_id]' dnd-type="'post'">
                     <div class='title'>{{ posts[node_id].title }}</div>
                 </md-card>
+                
             </div>
         
         </div>

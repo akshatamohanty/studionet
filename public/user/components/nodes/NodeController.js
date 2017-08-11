@@ -10,20 +10,32 @@ angular.module('studionet')
         var post = $scope.$resolve.postDetails.data;
 
         $scope.node_id = post.id;
-        if($scope.node_id == null)
-          $state.go('home.homepage');
 
         $scope.getUser = users.getUserShort; // gets a short description of the user 
         $scope.getTagName = tags.getTagName;
 
         $scope.getThumb = routerUtils.getThumb;
-        
+
         $scope.backToTop = function(){
               $location.hash('top');
               $anchorScroll();
         }
 
+        var reload = function(){
+          $state.reload();
+          //$state.go($state.current, {}, {reload: true});
+        }
+ 
         $scope.linkNewParent = function(new_parent, post_id){
+
+            if(new_parent.id == post_id){
+              var toast = $mdToast.simple()
+                  .textContent('Oops... you can\'t link the post to itself!')
+                  .position("bottom right")
+
+                $mdToast.show(toast);
+                return;
+            }
 
             // [post]->[parent]
           	var linkData = {
@@ -39,13 +51,22 @@ angular.module('studionet')
 
                 $mdToast.show(toast);
 
-                $state.reload();
+                reload();
 
             });
 
         }
 
         $scope.linkNewChild = function(new_child, post_id){
+            if(new_child.id == post_id){
+              var toast = $mdToast.simple()
+                  .textContent('Oops... you can\'t link the post to itself!')
+                  .position("bottom right")
+
+                $mdToast.show(toast);
+                return;
+            }
+
 
             // [child | source]->[post | target]
             var linkData = {
@@ -61,7 +82,7 @@ angular.module('studionet')
 
                 $mdToast.show(toast);
 
-                $state.reload();
+                reload();
 
             });
 
@@ -80,11 +101,8 @@ angular.module('studionet')
         			var post = response.data;
 
         			var previous_post = $scope.post_details;
-        			console.log($scope.post_details);
 
         			if(direction > 0){
-
-        					console.log(previous_post);
 
         				$scope.ancestors.push($scope.post_details.parents[$scope.parent]);
 
@@ -199,7 +217,7 @@ angular.module('studionet')
 
                         $mdToast.show(toast);
 
-                        //$state.reload();
+                        reload();
 
 
                   }, function(error){
@@ -270,7 +288,7 @@ angular.module('studionet')
 
                 if(comment == true){
                     // reload view if contribution was comment
-                    $state.reload();
+                    reload();
                 }
                 else{
                     // navigate back to homepage

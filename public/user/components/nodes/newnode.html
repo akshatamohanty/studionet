@@ -14,7 +14,7 @@
     <!-- actual form -->
     <div layout='column'>
 
-        <div>
+        <div ng-show='showOpts'>
         
           <!-- <h5 style='display: inline-block;'>New {{ contributionData.contentType }}</h5> -->
 
@@ -28,13 +28,13 @@
 
 
         <!-- Title -->
-        <md-input-container class="md-block">
+        <md-input-container style='margin-top: 24px;'>
           <label class="new-node-title">Enter a title</label>
           <textarea ng-model="contributionData.title"></textarea>
         </md-input-container>
 
 
-        <div class='tags' style='margin-top: 0px'>
+        <div class='tags' style='margin-top: 0px; margin-bottom: 10px;'>
           <span ng-repeat="tag in contributionData.tags">{{getTagName(tag)}}</span>
         </div>
 

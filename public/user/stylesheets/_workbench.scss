@@ -130,20 +130,19 @@
             max-height: 200px;
             overflow: auto;
             width: 100%;
-            border-color: gray;
 
             &.open{
               height:200px;
               transition:height 0.35s ease;
               position:relative;
-              border: 1px solid gray;
+              border: 1px solid #DCD9D9;
             }
 
             &.close{
-             height:0;
-            transition:height 0.35s ease;
-            overflow:hidden;
-            position:relative;
+              height:0;
+              transition:height 0.35s ease;
+              overflow:hidden;
+              position:relative;
             }
 
 

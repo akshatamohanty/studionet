@@ -293,13 +293,12 @@ md-input-container {
           height: auto;
           max-height: 200px;
           overflow: auto;
-          width: 100%;
-          border-color: gray; }
+          width: 100%; }
           #workbench-container #workbench md-content .folder .folder-notes.open {
             height: 200px;
             transition: height 0.35s ease;
             position: relative;
-            border: 1px solid gray; }
+            border: 1px solid #DCD9D9; }
           #workbench-container #workbench md-content .folder .folder-notes.close {
             height: 0;
             transition: height 0.35s ease;
@@ -543,7 +542,8 @@ mentio-menu {
         line-height: 36px; }
       .post-view-section .post-details .post-title.linked {
         margin: 0px 0px 0px 0px !important;
-        font-size: 14px; }
+        font-size: 14px;
+        overflow: auto; }
     .post-view-section .post-details .author-profile-picture {
       margin: 5px;
       display: inline;

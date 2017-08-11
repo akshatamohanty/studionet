@@ -26,7 +26,7 @@ angular.module('studionet')
 
         var self = this;
 
-        self.my_nodes = true;
+        self.my_nodes = false;
         self.show = undefined; // fork that is open
 
         self.toggleMyNodes = function(){
@@ -188,6 +188,17 @@ angular.module('studionet')
         }
 
         self.addNodeToFork = function(item, space){
+
+            if(space.posts.indexOf(item.id) >  -1){
+              var toast = $mdToast.simple()
+                        .textContent('Oops... This post already exists in your folder')
+                        .position("bottom left")
+
+              $mdToast.show(toast);
+
+              return;
+            }
+
 
             var _tags = spaces.getSpaceById(space.id).tags;
 
