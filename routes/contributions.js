@@ -41,70 +41,134 @@ router.route('/')
 	 *           If tags are created, contribution creator will be set to this tags as the creator of these tags.
 	 *
 	 */
-	.post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
 
-		// Creating the contribution node, then link it to the creator (user)
-		var query = [
-			'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
-			+ ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
-			+ ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam},'
-			+ ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
-			'MATCH (u:user) WHERE id(u)={createdByParam}',
-			'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c) WITH c',
-			'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
-			'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1) WITH c',
-			'UNWIND {tagsParam} as tagName '
-						+ 'MERGE (t:tag {name: tagName}) '
-						+ 'ON CREATE SET t.createdBy = {createdByParam}'
-						+ 'CREATE UNIQUE (c)-[r2:TAGGED]->(t) ',
-			'RETURN c'
-		].join('\n');
+  /*
+   * Creates a new contribution linked to the current user.
+   *
+   * req.author : profile.user.id;
+   * req.title : Contribution's Title
+   * req.body : Contribution's Content
+   * req.tags : Array - Contribution's tags
+   * To-do: Once a new tag is specified for the created contribution, this new tag should be sent to DB as well
+   * 
+   * req.ref : the being created contribution's parent (reply to ... )  
+   * 
+   * Links created:
+   * Reference link - Reference to another contribution (may be normal contribution or root node)
+   * Tag link - Links itself to the tags specified in the req body, creating them if necessary. 
+   *           If tags are created, contribution creator will be set to this tags as the creator of these tags.
+   *
+   */
+  .post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
 
-		var currentDate = Date.now();
-		var params = {
-			createdByParam: parseInt(req.user.id),
-			//tagsParam: ( req.body.tags !== "" ?  : [] ), //because form data has text string for tags   
-			contributionTitleParam: req.body.title,
-			contributionBodyParam: req.body.body,
-			contributionRefParam: parseInt(req.body.ref), 
-			lastUpdatedParam: currentDate,
-			dateCreatedParam: currentDate,
-			refTypeParam: req.body.refType || "RELATED_TO", 
-			editedParam: false,
-			contentTypeParam: req.body.contentType,
-			ratingParam: 0,
-			totalRatingParam: 0,
-			rateCountParam: 0,
-			viewsParam: 0
-		};
+    // Creating the contribution node, then link it to the creator (user)
+    var query = [
+      'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
+      + ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
+      + ' dateCreated: {dateCreatedParam}, edited: {editedParam}, contentType: {contentTypeParam}, mentions: {mentionedUsersParam},'
+      + ' rating: {ratingParam}, totalRating: {totalRatingParam}, rateCount: {rateCountParam}, tags: {tagsParam}, views: {viewsParam}}) WITH c',
+      'MATCH (u:user) WHERE id(u)={createdByParam}',
+      'CREATE (u)-[r:CREATED { dateCreated: {dateCreatedParam} }]->(c)',
+      'WITH c',
+      'MATCH (c1:contribution) where id(c1)={contributionRefParam}',
+      'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
+      'WITH c, c1',
+      'OPTIONAL MATCH (auth:user)-[:CREATED]->(c1) WHERE NOT ID(auth)={createdByParam} SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
+      'WITH c, c1',
+      'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
+      'SET mentioned.notifications = coalesce(mentioned.notifications,[]) + ({mentionedParam} + id(c))',
+      'WITH c',
+      'UNWIND {tagsParam} as tagID',
+      'OPTIONAL MATCH (t:tag) WHERE ID(t)=tagID',
+      'CREATE (c)-[r2:TAGGED {by_users: [{createdByParam}]}]->(t) ',
+      'RETURN c'
+    ].join('\n');
 
-    if(req.body.tags == "")
-      params.tagsParam = ""
-    else
-      params.tagsParam = req.body.tags.split(",");
+    var currentDate = Date.now();
+    var params = {
+      createdByParam: parseInt(req.user.id),
+      tagsParam: req.body.tags.split(",").map(function(t){ return parseInt(t)}), //because form data has text string for tags   
+      contributionTitleParam: req.body.title,
+      contributionBodyParam: req.body.body,
+      mentionedUsersParam: req.body.users.length > 0 ? req.body.users.split(",").map(function(t){ return parseInt(t) }) : [],
+      contributionRefParam: parseInt(req.body.ref), 
+      lastUpdatedParam: currentDate,
+      dateCreatedParam: currentDate,
+      refTypeParam: req.body.refType || "RELATED_TO", 
+      editedParam: false,
+      contentTypeParam: req.body.contentType,
+      ratingParam: 0,
+      totalRatingParam: 0,
+      rateCountParam: 0,
+      viewsParam: 0,
+      notifParam: "u" + req.user.id + "c" + req.body.ref + "t" + Date.now() + "ty" + (req.body.refType == "COMMENT_FOR" ? 3 : 4),
+      mentionedParam: "u" + req.user.id + "t" + Date.now() + "ty7" + "c",
+    };
 
-
-		db.query(query, params, function(error, result){
-			if (error){
-				console.log('[ERROR] Error creating new contribution for user : ', error);
-				res.status(500);
-				return res.send(error);
-			}
-			else{
-				console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
-				req.contributionId = result[0].id;
-				res.status(200);
+    db.query(query, params, function(error, result){
+      if (error){
+        console.log('[ERROR] Error creating new contribution for user : ', error);
+        res.status(500);
+        return res.send(error);
+      }
+      else{
+        console.log('[SUCCESS] Success in creating a new contribution for user id: ' + req.user.id);
+        req.contributionId = result[0].id;
+        res.status(200);
 
         // broadcasting message
-        req.app.get('socket').emit('node_created', result[0]);
+        req.app.get('socket').emit('node_created', result );
 
-				res.send( result[0] );
-				
+        res.send( result );
+        
         next();
-			}
-		}); 
+      }
+    }); 
 
-	}, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
+  }, contributionUtil.updateDatabaseWithAttachmentsAndGenerateThumbnails);
+
+// route: /api/contributions/query
+router.route('/query')
+
+  // return all spaces
+  .post(auth.ensureAuthenticated, function(req, res){
+
+    var tags = req.body.tags; 
+    var dates = req.body.dates;
+
+    // todo - fix this; make it full proof
+    if (dates.length == 0){
+      dates[0] = 978278400000; //Mon Jan 01 2001 00:00:00 GMT+0800 (Malay Peninsula Standard Time)
+      dates[1] = 2524579200000;
+    }
+
+    var query =  "WITH {tagsParam} as tags \
+                  MATCH (c:contribution)-[:TAGGED]->(t:tag)\
+                  WHERE ID(t) in tags and c.dateCreated > {startDateParam} and c.dateCreated < {endDateParam}\
+                  WITH c, count(*) as c1, size(tags) as c2\
+                  WHERE c1 = c2 \
+                  MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0 \
+                  WITH c, collect ({ id: ID(t), tagged_by: tg.by_users }) as tags\
+                  OPTIONAL MATCH (c)-[:ATTACHMENT]->(a)\
+                  WITH c, tags, collect({id: id(a), name: a.name, thumb: a.thumb}) as attachments\
+                  RETURN ID(c) as id, c.createdBy as createdBy, c.dateCreated as dateCreated, c.contentType as contentType, c.title as title, c.rating as rating, c.views as views, tags as tags, attachments as attachments"
+
+    var params = {
+      tagsParam : tags,
+      startDateParam : dates[0],
+      endDateParam: dates[1]
+    }
+
+    db.query(query, params, function(error, result){
+      if (error){
+        console.log('Error retrieving all spaces: ', error);
+      }
+      else{
+        res.send(result);
+      }
+    });
+  
+  });
 
 router.route('/questions')
   .get(auth.ensureAuthenticated, function(req, res){
@@ -323,10 +387,16 @@ router.route('/:contributionId')
 
     var query = [
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
-      'OPTIONAL MATCH (t:tag)<-[:TAGGED]-(c)',
-      'WITH c, collect( id(t) ) as tags',
+      'OPTIONAL MATCH (t:tag)<-[td:TAGGED]-(c) WHERE NOT t.name = ""',
+      'WITH c, collect( {tag_id: id(t), users: td.by_users} ) as tags',
       'OPTIONAL MATCH (a:attachment)<-[:ATTACHMENT]-(c)',
       'WITH c, tags, collect( { attachment: a, id: id(a) } ) as attachments',
+      'OPTIONAL MATCH (comment:contribution)-[:COMMENT_FOR]->(c)',
+      'WITH c, tags, attachments, collect( { id: id(comment), createdBy: comment.createdBy, date: comment.dateCreated, body: comment.body } ) as comments',
+      'OPTIONAL MATCH (parent:contribution)<-[:RELATED_TO]-(c) WHERE NOT parent.contentType="comment"',
+      'WITH c, tags, attachments, comments, collect( { id: id(parent), title: parent.title, createdBy: parent.createdBy, date: parent.dateCreated } ) as parents',
+      'OPTIONAL MATCH (child:contribution)-[:RELATED_TO]->(c) WHERE NOT child.contentType="comment"',
+      'WITH c, tags, attachments, comments, parents, collect( { id: id(child), title: child.title, createdBy: child.createdBy, date: child.dateCreated } ) as children',
       'RETURN { \
                 ratingArray: [ SIZE((:user)-[:RATED{rating: 5}]->(c)), SIZE((:user)-[:RATED{rating: 4}]->(c)), \
                   SIZE((:user)-[:RATED{rating: 3}]->(c)), SIZE((:user)-[:RATED{rating: 2}]->(c)), \
@@ -334,13 +404,17 @@ router.route('/:contributionId')
                 id: ID(c),\
                 title: c.title, \
                 edited: c.edited, \
+                type: c.contentType, \
                 body: c.body, \
-                lastUpdated: c.lastUpdated, \
+                date: c.lastUpdated, \
                 ref: c.ref, \
                 createdBy: c.createdBy, \
                 views: c.views, \
                 tags: tags, \
-                attachments: attachments }'
+                attachments: attachments,\
+                comments: comments,\
+                parents: parents, \
+                children: children }'
     ].join('\n');
 
     var params = {
@@ -404,11 +478,15 @@ router.route('/:contributionId')
             'MATCH (c3:contribution) WHERE ID(c3)={contributionIdParam}',
             'SET c3.title = {contributionTitleParam}',
             'SET c3.body = {contributionBodyParam}',
+            'SET c3.mentions = {mentionedUsersParam}',
             'SET c3.tags = {tagsParam}',
             'SET c3.ref = {contributionRefParam}',
             'SET c3.lastUpdated = {lastUpdatedParam}',
             'SET c3.edited = {editedParam}',
             'SET c3.contentType = {contentTypeParam}',
+            'WITH c3',
+            'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
+            'SET mentioned.notifications = coalesce(mentioned.notifications,[]) + {mentionedParam}'
           ];
 
           if (!(oldTags instanceof Array)) {
@@ -419,8 +497,9 @@ router.route('/:contributionId')
             newTags = [newTags];
           }
 
-          var tagsToRemove = _.difference(oldTags, newTags);
-          var tagsToAdd = _.difference(newTags, oldTags);
+          // tags will never be modified
+          var tagsToRemove = [];//_.difference(oldTags, newTags);
+          var tagsToAdd = [];//_.difference(newTags, oldTags);
 
           // remove old tags
           if (tagsToRemove.length > 0) {
@@ -463,6 +542,8 @@ router.route('/:contributionId')
             editedParam: true,
             createdByParam: req.user.id,
             contentTypeParam: req.body.contentType,
+            mentionedUsersParam: req.body.users.length > 0 ? req.body.users.split(",").map(function(t){ return parseInt(t) }) : [],
+            mentionedParam: "u" + req.user.id + "t" + Date.now() + "ty7" + "c" + req.params.contributionId,
           };
 
           db.query(query, params, function(error, result){
@@ -569,18 +650,20 @@ router.route('/:contributionId')
     .then(function(result){
       var query = [
         'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+        'OPTIONAL MATCH (:user)-[fork:FORKED]->(:space) WHERE {contributionIdParam} in fork.posts SET fork.posts = FILTER(x IN fork.posts WHERE x <> {contributionIdParam})',
+        'WITH c',
         'OPTIONAL MATCH (c)-[r:TAGGED]->(t:tag)',
         'DETACH DELETE c',
         'WITH t',
-        'OPTIONAL MATCH (t)<-[r1:TAGGED]-()',
+        'OPTIONAL MATCH (t)<-[r1:TAGGED|CONTAINS]-()',
         'WITH t, CASE WHEN count(r1)>0 THEN [] ELSE [1] END as array',
-        'FOREACH (x in array | DETACH DELETE t)'
+        'FOREACH (x in array | DETACH DELETE t)',
       ].join('\n');
 
       db.query(query, params, function(error, result){
         if (error) {
-          console.log('[ERROR] Error deleting leaf with contribution id ' + req.params.contributionId + ' for this user.');
-          res.send('Cannot delete this leaf');
+          console.log('[ERROR] Error deleting leaf with contribution id ' + req.params.contributionId + ' for this user');
+          res.status(400).send('Cannot delete this leaf');
         }
         else {
           req.app.get('socket').emit('node_deleted', req.params.contributionId);
@@ -663,6 +746,9 @@ router.route('/:contributionId/rate')
       'ON CREATE SET c.rating = (c.totalRating + {ratingParam})/toFloat(c.rateCount+1), c.rateCount = c.rateCount+1, c.totalRating = c.totalRating + {ratingParam}',
       'ON MATCH SET c.rating = (c.totalRating - r.rating + {ratingParam})/toFloat(c.rateCount), c.totalRating = c.totalRating - r.rating + {ratingParam}',
       'SET r.rating={ratingParam}, r.lastRated={lastRatedParam}',
+      'WITH c',
+      'MATCH (auth:user) WHERE ID(auth)=c.createdBy',
+      'SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
       'RETURN c'
     ].join('\n');
 
@@ -670,7 +756,8 @@ router.route('/:contributionId/rate')
       userIdParam: req.user.id,
       contributionIdParam: parseInt(req.params.contributionId),
       ratingParam: givenRating,
-      lastRatedParam: Date.now()
+      lastRatedParam: Date.now(),
+      notifParam: "u" + req.user.id + "c" + req.params.contributionId + "t" + Date.now() + "ty" + 2
     };
 
     db.query(query, params, function(error,result){
@@ -688,6 +775,39 @@ router.route('/:contributionId/rate')
       
       }
     })
+
+  })
+
+  .delete(auth.ensureAuthenticated, function(req, res) {
+
+    var query = [
+      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+      'MATCH (u:user) WHERE ID(u)={userIdParam}',
+      'MATCH (u)-[r:RATED]->(c)',
+      'DELETE r'
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+      contributionIdParam: parseInt(req.params.contributionId)
+    };
+
+    db.query(query, params, function(error,result){
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log('[SUCCESS] Successfully unliked contribution id ' + req.params.contributionId);
+        
+        // broadcasting message
+        req.app.get('socket').emit('node_unliked', result[0]);       
+        
+        // sending the contribution data
+        res.send(result[0]);
+      
+      }
+    })
+
   });
 
 // route: /api/contributions/:contributionId/bookmark
@@ -697,15 +817,20 @@ router.route('/:contributionId/bookmark')
     var query = [
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
       'MATCH (u:user) WHERE ID(u)={userIdParam}',
-      'CREATE p=(u)-[r:BOOKMARKED]->(c)',
-      'SET r.createdOn={createdOnParam}',
+      'MERGE p=(u)-[r:BOOKMARKED]->(c)',
+      'ON CREATE SET r.createdOn={createdOnParam}',
+      'ON MATCH SET r.updatedOn={createdOnParam}',
+      'WITH c',
+      'MATCH (auth:user) WHERE ID(auth)=c.createdBy and ID(auth)<>{userIdParam}',
+      'SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
       'RETURN c'
     ].join('\n');
 
     var params = {
       userIdParam: req.user.id,
       contributionIdParam: parseInt(req.params.contributionId),
-      createdOnParam: Date.now()
+      createdOnParam: Date.now(),
+      notifParam: "u" + req.user.id + "c" + req.params.contributionId + "t" + Date.now() + "ty" + 6
     };
 
     db.query(query, params, function(error,result){
@@ -720,6 +845,87 @@ router.route('/:contributionId/bookmark')
         
         // sending the contribution data
         res.send(result[0]);
+      
+      }
+    })
+  })
+  
+  .delete(auth.ensureAuthenticated, function(req, res) {
+
+    var query = [
+      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+      'MATCH (u:user) WHERE ID(u)={userIdParam}',
+      'MATCH p=(u)-[r:BOOKMARKED]->(c)',
+      'DELETE r',
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+      contributionIdParam: parseInt(req.params.contributionId),
+    };
+
+    db.query(query, params, function(error,result){
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log('[SUCCESS] Successfully deleted bookmark for contribution id ' + req.params.contributionId);
+        
+        // broadcasting message
+        
+        // sending the contribution data
+        res.send(result[0]);
+      
+      }
+    })
+
+  });
+
+
+// route: /api/contributions/:contributionId/tag
+router.route('/:contributionId/tag')
+  .post(auth.ensureAuthenticated, function(req, res) {
+
+    //  for each tag in the array
+    //  if contribution tag relationship exists, 
+    //      add user_id to user_array if user doesn't already exist
+    //  else
+    //      create relationship 
+    //      add user_id to user_array
+    //         
+
+    var query = [
+      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
+      'MATCH (t:tag) WHERE ID(t) in {tagsParam}',
+      'MERGE (c)-[td:TAGGED]->(t)',
+      'FOREACH(x in CASE WHEN {userIdParam} in td.by_users THEN [] ELSE [1] END | ',
+      '   SET td.by_users = coalesce(td.by_users,[]) + {userIdParam}',
+      ')',
+      //'ON MATCH',
+      //'SET td.by_users = td.by_users + {userIdParam}',
+      //'ON CREATE',
+      //'SET td.by_users=[{userIdParam}]',
+      'WITH c',
+      'MATCH (c)-[tg:TAGGED]->(t:tag) WHERE NOT length(t.name)=0',
+      'WITH c, COLLECT(distinct { id: ID(t), tagged_by: tg.by_users }) as tags',
+      'RETURN c as contribution, tags as tags'
+    ].join('\n');
+
+    var params = {
+      userIdParam: req.user.id,
+      contributionIdParam: parseInt(req.params.contributionId),
+      tagsParam: req.body.tags
+    };
+
+    db.query(query, params, function(error,result){
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log('[SUCCESS] Successfully tagged contribution id ' + req.params.contributionId);
+        
+        // sending the contribution data
+        res.send(result);
       
       }
     })

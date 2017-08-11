@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Raleway');
+
+$header-font: 'Raleway', sans-serif;
+$text-font: 'Open Sans', sans-serif;
+
+// dimensions
+$scroll-thk: 5px;	// thickness of the scroll bar
+$max-width: 950px;	// maximum width of the container view
+$toolbar-height: 60px;	// height of the main toolbar
+
+$bench-width: 250px; 	// width of the slidein-slideout bench
+$folder-height: 24px;	// height of the heading for the folders
+$post-size: 50px;		// height and width for the thumbnail posts
+
+$profile-height-sm: 30px;	// height & width of profile picture in small form
+$profile-width-sm: 30px;
+$profile-bar-height: 200px; 
+
+// background colors
+$bg-color: #E8E8E8; // background color of the main body
+
+// padding and margins
+$max-padding: 30px;
+$min-padding: 2px;
+$max-margin: 30px;
+$min-margin: 2px;
+$md-padding: 10px;
+
+
+$black: #222; 
+$white: #fff;
+
+$note-background: url('http://placehold.it/150x150');//url('/user/img/note-bg.jpg');
+$assignment-background: url('http://placehold.it/150x150');//url('/user/img/assignment-bg.jpg');
+$question-background: url('http://placehold.it/150x150');//url('/user/img/question-bg.png');
+

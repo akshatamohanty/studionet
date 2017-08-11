@@ -1,0 +1,168 @@
+.post-view-section{
+	max-width: 950px;
+	margin: 0 auto;
+
+	.linked-post-container{
+		height: 80px;
+
+		margin: 30px 0px;
+
+		.dndPlaceholder{
+			border: 1px dashed gray;
+		}
+
+		&.ancestor{
+			height: 40px;
+			margin: 10px !important;
+			display: inline-block;
+			width: 200px;
+		}
+
+	}
+
+	.post-details{
+
+		position: relative;
+
+		margin: 0px;
+		padding: 15px 20px;
+
+		.post-title{
+			@extend .header;
+
+			margin-bottom: 10px;
+			padding: 0px !important;
+
+			&.main{
+				margin: 0px 0px 10px 0px !important;
+				font-size: 24px;
+				line-height: 36px;
+			}
+
+			&.linked{
+				margin: 0px 0px 0px 0px !important;
+				font-size: 14px;
+			}
+		}
+
+		.author-profile-picture{
+			margin: 5px;
+			display: inline;
+			border-radius: 50%;
+
+			&.main{
+				width: 30px;
+				height: 30px;
+			}
+
+			&.linked{
+				width: 15px;
+				height: 15px;
+			}
+		}
+
+		.author-name{
+			margin: 5px;
+			display: inline;
+			height: 30px;
+
+
+			&.main{
+				line-height: 30px;
+				font-size: 16px;
+			}
+
+			&.linked{
+				line-height: 15px;
+				font-size: 12px;
+			}
+			
+		}
+
+		.post-body{
+
+			margin: 10px 0px 30px 0px;
+			
+			p{
+				font-size: 14px;
+				line-height: 24px;
+				text-align: justify;
+				font-family: $text-font;
+			}
+
+			img{
+				width: auto;
+				max-width: 100%;
+				max-height: 450px;
+				display: block;
+				margin: 10px auto;
+				border: 1px solid gray;
+			}
+		}
+	}
+
+
+	.post-container{
+		
+		position: relative;
+
+		.post-actions{
+
+			position: fixed;
+			right: 2%;
+			bottom: 2%;
+			background: rgba(184, 181, 181, 0.6);
+			z-index: 1;
+
+			.action{
+				display: inline-block;
+				float: right;
+				margin: 20px;
+				cursor: pointer;
+				svg{
+					fill: rgba(29, 31, 41, 0.5);
+				}
+
+				&.selected {
+					svg{
+						fill: blue !important;
+					}
+				}
+			}
+
+			.action:hover{
+				svg{
+					fill: #6E6EE6 !important;
+				}
+			}
+
+		}
+
+		.post-actions:hover{
+			background: rgba(184, 181, 181, 0.7);
+			z-index: 2;
+
+			.action{
+				svg{
+					fill: rgba(29, 31, 41, 1);
+				}
+			}
+
+		}
+
+		.tags{
+			margin-bottom: 10px;
+		}
+		
+	}
+
+	.comment{
+		margin-bottom: 10px;
+		margin-top: 10px;
+
+		font-size: 14px;
+		color: #5D5D5D;
+
+	}
+}
+

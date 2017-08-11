@@ -1,9 +1,9 @@
-<div layout="column" class="relative" layout-fill role="main" ng-cloak>
+<div layout='column' style='height: 100%; ' layout-fill>
   
   <!-- toolbar -->
-  <md-toolbar class="scroll-shrink" id="toolbar">
+  <md-toolbar class="scroll-shrink md-accent" id="toolbar">
     
-    <div class="md-toolbar-tools" layout-margin layout-padding layout-fill layout-align='top center'>
+    <div class="md-toolbar-tools" layout-align='top center'>
       
       <!-- Show / Hide Workbench control -->
       <div flex="5">
@@ -11,139 +11,37 @@
       </div>
 
       <!-- Branding -->
-      <div hide show-gt-xs flex-gt-sm="10" layout-align='top left'>
-        <span md-truncat>Studionet</span>
+      <div hide show-gt-xs flex-gt-sm="15" layout-align='top left'>
+        <a ui-sref='home.homepage'><span md-truncat>Studionet</span></a>
       </div>
 
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="70">
-        <md-chips ng-model="search.query"  ng-show='searchActive'  readonly="false" md-removable="true" md-enable-chip-edit="true"></md-chips>
+      <div show-gt-sm flex="80">
+        <ng-include src="'./components/skeleton/searchbar.html'" ng-controller="searchbarCtrl as ctrl"></ng-include>
       </div>
 
-
-      <!-- buttons -->
-      <div flex="10">
-
-        <md-button class="md-icon-button" aria-label="Search" ng-disabled="false" ng-hide='searchActive'>
-          <a ui-sref='home.search'><ng-md-icon icon="search" style="fill: white" size="25"></ng-md-icon></a>
-          <md-tooltip
-            md-direction="bottom">
-            Search
-          </md-tooltip>
-        </md-button>
-
-        <md-button class="md-icon-button" aria-label="Home" ng-disabled="false" ng-click='showProfile()'>
-          <a ui-sref='home.homepage'><ng-md-icon icon="home" style="fill: white" size="25"></ng-md-icon></a>
-          <md-tooltip
-            md-direction="bottom">
-            Home
-          </md-tooltip>
-        </md-button>
-        
-      </div>
 
     </div>
+
   </md-toolbar>
 
-  <div id='app-body' layout="row" layout-fill>
+
+  <!-- main body container -->
+  <md-content id='app-body' layout="row" flex layout='start start'>
 
       <!-- workbench -->
-      <div id='workbench-container' ng-class='showBench?"expand":"compress"'>
-          <div id='workbench' ng-controller="FabCtrl as demo" layout='column' layout-fill>
-
-              <!-- New Node Creation -->
-              <md-toolbar layout="column" style='padding-top: 20px; '>
-                
-                <!-- Profile Short Details -->
-                <div layout='column' layout-align='top center'>
-                  <a ui-sref='home.profile' style='margin: 0 auto; display: block;'>
-                    <!-- <user-avatar></user-avatar> -->
-                    <img src={{user.avatar}} style='width: 100px; height: 100px;'>
-                    <h3 class='md-body-2' style='margin: 0px;'>{{user.name}}</h3>
-                    <h4 class='md-caption' style='margin: 0px;'>Level: {{user.level}}</h4>
-                    <h4 class='md-caption' style='margin: 0px; margin-bottom: 15px;'>@{{user.name | lowercase | removeSpaces}}</h4>
-                  </a>
-                </div>
-
-                <md-divider></md-divider>
-
-                <md-fab-speed-dial ng-hide="demo.hidden" md-direction="right" md-open="demo.isOpen"
-                                   class="md-scale" ng-class="{ 'md-hover-full': demo.hover }"
-                                   ng-mouseenter="demo.isOpen=true" ng-mouseleave="demo.isOpen=false">
-                  <md-fab-trigger>
-                    <md-button aria-label="menu" class="md-fab md-warn">
-                      <md-tooltip md-direction="top" md-visible="tooltipVisible">New Node</md-tooltip>
-                      <i class="material-icons" style='line-height: 56px;'>create</i>
-                    </md-button>
-                  </md-fab-trigger>
-
-                  <md-fab-actions>
-                    <div ng-repeat="item in demo.items">
-                      <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ui-sref='home.node({type:item.name})'>
-                        <md-tooltip md-direction="{{item.direction}}" md-visible="tooltipVisible"
-                                    md-autohide="false">
-                          {{item.name}}
-                        </md-tooltip>
-
-                        <i class="material-icons" style='line-height: 36px; color: gray;'>{{item.icon}}</i>
-                      </md-button>
-                    </div>
-                  </md-fab-actions>
-                </md-fab-speed-dial>
-
-              </md-toolbar>
-
-              <md-content>
-
-                <md-divider></md-divider>
-
-                <div>Your Nodes</div>
-
-                <!-- Shortcuts to user own notes -->
-                <div class='folder'>
-                  <div class='folder-title pointer' ng-click='goTo("@" + (user.name | lowercase | removeSpaces))'>
-                          @{{user.name | lowercase | removeSpaces}}
-
-                          <a style='float: right' ng-click='ex1=!ex1'>...</a>
-                  </div>
-                  <div class='folder-notes open'>
-                      <div class='post-box' ng-repeat='node in user.posts' ng-click='goToNode(node)'>{{node.title}}</div>
-                  </div>
-                </div>
-
-                <md-divider></md-divider>
-
-                <div> Your Collections </div>
-
-                <!-- Shortcuts to user-saved notes -->
-                <div class='folder' ng-repeat="subs in user.forked" dnd-list='spaces[subs].posts' ng-click='spaces[subs].open=!spaces[subs].open;'>
-                  <div class='folder-title pointer'>
-                          {{spaces[subs].name}}  ({{ spaces[subs].posts.length }})
-                          <a style='float: right'>...</a>
-                  </div>
-                  <div ng-class='spaces[subs].open ? "folder-notes open" : "folder-notes close"'>
-                      <div class='post-box' ng-repeat='node in spaces[subs].posts track by $index' ng-click='goToNode(node)'>
-                          <div class='title'>{{ posts[node].title | shorten }}</div>
-                      </div>
-                  </div>
-                </div>
-
-              </md-content>
-
-
-          </div>
+      <!-- this slides in and out depending on the showBench value -->
+      <div id='workbench-container' ng-class='showBench ? "expand": "compress" ' layout='column'>
+        <ng-include id='workbench' ng-controller="WorkbenchCtrl as bench" src="'./components/skeleton/workbench.html'"></ng-include>
       </div>
       
       <!-- states -->
-      <div flex>
-        <div layout='column' layout-align='top left' layout-fill layout-padding>
-          <!-- view-container: centers the content -->
-          <ui-view class='view-container'></ui-view>
-        </div>
+      <div layout='column' layout-align='start stretch' flex>
+        <!-- view-container: centers the content -->
+        <ui-view class='view-container main' ></ui-view>
       </div>
-  
-  </div>
+
+  </md-content>
 
 </div>
-
 

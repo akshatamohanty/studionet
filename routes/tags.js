@@ -7,6 +7,7 @@ var db = require('seraph')({
 	pass: process.env.DB_PASS
 });
 
+
 // route: /api/tags/
 router.route('/')
 
@@ -18,9 +19,10 @@ router.route('/')
 		// return only name and id associated with each tag
 		var query = [
 			'MATCH (t:tag) WITH t',
-			'OPTIONAL MATCH (c:contribution)-[r:TAGGED]->(t)',
-			'OPTIONAL MATCH (g:group)-[:TAGGED]->(t)',
-			'RETURN {name: t.name, createdBy: t.createdBy, contributionCount: count(r), id: id(t), group:ID(g), restricted: g.restricted }'
+			'RETURN {name: t.name, id: id(t)}'
+			//'OPTIONAL MATCH (c:contribution)-[r:TAGGED]->(t)',
+			//'OPTIONAL MATCH (g:group)-[:TAGGED]->(t)',
+			//'RETURN {name: t.name, createdBy: t.createdBy, contributionCount: count(r), id: id(t)}'
 		].join('\n');
 
 		db.query(query, function(error, result){
@@ -31,6 +33,38 @@ router.route('/')
 		});
 
 	})
+
+	// 
+	// create a new tag
+	// 
+	.post(auth.ensureAuthenticated, function(req, res){
+
+		// return only name and id associated with each tag
+		var query = [
+			'MATCH (u:user) WHERE ID(u)={userIdParam}',
+			'WITH u',
+			'MERGE (t:tag {name: {tagnameParam} })',
+			'ON CREATE SET t.name={tagnameParam}, t.createdAt={dateCreatedParam}, t.createdBy = {userIdParam}',
+			'MERGE (t)<-[td:CREATED]-(u)',
+			'ON CREATE SET td.createdAt = {dateCreatedParam}',
+			'RETURN t'
+		].join('\n');
+
+		var params = {
+			tagnameParam : req.body.tags,
+			userIdParam: parseInt(req.user.id),
+			dateCreatedParam: Date.now()
+		}
+
+		db.query(query, params, function(error, result){
+			if (error)
+				console.log('Error creating tag: ', error);
+			else
+				res.send(result);
+		});
+
+	});
+
 
 
 module.exports = router;

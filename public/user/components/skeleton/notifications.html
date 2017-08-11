@@ -1,0 +1,27 @@
+<md-toolbar layout="row" class="md-hue-3">
+  <div class="md-toolbar-tools">
+    <span flex='90'>Your Notifications</span>
+    <md-button flex='10' ng-click='clear()' ng-if='notifications.length > 0'>Clear All</md-button>
+  </div>
+</md-toolbar>
+
+<md-content >
+  <md-list flex ng-if='notifications.length > 0' md-padding md-margin style='max-height: 400px; text-align: justify; padding: 10px 20px;'>
+
+    <md-subheader class="md-no-sticky">{{notifications.length}} notifications</md-subheader>
+
+    <md-divider></md-divider>
+
+    <md-list-item class="md-2-line" ng-repeat='note in notifications' ng-init='note = getNotification(note); user = getUser(note.user);'  style='min-height: 10px;'>
+      <div class="md-list-item-text" style='font-size: 12px; margin: 0px; padding: 10px 0px 10px 0px; '>
+        <img ng-src={{user.avatar}} style='width: 30px; height: 30px; border-radius: 50%; display: inline-block;'/>
+        {{user.nickname ? user.nickname : user.name}} {{ note.message }} the post titled <span class='pointer' ng-click='goToNode(note.contribution);close();'><a><i><u>{{ getContribution(note.contribution).title }}</u></i></a></span> on {{note.time | date: 'mediumDate'}}
+      </div> 
+
+    </md-list-item>
+
+  </md-list>
+
+  <p style='text-align: center' ng-if='notifications.length == 0'> You are all caught up! </p>
+
+</md-content>

@@ -100,7 +100,7 @@ router.route('/')
     });
 
   });
-
+  
 // route: /api/users/:userId
 router.route('/:userId')
 
@@ -109,22 +109,36 @@ router.route('/:userId')
         var query = [
           'MATCH (u:user) WHERE ID(u)={userIdParam}',
           'WITH u',
-          'OPTIONAL MATCH p1=(g:group)-[r:MEMBER]->(u)',
-          'WITH collect({id: id(g), name: g.name, role: r.role}) as groups, u',
-          'OPTIONAL MATCH p2=(c:contribution {contentType: "text"})<-[r1:CREATED]-(u)',
-          'WITH groups, collect({id: id(c), title: c.title, rating: c.rating, views: c.views, rateCount: c.rateCount }) as contributions, u',
-          'OPTIONAL MATCH p3=(t:tag)<-[r1:CREATED]-(u)',
-          'WITH groups, collect({id: id(t), name: t.name}) as tags, contributions, u',
-          'OPTIONAL MATCH p4=(c1:contribution)<-[b:BOOKMARKED]-(u)',
-          'WITH groups, collect({id: id(c1), title: c1.title, createdOn: c1.createdOn}) as bookmarks, tags, contributions, u',
+          'OPTIONAL MATCH (u)-[f:FOLLOWS]->(s:space)',
+          'WITH collect({id: id(s), name: f.name}) as follows, u',
+          'OPTIONAL MATCH (u)-[c:FORKED]->(s:space)',
+          'WITH follows, collect({id: id(s), name: c.name, posts: c.posts, timed: s.timed}) as forks, u',
+          'OPTIONAL MATCH p2=(u)-[r1:CREATED]->(c:contribution)',
+          'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = "" ',
+          'WITH u, forks, follows, c, r1, collect (id(t)) as tags',
+          'OPTIONAL MATCH (c)<-[v:VIEWED]-(u1:user) WHERE NOT id(u1)={userIdParam} ',
+          'WITH u, forks, follows, c, r1, tags, count(v) as vc',
+          'OPTIONAL MATCH (c)<-[lk:RATED]-(u2:user) WHERE NOT id(u2)={userIdParam} ',
+          'WITH u, forks, follows, c, r1, tags, vc, count(lk) as lk',
+          'OPTIONAL MATCH (c)<-[bk:BOOKMARKED]-(u3:user) WHERE NOT id(u3)={userIdParam} ',
+          'WITH u, forks, follows, c, r1, tags, vc, lk, count(bk) as bk',
+          'WITH forks, follows, u, collect({id: id(c), title: c.title, type: c.contentType, tags: tags, bookmarks: bk, views: vc, likes: lk }) as contributions',
+          'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[v:VIEWED]-(u1:user) WHERE NOT ID(u)=ID(u1)',
+          'WITH forks, follows, u, contributions, count(v) as views',
+          'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[r:RATED]-(u3:user) WHERE NOT ID(u)=ID(u3)',
+          'WITH forks, follows, u, contributions, views, count(r) as thumbs',
           'RETURN {\
-                    joinedOn: u.joinedOn,\
+                    nusOpenId: u.nusOpenId,\
+                    isAdmin: u.isAdmin, \
+                    name: u.name,\
+                    nickname: u.nickname,\
+                    avatar: u.avatar,\
                     lastLoggedIn: u.lastLoggedIn,\
                     id: id(u),\
-                    groups: groups,\
+                    views: views,\
+                    thumbs: thumbs,\
                     contributions: contributions,\
-                    tags: tags,\
-                    bookmarks: bookmarks\
+                    forked: forks \
           }'
         ].join('\n');
 

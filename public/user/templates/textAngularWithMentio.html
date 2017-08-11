@@ -1,23 +1,26 @@
 <div>
-    <div class="textAngular" text-angular ng-model='ngModel' ta-text-editor-setup='setup' style='background: white;'></div>
+    <div text-angular
+         ta-toolbar="[['h1','h2','h3','p','pre','quote'], ['bold', 'italics','underline', 'ul', 'ol','justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent','html','insertImage', 'insertLink', 'insertVideo']]"
+         ng-model='ngModel' ta-text-editor-setup='setup'></div>
 </div>
 
 
 <mentio-menu mentio-for="'htmlContent'"
              mentio-trigger-char="'@'"
-             mentio-items="people"
+             mentio-items="people | filter:label:typedTerm"
              mentio-template-url="/people-mentions.tpl"
-             mentio-search="searchPeople(item)"
+             mentio-search="searchPeople(term)"
              mentio-select="getPeopleText(item)">
 </mentio-menu>
 
 
 
 <script type="text/ng-template" id="/people-mentions.tpl">
-    <div style='max-height: 200px; overflow-y: scroll; margin: 25px;'>
-        <div mentio-menu-item="person" ng-repeat="person in items">
-            <img ng-src="{{person.avatar}}" class="user-photo" style='width: 30px; height: 30px; border-radius: 50%;'>
+    <ul class="list-group user-search">
+        <li mentio-menu-item="person" ng-repeat="person in items" class="list-group-item">
+            <img ng-src="{{person.imageUrl}}" class="user-photo" style='width: 30px; height: 30px; border-radius: 50%;'>
             <span class="text-primary" ng-bind-html="person.name | mentioHighlight:typedTerm:'menu-highlighted' | unsafe"></span>
-        </div>
-    </div>
+            
+        </li>
+    </ul>
 </script>

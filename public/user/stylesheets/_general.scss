@@ -1,0 +1,140 @@
+html, body{
+  background-color: $bg-color;
+  height: 100%;
+  width: 100%;
+
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  font-family: $text-font;
+
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar
+{
+  width: $scroll-thk;
+} 
+
+:focus{
+  outline: none;
+}
+
+.pointer:hover{
+  cursor: pointer;
+}
+
+a{
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover{
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6{
+  padding: $min-margin; 
+  margin: $min-padding;
+  font-family: $header-font;
+}
+
+.header{
+  font-size: 16px;
+  font-weight: 600;
+  font-family: $header-font;
+  line-height: 18px;
+  padding: $min-padding;
+  margin-top: 10px;
+}
+
+.subheader{
+  font-size: 12px;
+  font-weight: 300;
+  font-family: $text-font;
+  line-height: 14px;
+  padding: $min-padding;
+}
+
+.scroll{
+  height: 100%;
+  overflow: auto;
+}
+
+.italics{
+  font-style: italic;
+}
+
+.move{
+  cursor: move;
+}
+
+.background{
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.45), 
+      rgba(0, 0, 0, 0.45)
+    )
+}
+
+.tags{
+  
+  margin-top: 10px;
+
+  span{
+    margin: 2px; 
+    padding: 2px;
+    background: #C1BEBE;
+    border-radius: 4px;
+    display: inline-block;
+  }
+}
+
+#app-body{
+
+  overflow: hidden;
+
+  .view-container{
+    //max-width: $max-width;
+    padding: $max-padding/2 5% ;
+    overflow: hidden;
+    height: 100%;
+    min-width: 350px;
+
+  }
+
+  .dndPlaceholder{
+      list-style-type: none;
+  }
+
+  .dndDragover{
+      background-color: #D4D4D4;
+      border: 1px dashed #605E5E;
+  }
+
+  .dndDragging{
+    
+    border: 1px solid gray;
+
+  }
+
+  .dragBar{
+    width: 30px;
+    height: 30px;
+    cursor: move;
+    
+    position: absolute;
+    top: 0;
+    z-index: 2;
+  }
+
+  .dragBar:hover{
+    border: 1px dashed gray;
+  }
+
+}
+

@@ -48,6 +48,10 @@ router.route('/')
 			'WITH l, c, c1',
 			'MERGE (c)-[r:RELATED_TO]->(c1)',
 			'SET l.ref=ID(r), l.createdBy={userIdParam}, l.createdAt={dateParam}, l.likes = 0, l.note={noteParam}',
+      		'WITH c, c1, r',
+      		'OPTIONAL MATCH (uc:user)-[:CREATED]->(c) WHERE ID(uc)<>{userIdParam} SET uc.notifications = coalesce(uc.notifications,[]) + {notifParamSource}',
+			'WITH c, c1, r',
+      		'OPTIONAL MATCH (uc1:user)-[:CREATED]->(c1) WHERE ID(uc1)<>{userIdParam} SET uc1.notifications = coalesce(uc1.notifications,[]) + {notifParamTarget}',
 			'RETURN ID(r) as id'
 		].join('\n');
 
@@ -56,7 +60,9 @@ router.route('/')
 			sourceIdParam : parseInt(req.body.source), 
 			targetIdParam : parseInt(req.body.target),
 			noteParam : req.body.note,
-			dateParam : Date.now()
+			dateParam : Date.now(),
+			notifParamSource: "u" + req.user.id + "c" + req.body.source + "t" + Date.now() + "ty" + 5,
+			notifParamTarget: "u" + req.user.id + "c" + req.body.target + "t" + Date.now() + "ty" + 5
 		};
 
 		db.query(query, params, function(error, result){

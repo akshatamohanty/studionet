@@ -1,45 +1,159 @@
-<!-- back button -->
-<a onclick='history.back()' style='display: block;'><u>Back</u></a>
+<div class='scroll'>
 
-<!-- profile -->
-<h3 class='md-display'>{{profile}}</h3>
-    <br>
-      <hr class="style1">
-    <br>
-<div layout="row" layout-sm="column">
+    <!-- back button -->
+    <!-- <a onclick='history.back()' style='display: block;'><u>Back</u></a> -->
 
-    <!-- Top Post Window  -->
-    <div flex>
-        <div class="container">
-            <div layout="row" style="height:100%;">
-                <div layout="column">
-                    <div layout="row" layout-wrap>
-                          <div flex="30">
+    <div class='profile-container' layout="row" layout-sm="column">
 
-                          </div>
-                          <div flex="45">
-                            [flex="45"]
-                          </div>
-                          <div flex="25">
-                            [flex="25"]
-                          </div>
-                    </div>
+        <md-card flex-gt-sm='45' flex md-padding class='profile-card' layout="column">
 
-                    <hr width="100%">
+            <div class='headline'>
+                <h1>{{ user.points | level }}<span>{{ user.name }}</span></h1>
+            </div>
 
-                    <!-- Saved Tag -->
-                    <p>TAGSPACE 1</p>
-                    <div class="rcornerTopPost">
+            <md-divider md-inset></md-divider>
 
+            <!-- Last Seen section -->
+            <div style='text-align: '>
+                Last Seen : {{user.lastLoggedIn | date: 'medium'}}
+            </div>
+
+            <!-- Statistics -->
+            <div class="section" layout="row" style='position: relative;'>
+
+                <div flex='70'>
+                    <div style='margin: 0 auto; line-height: 24px;'>
+                        Posts: {{user.contributions.length}}<br>
+                        Comments: {{ (user.contributions | filter: {type: "comment"}).length  }}<br>
+                        Upvotes: {{user.thumbs}}<br>
+                        Views: {{user.views}}<br>
                     </div>
                 </div>
+
+                <div flex='30'>
+                    <img style='max-height: 100px; width: auto;' src='{{user.avatar}}'>
+                </div>
+
             </div>
-        </div>
+
+
+            <!-- Progress Bar -->
+            <div class='section'>
+                <h2>Progress</h2>
+                <md-divider md-inset></md-divider>
+                <br>
+                <div>
+                    <md-progress-linear md-mode="determinate" value="{{getLevelPercent()}}"></md-progress-linear>
+                    <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
+                          {{ (user.nickname ? user.nickname : user.name) | titlecase }} has {{user.points}} points
+                    </md-tooltip>
+                </div>
+                
+                <br>
+                <div layout="row">
+                    <span class='level pointer' ng-class={{getLevelStatus($index)}} ng-repeat='level in levels' flex>{{level.name}}
+                    <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true" ng-if='user.points >= level.points'>
+                      Reached this level at {{level.points}} points! 
+                    </md-tooltip>
+                    <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true" ng-if='user.points < level.points'>
+                      Needs {{ level.points - user.points }} more points to clear this level! 
+                    </md-tooltip>
+                    </span>
+                </div>
+            </div>
+
+
+            <!--Badge Layer -->
+            <!-- <h3>Badges Earned</h3>
+            <div layout="row" class="rcornermiddle">
+                <div ng-repeat='Badge in Badge'>
+                     <div flex class="badge">
+                     </div>
+                </div>
+            </div> -->
+
+
+            <!-- Tags Section -->
+            <div class="section" layout-align='center' layout='column'>
+                <h2>{{ (user.nickname ? user.nickname : user.name) | titlecase }}'s Cloud</h2>
+                <md-divider md-inset></md-divider>
+                <div class="cloud-container">
+                    <ng-tag-cloud cloud-data="data"></ng-tag-cloud>
+                </div>
+            </div>
+
+        </md-card>
+
+        <!-- user.contributions has the users' contributions -->
+        <md-card flex-gt-sm='45' flex class='profile-card' ng-init='post = topcontribution'>
+
+            <div class='section'>
+              <h2>{{ (user.nickname ? user.nickname : user.name) | titlecase  }}'s Top Contribution</h2>
+              <md-divider md-inset></md-divider>
+              
+              <md-card class='pointer mini-post' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)' style='max-width: 100%; background-color: #F2CE6D'> 
+                <div class='dragBar'></div>
+                <div class='action-bar' style='position: absolute;height: 30px; width: 30px; top: 4px; right: -1px; text-align: center;' ng-init='postStatus = getPostStatus(post)[0]'>
+                  <ng-md-icon icon="check_circle" style="fill: #8FE266" size="16" ng-if='postStatus == "viewed"'>
+                  </ng-md-icon>
+                  <!-- <ng-md-icon icon="create" style="fill: #2919F7" size="16" ng-if='postStatus == "created"'>
+                  </ng-md-icon> -->
+                  <ng-md-icon icon="thumb_up" style="fill: #C1BB08" size="16" ng-if='postStatus == "liked"'>
+                  </ng-md-icon>
+                  <ng-md-icon icon="bookmark" style="fill: #4D4AC7" size="16" ng-if='postStatus == "bookmarked"'>
+                  </ng-md-icon>
+                </div>
+                <md-tooltip md-direction="bottom" md-autohide="true"> You {{postStatus}} this post </md-tooltip>
+                
+                <md-content layout='column' layout-fill>
+                    <div class='poster' ng-style='getPostBackground(post)'>
+                      <div class='post-title' ng-if='post.attachments[0].id == null'>{{post.title}}</div>
+                    </div>
+                    <md-divider md-inset></md-divider>
+                    <div class='post-details'>
+                        <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>
+                        <div class='stats md-hue-3' layout='row' layout-align='center'>
+                            <div flex>
+                              <ng-md-icon icon="bookmark" size='14' style="fill: #AFAFAF"></ng-md-icon>{{post.bookmarks}}
+                              <md-tooltip md-delay='150' md-direction="bottom">Bookmarks</md-tooltip>
+                            </div>
+                            <div flex>
+                              <ng-md-icon icon="visibility" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ post.views }}
+                              <md-tooltip md-delay='150' md-direction="bottom">Views</md-tooltip>
+                            </div>
+                            <div flex>
+                              <ng-md-icon icon="thumb_up" size='14' style="fill: #AFAFAF"></ng-md-icon> {{ post.likes }}
+                              <md-tooltip md-delay='150' md-direction="bottom">Likes</md-tooltip>
+                            </div>
+                        </div> 
+                    </div>
+                </md-content>
+
+              </md-card>
+
+            </div>
+
+
+            <div class='section'>
+                <h2>{{ ( (user.nickname ? user.nickname : user.name)) | titlecase }}'s Spaces</h2>
+                <md-divider md-inset></md-divider>
+                <ul ng-if='user.forked[0].id != null' style='max-height: 450px; overflow: scroll;'> 
+                    <li class='pointer' ng-repeat='fork in user.forked' ng-click='goToSpace(fork.id)'>
+                        <h3>{{ fork.name }}</h3> {{ fork.posts.length }} posts
+                    </li>
+                </ul>
+            </div>
+
+            </section>
+                
+
+
+
+        </md-card>
+
     </div>
 
 
 </div>
-
-
 
 

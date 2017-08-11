@@ -20,35 +20,41 @@ router.get('/', auth.ensureAuthenticated, function(req, res){
   var query = [
     'MATCH (u:user) WHERE ID(u)={userIdParam}',
     'WITH u',
-    'OPTIONAL MATCH p1=(g:group)-[r:MEMBER]->(u)',
-    'WITH collect({id: id(g), role: r.role, joinedOn: r.joinedOn}) as groups, u',
-    'OPTIONAL MATCH p2=(c:contribution {contentType: "text"})<-[r1:CREATED]-(u)',
-    //'WITH groups, collect({id: id(c), title: c.title, lastUpdated: c.lastUpdated, contentType: c.contentType, rating: c.rating, rateCount: c.rateCount, views: c.views, tags: c.tags}) as contributions, u',
-    'WITH groups, collect({id: id(c), title: c.title, rating: c.rating, rateCount: c.rateCount, views: c.views}) as contributions, u',
-    'OPTIONAL MATCH p3=(t:tag)<-[r1:CREATED]-(u)',
-    'WITH groups, collect({id: id(t)}) as tags, contributions, u',
-    'OPTIONAL MATCH p4=(c1:contribution)<-[b:BOOKMARKED]-(u)',
-    'WITH groups, collect({id: id(c1), title: c1.title, createdOn: b.createdOn}) as bookmarks, tags, contributions, u',
-    'OPTIONAL MATCH p5=(c5:contribution {createdBy: {userIdParam}})<-[:RELATED_TO]-(:contribution) WHERE c5.dateCreated > {userLastLoggedInParam}',
-    'WITH groups, bookmarks, tags, contributions, u',
+    'OPTIONAL MATCH (u)-[f:FOLLOWS]->(s:space)',
+    'WITH collect({id: id(s), name: f.name}) as follows, u',
+    'OPTIONAL MATCH (u)-[c:FORKED]->(s:space)',
+    'WITH follows, collect({id: id(s), name: c.name, posts: c.posts, timed: s.timed}) as forks, u',
+    //'OPTIONAL MATCH p1=(g:group)-[r:MEMBER]->(u)',
+    //'WITH collect({id: id(g), role: r.role, joinedOn: r.joinedOn}) as groups, u',
+    'OPTIONAL MATCH p2=(u)-[r1:CREATED]->(c:contribution)',
+    'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = "" ',
+    'WITH u, forks, follows, c, r1, collect (id(t)) as tags',
+    'WITH forks, follows, u, collect({id: id(c), title: c.title, created_by: ID(u), created_on: r1.dateCreated, edited: r1.lastUpdated, type: c.contentType, tags: tags, ref: c.ref }) as contributions',
+    'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[v:VIEWED]-(u1:user) WHERE NOT ID(u)=ID(u1)',
+    'WITH forks, follows, u, contributions, count(v) as views',
+    'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[r:RATED]-(u3:user) WHERE NOT ID(u)=ID(u3)',
+    'WITH forks, follows, u, contributions, views, count(r) as thumbs',
+    //'WITH groups, collect({id: id(c), title: c.title, rating: c.rating, rateCount: c.rateCount, views: c.views}) as contributions, u',
+    //'OPTIONAL MATCH p3=(t:tag)<-[r1:CREATED]-(u)',
+    //'WITH groups, collect({id: id(t)}) as tags, contributions, u',
+    //'OPTIONAL MATCH p4=(c1:contribution)<-[b:BOOKMARKED]-(u)',
+    //'WITH groups, collect({id: id(c1), title: c1.title, createdOn: b.createdOn}) as bookmarks, tags, contributions, u',
+    //'OPTIONAL MATCH p5=(c5:contribution {createdBy: {userIdParam}})<-[:RELATED_TO]-(:contribution) WHERE c5.dateCreated > {userLastLoggedInParam}',
+    //'WITH groups, bookmarks, tags, contributions, u',
     'RETURN {\
               nusOpenId: u.nusOpenId,\
               isAdmin: u.isAdmin, \
-              canEdit: u.canEdit,\
               name: u.name,\
               nickname: u.nickname,\
-              addedOn: u.addedOn,\
               avatar: u.avatar,\
-              joinedOn: u.joinedOn,\
               lastLoggedIn: u.lastLoggedIn,\
-              filters: u.filters,\
-              filterNames: u.filterNames,\
               id: id(u),\
-              groups: groups,\
+              views: views,\
+              thumbs: thumbs,\
               contributions: contributions,\
-              tags: tags,\
-              bookmarks: bookmarks,\
-              level: {viewWeightParam}*(SIZE((u)-[:VIEWED]->(:contribution))) + {rateWeightParam}*(SIZE((u)-[:RATED]->(:contribution))) + {createWeightParam}*(SIZE((u)-[:CREATED]->(:contribution {contentType: "text"}))) \
+              follows: follows,\
+              forked: forks, \
+              notifications: u.notifications \
     }'
   ].join('\n');
 
@@ -172,6 +178,33 @@ router.get('/activity', auth.ensureAuthenticated, function(req, res){
   });
 
 });
+
+
+
+// route: /api/profile/notifications
+// get the contributions that this user created
+router.delete('/notifications', auth.ensureAuthenticated, function(req, res){
+  
+  var query = [
+    'MATCH (u:user) WHERE ID(u)={userIdParam}',
+    'SET u.notifications = []',
+    'RETURN u'
+  ].join('\n');
+
+  var params = {
+     userIdParam: parseInt(req.user.id)
+  }
+
+  db.query(query, params, function(error, result){
+    if (error)
+      console.log('Error clearing notifications for user ' + req.user.id);
+    else
+      res.send(result);
+  });
+
+});
+
+
 
 // route: /api/profile/tags
 // get the tags that this user created

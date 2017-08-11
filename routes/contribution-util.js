@@ -3,8 +3,8 @@ var glob = require('glob');
 var path = require('path');
 var fs = require('fs-extra');
 var gm = require('gm');
-/*var mmm = require('mmmagic'),
-      Magic = mmm.Magic;*/
+var mmm = require('mmmagic'),
+      Magic = mmm.Magic;
 var db = require('seraph')({
 	server: process.env.SERVER_URL || 'http://localhost:7474/', // 'http://studionetdb.design-automation.net'
 	user: process.env.DB_USER,
@@ -21,9 +21,12 @@ module.exports.handleGetContributionsWithoutParams = function(req, res, next) {
 	}
 
 	var query = [
-		'MATCH (c:contribution)',
-		'WITH c',
-		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), totalRatings: c.totalRating, rateCount: c.rateCount, rating: c.rating, views: c.views })'
+		'MATCH (c:contribution) WHERE EXISTS(c.createdBy)', // leave out the supernode
+		'OPTIONAL MATCH (c)-[:TAGGED]->(t:tag) WHERE NOT t.name = ""',
+		'WITH c, collect(id(t)) as tags',
+		'OPTIONAL MATCH (c)-[:ATTACHMENT]->(a:attachment)',
+		'WITH c, tags, collect({id: id(a), thumb: a.thumb, name: a.name}) as attachments',
+		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), tags: tags, type: c.contentType, attachments: attachments })'
 	].join('\n');
 
 	db.query(query, function(error, result) {
@@ -172,6 +175,7 @@ module.exports.getHandlerToSendImage = function(isForThumbnail) {
 }
 
 module.exports.updateDatabaseWithAttachmentsAndGenerateThumbnails = function(req, res, next){
+
 	// add attachments (can have multiple..)
 
 	var contributionId = parseInt(req.contributionId || req.params.contributionId);
