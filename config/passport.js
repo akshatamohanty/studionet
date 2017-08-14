@@ -101,14 +101,16 @@ module.exports = function(passport){
         // return done(null, { identifier: identifier })
 
         var query = [
-          'MATCH (u:user {nusOpenId: {nusOpenIdParam}})',
+          'MATCH (u:user) WHERE UPPER(u.nusOpenId)=UPPER({nusOpenIdParam})',
           'RETURN u'
         ].join('\n');
+
+        var result = identifier.match(/https:\/\/openid.nus.edu.sg\/(\w+)/);
 
         var params = {
           // do some string manipulation to extract the end of the string 
           // identifier is of form: https://openid.nus.edu.sg/{openId}
-          nusOpenIdParam: (identifier.slice(identifier.lastIndexOf('/')+1)).toUpperCase()
+          nusOpenIdParam: result[1]//(identifier.slice(identifier.lastIndexOf('/')+1)).toUpperCase()
         };
 
         db.query(query, params, function(err, res){
