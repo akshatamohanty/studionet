@@ -85,8 +85,8 @@
 			</div>
 
 
-			<div class='post-title main move' dnd-draggable='post_details'> 
-					<ng-md-icon icon="{{ post_details.type | post_icon }}" size='28' style="fill: #AFAFAF;">
+			<div class='post-title main move'> 
+					<ng-md-icon icon="{{ post_details.type | post_icon }}" size='28' style="fill: #AFAFAF;" dnd-draggable='post_details' dnd-type="'post'">
 						<md-tooltip md-direction="bottom">{{ post_details.type }}</md-tooltip>
 					</ng-md-icon> 
 					{{ post_details.title }}

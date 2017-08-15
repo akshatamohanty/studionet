@@ -139,7 +139,7 @@
                 <md-divider md-inset></md-divider>
                 <ul ng-if='user.forked[0].id != null' style='max-height: 450px; overflow: scroll;'> 
                     <li class='pointer' ng-repeat='fork in user.forked' ng-click='goToSpace(fork.id)'>
-                        <h3>{{ fork.name }}</h3> {{ fork.posts.length }} posts
+                        <h3>{{ fork.name }}</h3> {{ fork.posts.length || 0}} posts
                     </li>
                 </ul>
             </div>

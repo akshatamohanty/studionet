@@ -10,7 +10,7 @@
         <span>#{{$chip.name}}</span>
       </md-chip-template>
       
-      <md-autocomplete
+      <md-autocomplete ng-keypress="ctrl.enter($event)"
           md-selected-item="ctrl.selectedItem"
           md-no-cache="true"
           md-search-text="ctrl.searchText"

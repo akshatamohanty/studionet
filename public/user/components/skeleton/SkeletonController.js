@@ -19,7 +19,7 @@ angular.module('studionet')
           contributions.registerObserverCallback(function(){ $scope.posts = contributions.contributionsHash;  });
 
           $scope.spaces = spaces.spacesHash;
-          spaces.registerObserverCallback(function(){ console.log("updating spaces"); $scope.spaces = spaces.spacesHash; });
+          spaces.registerObserverCallback(function(){ $scope.spaces = spaces.spacesHash; });
 
           // user profile
           $scope.user = profile.user;
