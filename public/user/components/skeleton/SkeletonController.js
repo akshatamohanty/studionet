@@ -42,24 +42,25 @@ angular.module('studionet')
           $scope.getUserName = function(user_id){return users.usersHash[user_id].name };
           $scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
 
-
           // background of the cards 
           $scope.getPostBackground = function(post){
 
-            if(post.attachments == undefined)
-              return {};
+              if(post.attachments == undefined)
+                return {};
 
-            if(post.attachments[0].id == null)
-              return {};
+              if(post.attachments[0].id == null)
+                return {};
 
-            var path = undefined;
-            for(var i=0; i < post.attachments.length; i++){
-              path = routerUtils.getThumb(post.id, post.attachments[i]);
-              if(path.startsWith("./img/") == false)
-                break;
-            }
+              var path = undefined;
+              for(var i=0; i < post.attachments.length; i++){
+                path = routerUtils.getThumb(post.id, post.attachments[i]);
+                
+                // image found
+                if(path.image == true)
+                  break;
+              }
 
-            return {"background-image": "url(" + path + ")" };
+              return path.style; 
 
           }
 

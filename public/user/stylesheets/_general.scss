@@ -12,10 +12,12 @@ html, body{
   overflow: hidden;
 }
 
+
 ::-webkit-scrollbar
 {
   width: $scroll-thk;
 } 
+
 
 :focus{
   outline: none;

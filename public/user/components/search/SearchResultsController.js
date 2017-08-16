@@ -114,11 +114,13 @@ angular.module('studionet')
 		var path = undefined;
 		for(var i=0; i < post.attachments.length; i++){
 			path = routerUtils.getThumb(post.id, post.attachments[i]);
-			if(path.startsWith("./img/") == false)
+			
+			// image found
+			if(path.image == true)
 				break;
 		}
 
-		return {"background-image": "url(" + path + ")" };
+		return path.style;  
 
 	}
 
@@ -207,13 +209,27 @@ angular.module('studionet')
 			}
 		}
 
+
+		var suggested_fork_name = $scope._tags.map(function(t){ return $scope.getTagString(t).name }).join("_").replace(" ", "-");
+
+		if( $scope._dates.length == 2){
+
+			var d1 = new Date($scope._dates[0]);
+			var d2 = new Date($scope._dates[1]);
+
+			suggested_fork_name += "_" + d1.getDate() + "/" + (parseInt(d1.getMonth() + 1)) + "/" + d1.getFullYear(); // add first date
+			suggested_fork_name += "-" + d2.getDate() + "/" + (parseInt(d2.getMonth() + 1)) + "/" + d2.getFullYear(); // add second date
+
+		}													
+
+
 	    // Appending dialog to document.body to cover sidenav in docs app
 	    var confirm = $mdDialog.prompt()
 	      .title('What do you want to name your collection?')
 	      //.textContent('Bowser is a common name.')
 	      .placeholder('text')
 	      .ariaLabel('text')
-	      .initialValue( $scope._tags.map(function(t){ return $scope.getTagString(t).name }).join("_").replace(" ", "-") )
+	      .initialValue( suggested_fork_name )
 	      .ok('Create')
 	      .cancel('Cancel');
 

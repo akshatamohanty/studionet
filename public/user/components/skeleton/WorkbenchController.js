@@ -248,6 +248,9 @@ angular.module('studionet')
 
             var time = fork.timed;
 
+            if(time[0] == undefined)
+              return { msg: "This space doesnot have a deadline!", status: 'untimed'};
+
             var now = new Date();
             var daysLeft = Math.round( (time[1] - now.getTime())/86400000, 0 ); 
             fork.daysLeft = daysLeft;
@@ -291,30 +294,8 @@ angular.module('studionet')
 
             function NotificationsController($scope, $mdDialog, users, contributions, routerUtils, profile, $mdToast) {
 
-                $scope.notifications = profile.user.notifications;
-                $scope.getUser = users.getUserShort;
-                $scope.getContribution = contributions.getContributionShort;
 
-                $scope.goToNode = routerUtils.goToNode;
-
-                $scope.close = function(){
-                  $mdDialog.hide();
-                }
-
-                $scope.clear = function(){
-                    profile.deleteNotifications().success(function(){
-                        $mdDialog.hide();
-
-                        var toast = $mdToast.simple()
-                                  .textContent('Your notifications were cleared.')
-                                  .position("bottom left")
-
-                        $mdToast.show(toast);
-
-                    });
-                }
-
-                $scope.getNotification = function(notif){
+                var getNotification = function(notif){
 
                   var notif_obj = {};
 
@@ -344,6 +325,33 @@ angular.module('studionet')
 
                   return notif_obj;
 
+                }
+
+
+                $scope.notifications = profile.user.notifications.map(function(notif){
+                    return getNotification(notif);
+                });
+
+                $scope.getUser = users.getUserShort;
+                $scope.getContribution = contributions.getContributionShort;
+
+                $scope.goToNode = routerUtils.goToNode;
+
+                $scope.close = function(){
+                  $mdDialog.hide();
+                }
+
+                $scope.clear = function(){
+                    profile.deleteNotifications().success(function(){
+                        $mdDialog.hide();
+
+                        var toast = $mdToast.simple()
+                                  .textContent('Your notifications were cleared.')
+                                  .position("bottom left")
+
+                        $mdToast.show(toast);
+
+                    });
                 }
 
                 $scope.clearNotifications = function(){

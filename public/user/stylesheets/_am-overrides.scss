@@ -36,3 +36,14 @@ md-input-container{
   margin: 0px !important;
   font-size: 12px;
 }
+
+md-card{
+  md-content{
+    overflow: hidden;
+    position: unset;
+  }
+}
+
+.ta-scroll-window > .ta-bind{
+  max-height: 350px;
+}

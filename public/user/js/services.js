@@ -61,17 +61,46 @@ angular.module('studionet')
 
  		fn.getThumb = function(contributionId, attachment){
 
+ 			var path = {image: false, style: {"background-color" : "#FFFFFF"}};
+
             if(attachment.thumb){
-              return "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail";
+              path.image = true; 
+              path.style = {"background-image": "url(" + "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail" + ")" };
             }
             else{
-              if(attachment.name.indexOf(".pdf") > -1)
-                return "./img/file_pdf.png"
-              else if(attachment.name.indexOf(".doc") > -1)
-                return "./img/file_doc.jpg"
-              else
-                return "./img/file_default.jpg"; // replace with image for particular extension
+
+				var map = [
+							{ extension :"pdf", color: "#C61A00" }, 
+							{ extension :"doc", color: "#2A5696" }, 
+							{ extension :"docx", color: "#E64A19" },
+							{ extension :"ppt", color: "#E64A19" },
+							{ extension :"pptx", color: "#E64A19" },
+							{ extension :"xls", color: "#1F7244" },
+							{ extension :"xlsx", color: "#1F7244" },
+							{ extension :"psd", color: "#001C25" },
+							{ extension :"psb", color: "#001C25" },
+							{ extension :"ai", color: "#261300" },
+							{ extension :"indd", color: "#2E0013" },
+							{ extension :"indb", color: "#2E0013" },
+							{ extension :"dwg" , color: "#F5D9CD" },
+							{ extension :"pla" , color: "#3B8AFF" },
+							{ extension :"pln" , color: "#3B8AFF" },
+							{ extension :"rvt" , color: "#3B8AFF" },
+							{ extension :"bim" , color: "#DCE4F1" },
+							{ extension :"bimx" , color: "#050505" }             			
+						];		
+
+
+				for(var i=0; i < map.length; i++){
+					if(attachment.name.indexOf("." + map[i].extension) > -1){
+						path.style = {"background-color" : map[i].color};
+						break;
+					}
+				}
+
             }
+
+            return path;
         }
 
 		return fn;

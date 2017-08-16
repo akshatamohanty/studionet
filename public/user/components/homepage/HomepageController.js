@@ -24,4 +24,6 @@ angular.module('studionet')
           contributions.registerObserverCallback(function(){ getRecent(); });
 
 
+
+
 }]);

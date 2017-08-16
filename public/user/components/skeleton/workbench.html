@@ -36,7 +36,8 @@
               <md-tooltip md-delay='150' md-direction="bottom">Likes</md-tooltip>
             </div>
             <div flex ng-click='bench.showNotifications()' ng-class="user.notifications.length > 0 ? 'selected' : 'unselected'">
-              <ng-md-icon icon="notifications" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.notifications.length || 0 }}
+              <ng-md-icon icon="notifications" size='14' style="fill: #AFAFAF" ng-if='user.notifications == null || user.notifications.length == 0'></ng-md-icon>
+              <ng-md-icon icon="notifications" size='20' style="fill: #AFAFAF" ng-if='user.notifications.length > 0'></ng-md-icon>
               <md-tooltip md-delay='150' md-direction="bottom">Notifications</md-tooltip>
             </div>
         </div> 
@@ -50,7 +51,7 @@
   <div class='profile-posts' layout='column'>
     
     <!-- Your posts -->
-    <div>
+    <!-- <div>
       <div class='header'>My posts ({{user.contributions.length}}) 
 
             <a ui-sref='home.node({type:"note"})'>
@@ -80,13 +81,13 @@
             </md-card>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
     <md-divider></md-divider>
 
     <!-- Your comments -->
-    <div ng-init='bench.comments = false;'>
+    <!-- <div ng-init='bench.comments = false;'>
       <div class='header'>My Comments 
             <a style='float: right' ng-click='bench.comments = !bench.comments'> 
                 <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='!bench.comments'></ng-md-icon>
@@ -105,24 +106,86 @@
             </md-card>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
-    <md-divider></md-divider>
-
-
-
-    <!-- Timed Spaces -->
+    <!-- User Contributions -->
     <div>
       <div class='header'>
-          Timed Spaces
+          My Contributions
       </div>
 
       <md-divider></md-divider>
 
       <div class='folder-notes'>
-        <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)'
-            ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.timed[0]!=undefined'>
+        
+        <!-- posts -->
+        <div class='folder'>
+            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.toggleMyNodes()'>
+                  My Posts
+                  <a ui-sref='home.node({type:"note"})'>
+                    <ng-md-icon icon="add" size='18' style="fill: green"></ng-md-icon>
+                  </a>
+
+                  <a style='float: right' > 
+                      <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='!bench.my_nodes'></ng-md-icon>
+                      <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='bench.my_nodes'></ng-md-icon>
+                  </a>
+            </div>
+
+            <div class='folder-notes' ng-class='bench.my_nodes ? "open" : "close" '>
+                <md-card class='post-box move' ng-class='node.tags.length ? "published" : "unpublished" ' 
+                    ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"}' 
+                    ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'" ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
+                    <div class='title'>
+                      {{node.title}} 
+                      <md-tooltip md-delay='150' ng-if='node.tags.length == 0 && !bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
+                          Status: Unpublished
+                      </md-tooltip>
+                      <md-tooltip md-delay='150' ng-if='bench.isRecent(node)' class="tooltip" md-direction="bottom" style='height: auto'>
+                          You just created this node
+                      </md-tooltip>
+                    </div>
+                </md-card>
+            </div>
+        </div>
+
+        <!-- comments -->
+        <div class='folder'>
+            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.comments = !bench.comments'>
+                  My Comments
+                  <a style='float: right' > 
+                      <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='!bench.comments'></ng-md-icon>
+                      <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='bench.comments'></ng-md-icon>
+                  </a>
+            </div>
+
+            <div class='folder-notes' ng-class='bench.comments ? "open" : "close" '>
+              <md-card class='post-box'
+                  ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "comment"}' 
+                  ng-click='goToNode(node.ref)' ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
+                  <div class='title'>
+                    {{node.title}} 
+                  </div>
+              </md-card>
+            </div>
+        </div>
+      
+      </div>
+    </div>
+
+    <md-divider></md-divider>
+
+    <!-- Timed Spaces -->
+    <div>
+      <div class='header'>
+          Spaces
+      </div>
+
+      <md-divider></md-divider>
+
+      <div class='folder-notes'>
+        <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]'>
           
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)'>
                   {{fork.name}}
@@ -145,16 +208,13 @@
 
                 <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='posts[node_id]' dnd-type="'post'">
                     <div class='title'>{{ posts[node_id].title }}</div>
+                    <span ng-click='bench.removeFromFork(fork.id, node_id)' style='position: absolute; bottom: 0px; right: 5px; color: black; font-weight: 600;'>x</span>
                 </md-card>
 
             </div>
 
         </div>
       </div>
-
-
-
-
     </div>
 
 
@@ -162,7 +222,7 @@
 
 
     <!-- saved spaces -->
-    <div>
+    <!-- <div>
       <div class='header'>
           Saved Spaces
       </div>
@@ -191,14 +251,14 @@
 
                 <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='posts[node_id]' dnd-type="'post'">
                     <div class='title'>{{ posts[node_id].title }}</div>
-                    <span ng-click='bench.removeFromFork(fork.id, node_id)' style='position: absolute; bottom: 0px; right: 5px; color: red'>x</span>
+                    <span ng-click='bench.removeFromFork(fork.id, node_id)' style='position: absolute; bottom: 0px; right: 5px; color: black; font-weight: 600;'>x</span>
                 </md-card>
                 
             </div>
         
         </div>
       </div>
-    </div>
+    </div> -->
 
 
   </div>

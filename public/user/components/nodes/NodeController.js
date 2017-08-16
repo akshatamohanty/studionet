@@ -22,8 +22,7 @@ angular.module('studionet')
         }
 
         var reload = function(){
-          $state.reload();
-          //$state.go($state.current, {}, {reload: true});
+          $state.go( $state.current, {address: post.id}, {reload: "home.node-details"});
         }
  
         $scope.linkNewParent = function(new_parent, post_id){
@@ -216,7 +215,7 @@ angular.module('studionet')
                           .position("bottom right")
 
                         $mdToast.show(toast);
-
+                      
                         reload();
 
 
@@ -275,16 +274,11 @@ angular.module('studionet')
               var msg = 'Your contribution was deleted';
                   // display success message
                   // navigate after 3 seconds
-                  $mdDialog.show(
-                    $mdDialog.alert()
-                      .parent(angular.element(document.querySelector('body')))
-                      .clickOutsideToClose(false)
-                      .title('Success!')
-                      .textContent(msg)
-                      .ariaLabel('Action Successful')
-                      .ok('Got it!')
-                      //.targetEvent(ev)
-                  );
+                  var toast = $mdToast.simple()
+                          .textContent(msg)
+                          .position("bottom right")
+
+                        $mdToast.show(toast);
 
                 if(comment == true){
                     // reload view if contribution was comment

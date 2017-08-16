@@ -14,6 +14,9 @@
 
     @include animate-slide($bench-width);
 
+
+
+
     &.expand{
       animation: 0.5s slideIn;
       margin-left: 0;
