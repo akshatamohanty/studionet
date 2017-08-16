@@ -410,13 +410,7 @@ md-card md-content {
     font-size: 12px;
     line-height: 16px;
     font-weight: 400; }
-.progress md-whiteframe {
-           background-color: darkgray;
-          margin: 30px; 
-          height: 100px; 
-		   width: 200px;
-		   
-       }
+
 .shortcut-div {
   color: white;
   height: 119px;
@@ -533,8 +527,7 @@ mentio-menu {
   max-width: 950px;
   margin: 0 auto; }
   .post-view-section .linked-post-container {
-    height: 80px;
-    margin: 30px 0px; }
+    height: 80px; }
     .post-view-section .linked-post-container .dndPlaceholder {
       border: 1px dashed gray; }
     .post-view-section .linked-post-container.ancestor {
@@ -542,6 +535,55 @@ mentio-menu {
       margin: 10px !important;
       display: inline-block;
       width: 200px; }
+  .post-view-section .side-details {
+    overflow: hidden;
+    height: 80%; }
+    .post-view-section .side-details .container {
+      position: absolute;
+      max-width: 200px;
+      border: 2px solid #D9D9D9;
+      overflow: auto;
+      height: inherit; }
+    .post-view-section .side-details .author-profile-picture {
+      margin: 5px;
+      display: inline;
+      border-radius: 50%;
+      vertical-align: middle; }
+      .post-view-section .side-details .author-profile-picture.main {
+        width: 30px;
+        height: 30px; }
+      .post-view-section .side-details .author-profile-picture.linked {
+        width: 15px;
+        height: 15px; }
+    .post-view-section .side-details .author-name {
+      margin: 5px;
+      display: inline;
+      height: 30px; }
+      .post-view-section .side-details .author-name.main {
+        line-height: 30px;
+        font-size: 14px; }
+      .post-view-section .side-details .author-name.linked {
+        line-height: 15px;
+        font-size: 12px;
+        display: none; }
+    .post-view-section .side-details .post-actions {
+      background: rgba(184, 181, 181, 0.6);
+      z-index: 1; }
+      .post-view-section .side-details .post-actions .action {
+        display: inline-block;
+        margin: 10px;
+        cursor: pointer; }
+        .post-view-section .side-details .post-actions .action svg {
+          fill: rgba(29, 31, 41, 0.5); }
+        .post-view-section .side-details .post-actions .action.selected svg {
+          fill: blue !important; }
+      .post-view-section .side-details .post-actions .action:hover svg {
+        fill: #6E6EE6 !important; }
+    .post-view-section .side-details .post-actions:hover {
+      background: rgba(184, 181, 181, 0.7);
+      z-index: 2; }
+      .post-view-section .side-details .post-actions:hover .action svg {
+        fill: #1d1f29; }
   .post-view-section .post-details {
     position: relative;
     margin: 0px;
@@ -557,26 +599,6 @@ mentio-menu {
         margin: 0px 0px 0px 0px !important;
         font-size: 14px;
         overflow: auto; }
-    .post-view-section .post-details .author-profile-picture {
-      margin: 5px;
-      display: inline;
-      border-radius: 50%; }
-      .post-view-section .post-details .author-profile-picture.main {
-        width: 30px;
-        height: 30px; }
-      .post-view-section .post-details .author-profile-picture.linked {
-        width: 15px;
-        height: 15px; }
-    .post-view-section .post-details .author-name {
-      margin: 5px;
-      display: inline;
-      height: 30px; }
-      .post-view-section .post-details .author-name.main {
-        line-height: 30px;
-        font-size: 16px; }
-      .post-view-section .post-details .author-name.linked {
-        line-height: 15px;
-        font-size: 12px; }
     .post-view-section .post-details .post-body {
       margin: 10px 0px 30px 0px; }
       .post-view-section .post-details .post-body p {
@@ -593,34 +615,12 @@ mentio-menu {
         border: 1px solid gray; }
   .post-view-section .post-container {
     position: relative; }
-    .post-view-section .post-container .post-actions {
-      position: fixed;
-      right: 2%;
-      bottom: 2%;
-      background: rgba(184, 181, 181, 0.6);
-      z-index: 1; }
-      .post-view-section .post-container .post-actions .action {
-        display: inline-block;
-        float: right;
-        margin: 20px;
-        cursor: pointer; }
-        .post-view-section .post-container .post-actions .action svg {
-          fill: rgba(29, 31, 41, 0.5); }
-        .post-view-section .post-container .post-actions .action.selected svg {
-          fill: blue !important; }
-      .post-view-section .post-container .post-actions .action:hover svg {
-        fill: #6E6EE6 !important; }
-    .post-view-section .post-container .post-actions:hover {
-      background: rgba(184, 181, 181, 0.7);
-      z-index: 2; }
-      .post-view-section .post-container .post-actions:hover .action svg {
-        fill: #1d1f29; }
     .post-view-section .post-container .tags {
       margin-bottom: 10px; }
   .post-view-section .comment {
-    margin-bottom: 10px;
-    margin-top: 10px;
-    font-size: 14px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 12px;
     color: #5D5D5D; }
 
 #searchbar {
