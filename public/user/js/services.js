@@ -255,6 +255,29 @@ angular.module('studionet')
 		}
 
 		//
+		//
+		//	
+		//
+		o.untagContribution = function(contribution_id, tag_array){
+
+			// get all the posts for this query
+			return $http({
+						  method  : 'DELETE',
+						  url     : '/api/contributions/' + contribution_id + '/tag',
+						  data    : { tags: tag_array },  
+						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
+						 })
+						.success(function(data) {
+
+							//refresh user profile
+							o.getUser();
+
+							return data;
+						});
+
+		}
+
+		//
 		//	clear notifications
 		//
 		//
@@ -565,6 +588,12 @@ angular.module('studionet')
 
 		o.bookmarkContribution = function(contribution_id){
 			return $http.post('/api/contributions/' + contribution_id + '/bookmark').success(function(data){
+				profile.getUser();
+			});
+		};
+
+		o.removeBookmark = function(contribution_id){
+			return $http.delete('/api/contributions/' + contribution_id + '/bookmark').success(function(data){
 				profile.getUser();
 			});
 		};
@@ -918,7 +947,6 @@ angular.module('studionet')
 						 })
 						.success(function(data) {
 								// also bookmark the contribution
-								// todo: make this internal
 								contributions.bookmarkContribution(contribution_id);
 								return data;
 						});
@@ -933,7 +961,15 @@ angular.module('studionet')
 						  headers : { 'Content-Type': 'application/json' }  // set the headers so angular passing info as form data (not request payload)
 						 })
 						.success(function(data) {
+
+								// remove the bookmark
+								contributions.removeBookmark(contribution_id);
+
+								// remove the tags
+								profile.untagContribution(contribution_id, o.spacesHash[space_id].tags);
+
 								profile.getUser();
+
 								return data;
 						});
 		}

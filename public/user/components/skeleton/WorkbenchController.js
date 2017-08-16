@@ -187,9 +187,19 @@ angular.module('studionet')
 
         }
 
+        self.removeFromFork = function(spaceId, contributionId){
+          spaces.removeFromFork(spaceId, contributionId).then(function(data){
+                  var toast = $mdToast.simple()
+                          .textContent('Removed post from folder')
+                          .position("bottom left")
+
+                  $mdToast.show(toast);
+          });
+        }
+
         self.addNodeToFork = function(item, space){
 
-            if(space.posts.indexOf(item.id) >  -1){
+            if(space.posts != null && space.posts.indexOf(item.id) >  -1){
               var toast = $mdToast.simple()
                         .textContent('Oops... This post already exists in your folder')
                         .position("bottom left")
@@ -203,7 +213,8 @@ angular.module('studionet')
             var _tags = spaces.getSpaceById(space.id).tags;
 
             // add the contribution to the users fork
-            spaces.addToFork(space.id, item.id).then(function(){
+            profile.tagContribution(item.id, _tags).then(function(){ 
+              spaces.addToFork(space.id, item.id).then(function(){
                 
                 // if item isn't in the time frame, show failure alert
                 var toast = $mdToast.simple()
@@ -217,23 +228,18 @@ angular.module('studionet')
                 $mdToast.show(toast).then(function(response){
                       // user pressed undo button
                       if ( response == 'ok' ) {
-                          console.log("post will not be tagged");
                           spaces.removeFromFork(space.id, item.id);
-
-                      }
-                      else{
-                          console.log("post will be tagged");
-                          profile.tagContribution(item.id, _tags);
                       }
                 });
 
-            }, function(){
+              }, function(){
 
-                  var toast = $mdToast.simple()
-                        .textContent('Hmm.... Something went wrong')
-                        .position("bottom left")
+                    var toast = $mdToast.simple()
+                          .textContent('Hmm.... Something went wrong')
+                          .position("bottom left")
 
-                  $mdToast.show(toast);
+                    $mdToast.show(toast);
+              });
             });
         
         }

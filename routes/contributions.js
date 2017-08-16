@@ -80,7 +80,7 @@ router.route('/')
       'WITH c',
       'UNWIND {tagsParam} as tagID',
       'OPTIONAL MATCH (t:tag) WHERE ID(t)=tagID',
-      'CREATE (c)-[r2:TAGGED {by_users: [{createdByParam}]}]->(t) ',
+      'CREATE (c)-[r2:TAGGED {by_users: [{createdByParam}], counter: 1}]->(t) ',
       'RETURN c'
     ].join('\n');
 
@@ -818,8 +818,8 @@ router.route('/:contributionId/bookmark')
       'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
       'MATCH (u:user) WHERE ID(u)={userIdParam}',
       'MERGE p=(u)-[r:BOOKMARKED]->(c)',
-      'ON CREATE SET r.createdOn={createdOnParam}',
-      'ON MATCH SET r.updatedOn={createdOnParam}',
+      'ON CREATE SET r.createdOn={createdOnParam}, r.counter = 1',
+      'ON MATCH SET r.updatedOn={createdOnParam}, r.counter = r.counter + 1',
       'WITH c',
       'MATCH (auth:user) WHERE ID(auth)=c.createdBy and ID(auth)<>{userIdParam}',
       'SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
@@ -853,10 +853,12 @@ router.route('/:contributionId/bookmark')
   .delete(auth.ensureAuthenticated, function(req, res) {
 
     var query = [
-      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
-      'MATCH (u:user) WHERE ID(u)={userIdParam}',
-      'MATCH p=(u)-[r:BOOKMARKED]->(c)',
-      'DELETE r',
+      'MATCH (u)-[r:BOOKMARKED]->(c) WHERE id(u)={userIdParam} and id(c)={contributionIdParam}',
+      'SET r.counter = r.counter - 1',
+      'DELETE',
+      'CASE r.counter',
+      'WHEN 0 THEN r',
+      'END'
     ].join('\n');
 
     var params = {
@@ -901,6 +903,7 @@ router.route('/:contributionId/tag')
       'FOREACH(x in CASE WHEN {userIdParam} in td.by_users THEN [] ELSE [1] END | ',
       '   SET td.by_users = coalesce(td.by_users,[]) + {userIdParam}',
       ')',
+      'SET td.counter = coalesce(td.counter, 0) + 1',
       //'ON MATCH',
       //'SET td.by_users = td.by_users + {userIdParam}',
       //'ON CREATE',
@@ -931,19 +934,25 @@ router.route('/:contributionId/tag')
     })
   })
   
+  // delete the tag if count goes below 1
   .delete(auth.ensureAuthenticated, function(req, res) {
 
     var query = [
-      'MATCH (c:contribution) WHERE ID(c)={contributionIdParam}',
-      'MATCH (u:user) WHERE ID(u)={userIdParam}',
-      'MATCH p=(u)-[r:BOOKMARKED]->(c)',
-      'DELETE r',
+      'MATCH (c:contribution)-[td:TAGGED]->(t:tag) WHERE ID(c)={contributionIdParam} and id(t) in {tagsParam}',
+      'SET td.counter = td.counter - 1',
+      'DELETE',
+      'CASE td.counter',
+      'WHEN 0 THEN td',
+      'END'
     ].join('\n');
 
     var params = {
       userIdParam: req.user.id,
-      contributionIdParam: parseInt(req.params.contributionId),
+      tagsParam: req.body.tags,
+      contributionIdParam: parseInt(req.params.contributionId)
     };
+
+    console.log(req.body.tags);
 
     db.query(query, params, function(error,result){
       if (error) {

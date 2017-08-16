@@ -184,10 +184,10 @@ router.route('/:spaceId/subscribe')
     
   });
 
-  // route: /api/spaces/:spaceId
+  // route: /api/spaces/:spaceId/add
   router.route('/:spaceId/add')
 
-    // return all spaces
+    // add a post to a fork
     .post(auth.ensureAuthenticated, function(req, res){
         var query = [ 
                       "MATCH (u:user) WHERE ID(u) = {userIdParam}",
@@ -220,21 +220,14 @@ router.route('/:spaceId/subscribe')
 
   // route: /api/spaces/:spaceId
   // remove the id from posts property of space
-  // delete bookmark
   // note: removal of tags incase of undo is handled in the frontend. however, tags should remain 
   router.route('/:spaceId/remove')
 
-    // return all spaces
     .delete(auth.ensureAuthenticated, function(req, res){
         var query = [ 
                       "MATCH (u:user)-[f:FORKED]->(s:space) WHERE ID(u)={userIdParam} AND ID(s)={spaceIdParam} AND EXISTS(f.posts)",
                       "SET f.posts = FILTER(x IN f.posts WHERE x <> {contributionIdParam})",
-                      "WITH s, u, f",
-                      "MATCH (u)-[b:BOOKMARKED]->(c:contribution) WHERE ID(c)={contributionIdParam}",
-                      "OPTIONAL MATCH (u)-[frk:FORKED]->(sp:space) WHERE id(c) in sp.posts",
-                      "WITH s, u, b, f, count(frk) as forks",
-                      "WHERE forks=0 DELETE b",
-                      "RETURN f"
+                      "RETURN s"
                     ].join(" ");
 
         var params = {
@@ -248,6 +241,7 @@ router.route('/:spaceId/subscribe')
             console.log('Error forking the space: ', error);
           }
           else{
+            console.log(result);
             res.send(result);
           }
         });

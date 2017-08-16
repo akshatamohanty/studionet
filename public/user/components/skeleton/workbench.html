@@ -191,6 +191,7 @@
 
                 <md-card class='post-box' ng-class='posts[node_id].type' ng-repeat='node_id in fork.posts' ng-click='goToNode(node_id)' dnd-draggable='posts[node_id]' dnd-type="'post'">
                     <div class='title'>{{ posts[node_id].title }}</div>
+                    <span ng-click='bench.removeFromFork(fork.id, node_id)' style='position: absolute; bottom: 0px; right: 5px; color: red'>x</span>
                 </md-card>
                 
             </div>
