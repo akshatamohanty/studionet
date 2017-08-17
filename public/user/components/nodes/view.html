@@ -186,7 +186,7 @@
 
 
 				<md-card class='post-details pointer' layout='column' flex ng-if='post_details.parents[parent].id==null'>
-					<div class='post-subtitle linked'>This post has no preceeding posts. Drop a node here to link a parent.</div>
+					<div class='post-subtitle linked'>This post has no preceeding posts. Drop a post here to link a parent.</div>
 				</md-card>
 
 				<a class='nav-btn' ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null' ng-class='post_details.parents[parent].id!=null && parent<post_details.parents.length-1 ? "" : "clear"'>
@@ -226,7 +226,7 @@
 
 
 				<md-card class='post-details pointer' layout='column' flex ng-if='post_details.children[child].id==null'>
-					<div class='post-subtitle linked'>This post has no replies. Drop a node here to link a child.</div>
+					<div class='post-subtitle linked'>This post has no replies. Drop a post here to link a child.</div>
 				</md-card>
 
 				<!-- <md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child + 1 < post_details.children.length ? child=child+1: null'>
