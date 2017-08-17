@@ -80,9 +80,11 @@
 		md-datepicker{
 
 			md-icon{
-				fill: rgba(0,0,0,.5); 	
+				fill: rgba(0,0,0,.5);
 			}
 		}
+
+
 
 		/* .md-button.md-icon-button{
 			margin-left: 5px;
@@ -99,10 +101,15 @@
 		} */
 	}
 
+
 	.searchbtn{
 		font-size: 12px;
 		line-height: 48px;
 	}
 
 }
+
+.md-datepicker-input-mask{
+      overflow:hidden;
+    }
 

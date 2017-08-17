@@ -5,10 +5,10 @@
 
 var app = angular.module('studionet', ['ngMaterial', 'ngAnimate', 'ngSanitize','ui.router',
 										'ngTagsInput', 'ngFileUpload', 'angularModalService', 'multiselect-searchtree',
-										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists' , 'ngTagCloud']);
+										'angular-ranger','textAngular', 'angularMoment', 'mentio', 'ui.tree', 'ngMdIcons', 'dndLists' , 'ngTagCloud', 'ngScrollable' ]);
 
 /*app.run(function($rootScope, $state, $location){
-	$rootScope.$on("$locationChangeStart", function(event, next, current) { 
+	$rootScope.$on("$locationChangeStart", function(event, next, current) {
 		if(next==current){
 		    event.preventDefault();
 		    $location.path(next)
@@ -98,7 +98,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 			resolve: {
 				location: ['spaces', '$stateParams', 'tagsPromise', function(spaces, $stateParams, tagsPromise){
 					// get information about the space based on the route params
-					return spaces.getSpace($stateParams);  
+					return spaces.getSpace($stateParams);
 				}],
 				search_results: ['spaces', '$stateParams', function(spaces, $stateParams){
 					// get search results for the space
@@ -145,7 +145,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 				}]
 			}
 		})
-		
+
 		.state('home.edit', {
 			url: 'node/:address/edit',
 			templateUrl: '/user/components/nodes/newnode.html',
@@ -209,7 +209,7 @@ app.config(['$stateProvider', '$urlRouterProvider', 'tagsInputConfigProvider', f
 
 // Configuration options for Angular Material and Plugins
 app.config(['$mdThemingProvider', function($mdThemingProvider){
-		
+
 
 		$mdThemingProvider.theme('default').primaryPalette('studionet', {
 		      'default': '400', // by default use shade 400 from the pink palette for primary intentions
