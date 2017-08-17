@@ -116,6 +116,7 @@
 				  	{{ tag.users.length }} user(s) tagged this post as {{getTagName(tag.tag_id)}}
 				</md-tooltip>
 				</span>
+				<div style='line-height: 14px; font-size: 10px;color: #6C6969; text-align: center;' ng-if='post_details.tags.length == 0'>This post is not published in any space.</div>
 			</div>
 
 
@@ -162,6 +163,17 @@
 					<ng-md-icon icon="reply" size='16' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom">Reply</md-tooltip>
 				</div>
+
+				<div class='action' ng-click='edit(post_details)' ng-if='post_details.createdBy == user.id;'>
+					<ng-md-icon icon="mode_edit" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
+				</div>
+
+				<div class='action' ng-if='post_details.children[0].id == null && post_details.comments[0].id == null && post_details.createdBy == user.id;' ng-click='delete(post_details.id)'>
+					<ng-md-icon icon="delete" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
+				</div>
+
 
 			</div>
 
@@ -241,21 +253,6 @@
 				<a class='nav-btn' ng-click='child + 1 < post_details.children.length ? child=child+1: null' ng-class='post_details.children[child].id!=null && child<post_details.children.length-1 ? "" : "clear"'>
 					<!-- <ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child<post_details.children.length-1'></ng-md-icon> -->
 				</a>
-
-			</div>
-
-			<!-- for creator -->
-			<div class='post-actions' layout="row" layout-align='center' layout-wrap ng-if='post_details.createdBy == user.id;'>
-
-				<div class='action' ng-if='post_details.children[0].id == null && post_details.comments[0].id == null;' ng-click='delete(post_details.id)'>
-					<ng-md-icon icon="delete" size='16' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
-				</div>
-
-				<div class='action' ng-click='edit(post_details)'>
-					<ng-md-icon icon="mode_edit" size='16' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
-				</div>
 
 			</div>
 

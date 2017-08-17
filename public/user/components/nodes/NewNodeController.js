@@ -67,8 +67,8 @@ angular.module('studionet')
 
 
 angular.module('studionet')
-.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'tags', 'users', 'contributions', '$mdDialog',
-                                  function($scope, $stateParams, $state, tags, users, contributions, $mdDialog){
+.controller('NewNodeController', ['$scope', '$stateParams', '$state', 'tags', 'users', 'contributions', '$mdDialog', 'routerUtils',
+                                  function($scope, $stateParams, $state, tags, users, contributions, $mdDialog, routerUtils){
 
 
       $scope.$emit('hideBench');
@@ -184,7 +184,11 @@ angular.module('studionet')
                     //.targetEvent(ev)
                 );
 
-                history.back();
+                // navigate to the newly created node
+                if($stateParams.ref == null)
+                  routerUtils.goToNode(res.data[0].id);
+                else
+                  history.back();
 
             }, function(error){
 
@@ -193,6 +197,7 @@ angular.module('studionet')
             }); 
 
         };
+
 
         $scope.editContribution = function(){
 
