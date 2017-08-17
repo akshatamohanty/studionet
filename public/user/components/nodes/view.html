@@ -1,4 +1,4 @@
-<div class='scroll post-view-section' layout="row">
+<div class='scroll post-view-section' layout="row" id='view_container'>
 
 	<div flex>
 		<!-- main -->
@@ -71,6 +71,11 @@
 				<div class='action' ng-click='backToTop()'>
 					<ng-md-icon icon="keyboard_arrow_up" size='16' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom">Up</md-tooltip>
+				</div>
+
+				<div class='action' ng-click='goToEnd()'>
+					<ng-md-icon icon="keyboard_arrow_down" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Down</md-tooltip>
 				</div>
 
 				<div class='action'>

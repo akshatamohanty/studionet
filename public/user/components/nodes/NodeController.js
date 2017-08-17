@@ -17,8 +17,13 @@ angular.module('studionet')
         $scope.getThumb = routerUtils.getThumb;
 
         $scope.backToTop = function(){
-              $location.hash('top');
-              $anchorScroll();
+              /*$location.hash('top');
+              $anchorScroll();*/
+            $("#view_container").animate({ scrollTop: 0 }, "slow");
+        }
+
+        $scope.goToEnd = function(){
+            $('#view_container').animate({ scrollTop: $('#view_container')[0].scrollHeight }, "slow");
         }
 
         var reload = function(){
