@@ -14,7 +14,7 @@
           <div layout='row' layout-fill layout-margin>
             <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
             <div>     
-                <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.name}}</div>
+                <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.nickname ? user.nickname : user.name}}</div>
                 <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>{{user.points | level}}</div>
             </div>
           </div>
@@ -135,7 +135,7 @@
 
             <div class='folder-notes' ng-class='bench.my_nodes ? "open" : "close" '>
                 <md-card class='post-box move' ng-class='node.tags.length ? "published" : "unpublished" ' 
-                    ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"}' 
+                    ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"} as main_posts' 
                     ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'" ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                     <div class='title'>
                       {{node.title}} 
@@ -147,6 +147,8 @@
                       </md-tooltip>
                     </div>
                 </md-card>
+
+                <div style='text-align: center;  margin-top: 20px;' ng-if='main_posts.length == 0'> Oops.. no posts yet! </div>
             </div>
         </div>
 
@@ -162,12 +164,13 @@
 
             <div class='folder-notes' ng-class='bench.comments ? "open" : "close" '>
               <md-card class='post-box'
-                  ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "comment"}' 
+                  ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "comment"} as com_posts' 
                   ng-click='goToNode(node.ref)' ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                   <div class='title'>
                     {{node.title}} 
                   </div>
               </md-card>
+              <div style='text-align: center;  margin-top: 20px;' ng-if='com_posts.length == 0'> Oops.. no comments yet! </div>
             </div>
         </div>
       
@@ -185,7 +188,7 @@
       <md-divider></md-divider>
 
       <div class='folder-notes'>
-        <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]'>
+        <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.id !== null'>
           
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)'>
                   {{fork.name}}

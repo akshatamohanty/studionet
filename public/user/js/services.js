@@ -146,6 +146,10 @@ angular.module('studionet')
 		// 
 		o.getUser = function(){
 			return $http.get('/api/profile/').success(function(data){
+
+				if(data.contributions[0].id == null)
+					data.contributions = [];
+
 				angular.copy(data, o.user);
 				o.getActivity();
 

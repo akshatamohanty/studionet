@@ -101,7 +101,16 @@ module.exports = function(passport){
         // return done(null, { identifier: identifier })
 
         var query = [
-          'MATCH (u:user) WHERE UPPER(u.nusOpenId)=UPPER({nusOpenIdParam})',
+          'MERGE (u:user {nusOpenId: {nusOpenIdParam}})',
+          'ON CREATE SET u.canEdit = {canEditParam}, u.name = {nameParam},\
+                        u.isAdmin = {isAdminParam},\
+                        u.addedBy = {addedByParam},\
+                        u.addedOn = {addedOnParam},\
+                        u.avatar = {avatarParam},\
+                        u.joinedOn = {joinedOnParam},\
+                        u.lastLoggedIn = {lastLoggedInParam},\
+                        u.filters = {filtersParam},\
+                        u.filterNames = {filterNamesParam}',
           'RETURN u'
         ].join('\n');
 
@@ -110,7 +119,17 @@ module.exports = function(passport){
         var params = {
           // do some string manipulation to extract the end of the string 
           // identifier is of form: https://openid.nus.edu.sg/{openId}
-          nusOpenIdParam: result[1]//(identifier.slice(identifier.lastIndexOf('/')+1)).toUpperCase()
+          nusOpenIdParam: result[1].toUpperCase(), //(identifier.slice(identifier.lastIndexOf('/')+1)).toUpperCase(),
+          canEditParam: true, //req.body.canEdit,
+          nameParam: result[1].toUpperCase(),
+          isAdminParam: false, 
+          addedByParam: "auto-add",
+          addedOnParam: Date.now(),
+          avatarParam: "/assets/images/avatar.png",
+          joinedOnParam: Date.now(),  // -1 as default
+          lastLoggedInParam: -1, // -1 as default
+          filtersParam: [],
+          filterNamesParam: []
         };
 
         db.query(query, params, function(err, res){
@@ -131,6 +150,7 @@ module.exports = function(passport){
     }
   ));
 
+  // not in use
   passport.use(new BasicStrategy(
     function(userid, password, done) {
       process.nextTick(function () {
@@ -161,6 +181,7 @@ module.exports = function(passport){
     }
   ));
 
+  // not in use
   passport.use(new LocalStrategy(
     function(username, password, done) {
       process.nextTick(function () {

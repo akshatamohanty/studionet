@@ -65,7 +65,7 @@ router.route('/')
     ].join('\n');
 
     var params = {
-      nusOpenIdParam: req.body.nusOpenId,
+      nusOpenIdParam: req.body.nusOpenId.toUpperCase(),
       canEditParam: true, //req.body.canEdit,
       nameParam: req.body.name,
       isAdminParam: req.body.isAdmin, 

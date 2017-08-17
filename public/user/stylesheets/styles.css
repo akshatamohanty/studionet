@@ -535,9 +535,21 @@ mentio-menu {
       margin: 10px !important;
       display: inline-block;
       width: 200px; }
+    .post-view-section .linked-post-container .md-mini {
+      border: 1px solid black;
+      display: inline;
+      width: 10px; }
+    .post-view-section .linked-post-container .nav-btn {
+      background-color: #8A8989;
+      width: 10px; }
+      .post-view-section .linked-post-container .nav-btn.clear {
+        background-color: white !important; }
+    .post-view-section .linked-post-container .nav-btn:hover {
+      background-color: #4C4848; }
   .post-view-section .side-details {
     overflow: hidden;
-    height: 80%; }
+    height: 80%;
+    margin-top: -7px; }
     .post-view-section .side-details .container {
       position: absolute;
       max-width: 200px;
@@ -554,7 +566,8 @@ mentio-menu {
         height: 30px; }
       .post-view-section .side-details .author-profile-picture.linked {
         width: 15px;
-        height: 15px; }
+        height: 15px;
+        display: none; }
     .post-view-section .side-details .author-name {
       margin: 5px;
       display: inline;
@@ -599,6 +612,10 @@ mentio-menu {
         margin: 0px 0px 0px 0px !important;
         font-size: 14px;
         overflow: auto; }
+    .post-view-section .post-details .post-subtitle {
+      font-size: 12px;
+      line-height: 14px;
+      color: gray; }
     .post-view-section .post-details .post-body {
       margin: 10px 0px 30px 0px; }
       .post-view-section .post-details .post-body p {

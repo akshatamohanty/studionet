@@ -90,8 +90,10 @@
             <div class='section'>
               <h2>{{ (user.nickname ? user.nickname : user.name) | titlecase  }}'s Top Contribution</h2>
               <md-divider md-inset></md-divider>
-              
-              <md-card class='pointer mini-post' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)' style='max-width: 100%; background-color: #F2CE6D'> 
+            
+              <div style='text-align: center;  margin-top: 20px;' ng-if='post.id === null'> Oops.. this user doesn't have a top contribution yet! </div>
+
+              <md-card class='pointer mini-post' dnd-type="'post'" dnd-draggable='post' ng-click='goToNode(post.id)' style='max-width: 100%; background-color: #F2CE6D' ng-if='post.id !== null'> 
                 <div class='dragBar'></div>
                 <div class='action-bar' style='position: absolute;height: 30px; width: 30px; top: 4px; right: -1px; text-align: center;' ng-init='postStatus = getPostStatus(post)[0]'>
                   <ng-md-icon icon="check_circle" style="fill: #8FE266" size="16" ng-if='postStatus == "viewed"'>

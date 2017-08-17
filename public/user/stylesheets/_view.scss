@@ -16,12 +16,32 @@
 			width: 200px;
 		}
 
+		.md-mini{
+				border: 1px solid black;
+				display: inline;
+				width: 10px;
+		}
+
+		.nav-btn{
+			background-color: #8A8989;
+			width: 10px;
+
+			&.clear{
+				background-color: white !important;
+			}
+		}
+
+		.nav-btn:hover{
+			background-color: #4C4848;
+		}
+
 	}
 
 	.side-details{
 
 		overflow: hidden;
 		height: 80%;
+		margin-top: -7px;
 
 		.container{
 			position: absolute;
@@ -46,6 +66,7 @@
 			&.linked{
 				width: 15px;
 				height: 15px;
+				display: none;
 			}
 		}
 
@@ -136,8 +157,14 @@
 				font-size: 14px;
 				overflow: auto;
 			}
+
 		}
 
+		.post-subtitle{
+			font-size: 12px;
+			line-height: 14px;
+			color: gray;
+		}
 
 		.post-body{
 

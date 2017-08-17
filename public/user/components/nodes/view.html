@@ -1,151 +1,129 @@
-<div class='scroll post-view-section'>
+<div class='scroll post-view-section' layout="row">
 
-	<!-- back button -->
-	<a onclick='history.back()' style='display: block;'   id='top'></a>
+	<div flex>
+		<!-- main -->
+		<div class='post-container' layout='column'>
 
-	<!-- parent -->
-	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item, post_details.id)'>
-		
-		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent - 1 >= 0 ? parent=parent-1 :  null'>
-			<ng-md-icon icon="keyboard_arrow_left" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent > 0 '></ng-md-icon>
-		</md-button>
-		
-		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)' ng-if='post_details.parents[parent].id!=null'>
-			<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} </div>
-			<div layout="row">
-				<img class='author-profile-picture linked' src='{{getUser(post_details.parents[parent].createdBy).avatar}}'>
-				<div class='author-name linked'>{{getUser(post_details.parents[parent].createdBy).name}}</div>
-			</div>
-		</md-card>
+			<md-card class='post-details' layout='column' flex>
+
+				<div class='post-title main move'> 
+						<ng-md-icon icon="{{ post_details.type | post_icon }}" size='28' style="fill: #AFAFAF;" dnd-draggable='post_details' dnd-type="'post'">
+							<md-tooltip md-direction="bottom">{{ post_details.type }}</md-tooltip>
+						</ng-md-icon> 
+						{{ post_details.title }}
+				</div>
+				
+				<!-- <div layout="row">
+					<a ui-sref='home.profile-details({address: post_details.createdBy})'>
+						<img class='author-profile-picture main' src='{{getUser(post_details.createdBy).avatar}}'>
+						<div class='author-name main'> {{ getUser(post_details.createdBy).name }}</div>
+					</a>
+				</div>
+				
+				<div class='tags'>
+					<span class='pointer' ng-repeat='tag in post_details.tags | orderBy : "users"' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag.tag_id)'>#{{getTagName(tag.tag_id)}}
+					<md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
+					  	{{ tag.users.length }} user(s) tagged this post as {{getTagName(tag.tag_id)}}
+					</md-tooltip>
+					</span>
+				</div> -->
+
+				<md-divider></md-divider>
+
+				<div class='post-body'>	
+
+					<!-- content -->
+					<div ng-bind-html='post_details.body'></div>
+
+					<!-- Attachments - if present -->
+		            <div ng-if='post_details.attachments[0].id!=null'>
+		                <b>Attachments ({{post_details.attachments.length}} files)</b>
+		                <div ng-repeat="attachment in post_details.attachments">
+		                  <a href="/api/contributions/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
+		                    <div layout='row'>
+		                      <div class='flex-30 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}}); background-size: contain;'></div>
+		                      <div class='flex-70'>
+		                          <div class='attachment-details' style='margin-left: 20px;'>
+		                            <h4>{{attachment.attachment.name}}</h4>
+		                            <div> Size: {{ (attachment.attachment.size/1000000).toFixed(2) }} MB </div>
+		                          </div>
+		                      </div>
+		                    </div>
+		                  </a>
+		                </div>
+		            </div>
 
 
-		<md-card class='post-details pointer' layout='column' flex ng-if='post_details.parents[parent].id==null'>
-			<div class='post-title linked'>This post has no preceeding posts.</div>
-		</md-card>
+				</div>
 
-		
-		<md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null'>
-			<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon>
-		</md-button>
+			</md-card>
 
+		</div>
 	</div>
 
-	<!-- main -->
-	<div class='post-container' layout='column'>
+	<div class='side-details' flex="20">
 
-		<md-card class='post-details' layout='column' flex>
+		<div class='container' layout-margin>
 
-			<div class='post-actions'>
-
-				<div class='action' ng-click='reply(post_details)'>
-					<ng-md-icon icon="reply" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Reply</md-tooltip>
-				</div>
-
-				<div class='action' ng-click='comment(post_details)'>
-					<ng-md-icon icon="chat_bubble" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Comment</md-tooltip>
-				</div>
-
-				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='post_details.status.indexOf("liked") > -1 ? unlike(post_details.id) : like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
-					<ng-md-icon icon="thumb_up" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") > -1'> You've liked this post!</md-tooltip>
-	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") == -1'> Like this post!</md-tooltip>
-				</div>
-
-				<div class='action' ng-if='post_details.createdBy == user.id && post_details.children[0].id == null && post_details.comments[0].id == null;' ng-click='delete(post_details.id)'>
-					<ng-md-icon icon="delete" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
-				</div>
-
-				<div class='action' ng-if='post_details.createdBy == user.id;' ng-click='edit(post_details)'>
-					<ng-md-icon icon="mode_edit" size='20' style="fill: #5A5A5A"></ng-md-icon>
-	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
-				</div>
-
+			<!-- navigation -->
+			<div class='post-actions' layout="row" layout-align='center'  layout-wrap>
+				
 				<div class='action' ng-click='backToTop()'>
-					<ng-md-icon icon="keyboard_arrow_up" size='20' style="fill: #5A5A5A"></ng-md-icon>
+					<ng-md-icon icon="keyboard_arrow_up" size='16' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom">Up</md-tooltip>
 				</div>
 
 				<div class='action'>
 					<a onclick='history.back()'>
-						<ng-md-icon icon="keyboard_arrow_left" size='20' style="fill: #5A5A5A"></ng-md-icon>
+						<ng-md-icon icon="keyboard_arrow_left" size='16' style="fill: #5A5A5A"></ng-md-icon>
 		             	<md-tooltip md-direction="bottom">Back</md-tooltip>
 	             	</a>
 				</div>
 
 				<div class='action'>
 					<a ng-click='goToSpaceWithArgs(query)'>
-						<ng-md-icon icon="first_page" size='20' style="fill: #5A5A5A"></ng-md-icon>
+						<ng-md-icon icon="first_page" size='16' style="fill: #5A5A5A"></ng-md-icon>
 		             	<md-tooltip md-direction="bottom">Back to Search</md-tooltip>
 	             	</a>
 				</div>
 
 			</div>
 
-
-			<div class='post-title main move'> 
-					<ng-md-icon icon="{{ post_details.type | post_icon }}" size='28' style="fill: #AFAFAF;" dnd-draggable='post_details' dnd-type="'post'">
-						<md-tooltip md-direction="bottom">{{ post_details.type }}</md-tooltip>
-					</ng-md-icon> 
-					{{ post_details.title }}
-			</div>
+			<h3 style='line-height: 18px; font-size: 14px;'>
+                About the author
+            </h3>
 			<div layout="row">
-				<a ui-sref='home.profile-details({address: post_details.createdBy})'>
-					<img class='author-profile-picture main' src='{{getUser(post_details.createdBy).avatar}}'>
-					<div class='author-name main'> {{ getUser(post_details.createdBy).name }}</div>
+				<a ui-sref='home.profile-details({address: post_details.createdBy})' ng-init='auth = getUser(post_details.createdBy)'>
+					<img class='author-profile-picture main' src='{{auth.avatar}}'>
+					<div class='author-name main'> {{ auth.nickname ? auth.nickname : auth.name }}</div>
 				</a>
 			</div>
-			
+
+			<div layout='column'>
+				<span style='font-size: 10px;'>Created: {{post_details.date | date: 'mediumDate' }}</span>
+				<span style='font-size: 10px;'>Views: {{post_details.views }}</span>
+				<span style='font-size: 10px;'>Likes: {{post_details.likes}}</span>
+			</div>
+
 			<div class='tags'>
-				<span class='pointer' ng-repeat='tag in post_details.tags | orderBy : "users"' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag.tag_id)'>#{{getTagName(tag.tag_id)}}
+				<span style='line-height: 14px; font-size: 12px;' class='pointer' ng-repeat='tag in post_details.tags | orderBy : "users"' ng-if='getTagName(tag.tag_id).length>0' ng-click='goToTagSpace(tag.tag_id)'>#{{getTagName(tag.tag_id)}}
 				<md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
 				  	{{ tag.users.length }} user(s) tagged this post as {{getTagName(tag.tag_id)}}
 				</md-tooltip>
 				</span>
 			</div>
 
-			<md-divider></md-divider>
 
-			<div class='post-body'>	
+			<!-- comments -->
 
-				<!-- content -->
-				<div ng-bind-html='post_details.body'></div>
+            <!-- post-functions -->
+			<div class='comment' layout='column' ng-if='post_details.comments[0].id != null' >
 
-				<!-- Attachments - if present -->
-	            <div ng-if='post_details.attachments[0].id!=null'>
-	                <b>Attachments ({{post_details.attachments.length}} files)</b>
-	                <div ng-repeat="attachment in post_details.attachments">
-	                  <a href="/api/contributions/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
-	                    <div layout='row'>
-	                      <div class='flex-30 attachment-thumb' style='background-image: url({{getThumb(post_details.id, attachment.attachment)}}); background-size: contain;'></div>
-	                      <div class='flex-70'>
-	                          <div class='attachment-details' style='margin-left: 20px;'>
-	                            <h4>{{attachment.attachment.name}}</h4>
-	                            <div> Size: {{ (attachment.attachment.size/1000000).toFixed(2) }} MB </div>
-	                          </div>
-	                      </div>
-	                    </div>
-	                  </a>
-	                </div>
-	            </div>
+                <h3 style='line-height: 18px; font-size: 14px;'>
+                	Comments ({{post_details.comments.length}})
+                </h3>
 
-	            <!-- post-functions -->
-				<div class='comment' layout='column' ng-if='post_details.comments[0].id != null'>
-
-					<md-divider></md-divider>
-	                
-	                <h3 style='line-height: 24px;'>
-	                	Comments 
-	                </h3>
-
-	                <!-- commenting area -->
-	                <textarea ng-show='showComment'>
-	                	
-	                </textarea>
-
-					<md-divider></md-divider>
+                <div style='max-height: 200px; overflow-y: scroll;'>
 
 	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: dateCreated' ng-init='u = getUser(comment.createdBy)'>
 	                    
@@ -157,44 +135,127 @@
 
 	                </div>
 
+                </div>
+
+			</div>
+
+			<!-- reactions -->
+			<div class='post-actions' layout="row" layout-align='center'  layout-wrap>
+				
+				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='post_details.status.indexOf("liked") > -1 ? unlike(post_details.id) : like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
+					<ng-md-icon icon="thumb_up" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") > -1'> You've liked this post!</md-tooltip>
+	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") == -1'> Like this post!</md-tooltip>
 				</div>
+
+				<div class='action' ng-click='comment(post_details)'>
+					<ng-md-icon icon="chat_bubble" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Comment</md-tooltip>
+				</div>
+
+				<div class='action' ng-click='reply(post_details)'>
+					<ng-md-icon icon="reply" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Reply</md-tooltip>
+				</div>
+
 			</div>
 
-		</md-card>
+			<md-divider></md-divider>
 
-	</div>
+			<h3 style='line-height: 16px; font-size: 12px;'>
+               	Predecessors
+            </h3>
 
-	<!-- children -->
-	<div class='linked-post-container' layout='row' layout-wrap dnd-list dnd-drop='linkNewChild(item, post_details.id)'>
-		
-		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child - 1 >= 0 ? child=child-1 :  null'>
-			<ng-md-icon icon="keyboard_arrow_left" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child>0'></ng-md-icon>
-		</md-button>
-		
-		<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.children[child].id)' ng-if='post_details.children[child].id!=null'>
-			<div class='post-title linked'>{{child+1}} | {{post_details.children.length }} {{post_details.children[child].title}} </div>
-			<div layout="row">
-				<img class='author-profile-picture linked' src='{{getUser(post_details.children[child].createdBy).avatar}}'>
-				<div class='author-name linked'>{{getUser(post_details.children[child].createdBy).name}}</div>
+			<!-- parent -->
+			<div class='linked-post-container parent' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item, post_details.id)'>
+				
+				<!-- <md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent - 1 >= 0 ? parent=parent-1 :  null'>
+					<ng-md-icon icon="keyboard_arrow_left" size='12' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent > 0 '></ng-md-icon>
+				</md-button> -->
+				<a class='nav-btn' ng-click='parent - 1 >= 0 ? parent=parent-1 :  null' ng-class='post_details.parents[parent].id!=null && parent > 0 ? "" : "clear"'>
+					<!-- <ng-md-icon icon="keyboard_arrow_left" size='12' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent > 0 '></ng-md-icon> -->
+				</a>
+				
+				<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.parents[parent].id)' ng-if='post_details.parents[parent].id!=null'>
+					<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} </div>
+					<div layout="row">
+						<img class='author-profile-picture linked' src='{{getUser(post_details.parents[parent].createdBy).avatar}}'>
+						<div class='author-name linked'>{{getUser(post_details.parents[parent].createdBy).name}}</div>
+					</div>
+				</md-card>
+
+
+				<md-card class='post-details pointer' layout='column' flex ng-if='post_details.parents[parent].id==null'>
+					<div class='post-subtitle linked'>This post has no preceeding posts. Drop a node here to link a parent.</div>
+				</md-card>
+
+				<a class='nav-btn' ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null' ng-class='post_details.parents[parent].id!=null && parent<post_details.parents.length-1 ? "" : "clear"'>
+					<!-- <ng-md-icon icon="keyboard_arrow_right" size='12' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon> -->
+				</a>
+
+				
+				<!-- <md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null'>
+					<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon>
+				</md-button> -->
+
 			</div>
-		</md-card>
 
 
-		<md-card class='post-details pointer' layout='column' flex ng-if='post_details.children[child].id==null'>
-			<div class='post-title linked'>This post has no replies.</div>
-		</md-card>
+			<h3 style='line-height: 16px; font-size: 12px;'>
+                Successors
+            </h3>
 
-		<md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child + 1 < post_details.children.length ? child=child+1: null'>
-			<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child<post_details.children.length-1'></ng-md-icon>
-		</md-button>
+			<!-- children -->
+			<div class='linked-post-container child' layout='row' layout-wrap dnd-list dnd-drop='linkNewChild(item, post_details.id)'>
+				
+				<!-- <md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child - 1 >= 0 ? child=child-1 :  null'>
+					<ng-md-icon icon="keyboard_arrow_left" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child>0'></ng-md-icon>
+				</md-button> -->
+				
+				<a class="nav-btn" ng-click='child - 1 >= 0 ? child=child-1 :  null' ng-class='post_details.children[child].id!=null && child>0 ? "" : "clear"'>
+					<!-- <ng-md-icon icon="keyboard_arrow_left" size='12' style="fill: #222" ng-if='post_details.children[child].id!=null && child>0'></ng-md-icon> -->
+				</a>
+
+				<md-card class='post-details pointer' layout='column' flex ng-click='goToNode(post_details.children[child].id)' ng-if='post_details.children[child].id!=null'>
+					<div class='post-title linked'>{{child+1}} | {{post_details.children.length }} {{post_details.children[child].title}} </div>
+					<div layout="row">
+						<img class='author-profile-picture linked' src='{{getUser(post_details.children[child].createdBy).avatar}}'>
+						<div class='author-name linked'>{{getUser(post_details.children[child].createdBy).name}}</div>
+					</div>
+				</md-card>
+
+
+				<md-card class='post-details pointer' layout='column' flex ng-if='post_details.children[child].id==null'>
+					<div class='post-subtitle linked'>This post has no replies. Drop a node here to link a child.</div>
+				</md-card>
+
+				<!-- <md-button class="md-mini" aria-label="switch-child" md-no-ink="false" md-ripple-size="auto" ng-click='child + 1 < post_details.children.length ? child=child+1: null'>
+					<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child<post_details.children.length-1'></ng-md-icon>
+				</md-button> -->
+
+				<a class='nav-btn' ng-click='child + 1 < post_details.children.length ? child=child+1: null' ng-class='post_details.children[child].id!=null && child<post_details.children.length-1 ? "" : "clear"'>
+					<!-- <ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.children[child].id!=null && child<post_details.children.length-1'></ng-md-icon> -->
+				</a>
+
+			</div>
+
+			<!-- for creator -->
+			<div class='post-actions' layout="row" layout-align='center' layout-wrap ng-if='post_details.createdBy == user.id;'>
+
+				<div class='action' ng-if='post_details.children[0].id == null && post_details.comments[0].id == null;' ng-click='delete(post_details.id)'>
+					<ng-md-icon icon="delete" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Delete</md-tooltip>
+				</div>
+
+				<div class='action' ng-click='edit(post_details)'>
+					<ng-md-icon icon="mode_edit" size='16' style="fill: #5A5A5A"></ng-md-icon>
+	             	<md-tooltip md-direction="bottom">Edit</md-tooltip>
+				</div>
+
+			</div>
+
+		</div>
 
 	</div>
-
-	<!-- <div class='linked-post-container ancestor' ng-repeat='descendant in descendants' layout='row' layout-wrap>
-		<md-card class='post-details' layout='column' flex ng-click='expand(ancestor.id)'>
-			<div class='post-title linked'>{{post_details.children[child].title}} <span ng-if='post_details.children[child].id==null'>This node has no parents</span></div>
-		</md-card>
-	</div> -->
-
 
 </div>

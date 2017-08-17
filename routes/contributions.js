@@ -410,6 +410,7 @@ router.route('/:contributionId')
                 ref: c.ref, \
                 createdBy: c.createdBy, \
                 views: c.views, \
+                likes: c.rateCount,\
                 tags: tags, \
                 attachments: attachments,\
                 comments: comments,\

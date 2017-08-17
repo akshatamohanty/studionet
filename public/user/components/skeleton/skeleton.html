@@ -16,10 +16,15 @@
       </div>
 
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="80">
+      <div show-gt-sm flex="75">
         <ng-include src="'./components/skeleton/searchbar.html'" ng-controller="searchbarCtrl as ctrl"></ng-include>
       </div>
 
+      <div flex="5">
+        <a href='/logout'>
+            <ng-md-icon class='pointer' icon="logout" style="fill: white" size="25"></ng-md-icon> 
+        </a>
+      </div>
 
     </div>
 
