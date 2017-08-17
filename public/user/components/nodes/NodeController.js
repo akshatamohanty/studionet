@@ -2,9 +2,12 @@ angular.module('studionet')
 .controller('NodeController', [ '$scope', 'attachments', 'users', 'tags', 'contributions', '$mdDialog', '$state', '$mdToast', 'links', 'routerUtils', '$anchorScroll', '$location', 'routerUtils',
                                 function($scope, attachments, users, tags, contributions, $mdDialog, $state, $mdToast, links, routerUtils, $anchorScroll, $location, routerUtils){ 
 
+
         $scope.goToTagSpace = function(tag){
           routerUtils.goToSpaceWithArgs([tag],[]);
         } 
+
+        $scope.$emit('showBench');
 
         // change this to resolve 
         var post = $scope.$resolve.postDetails.data;
@@ -202,6 +205,15 @@ angular.module('studionet')
               .cancel('Cancel');
 
             $mdDialog.show(confirm).then(function(result) {
+
+                  if(result == undefined || result.length == 0){
+                    var toast = $mdToast.simple()
+                          .textContent('Oops.. Can\'t post a blank comment!')
+                          .position("bottom right")
+
+                    $mdToast.show(toast);
+                    return;
+                  }
                   
                   var new_comment = { 
                                   users: [],
@@ -215,6 +227,7 @@ angular.module('studionet')
                                 };
 
                   contributions.createContribution( new_comment ).then(function(res){
+                        
                         var toast = $mdToast.simple()
                           .textContent('Hurrah! Keep the conversation going!')
                           .position("bottom right")
@@ -254,6 +267,7 @@ angular.module('studionet')
                   $mdToast.show(toast);
 
                   $scope.post_details.status.push("liked");
+                  $scope.post_details.likes.push({id: -1});
             });
         }
 
@@ -268,6 +282,8 @@ angular.module('studionet')
 
                   if($scope.post_details.status.indexOf("liked") > -1)
                     $scope.post_details.status.splice($scope.post_details.status.indexOf("liked"));
+
+                  $scope.post_details.likes.pop();
             });
 
         }

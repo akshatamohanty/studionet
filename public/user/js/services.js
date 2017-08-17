@@ -241,7 +241,7 @@ angular.module('studionet')
 
 			post.status = status;
 
-			return status;
+			return post;
 
 		}	
 
@@ -381,7 +381,7 @@ angular.module('studionet')
 					return o.recentPosts;
 				}
 				else{
-					number = 10;
+					number = 20;
 				}
 			}
 
@@ -435,7 +435,7 @@ angular.module('studionet')
 				res.body = res.body.replace(inlineImagePattern, 'src="../api/contributions/' + contribution_id + '/attachments?name=studionet-inline-img-');
 
 				// add status if present
-				res.status = o.contributionsHash[res.id] ? o.contributionsHash[res.id].status : [];
+				profile.getPostStatus(res);
 
 				return res;
 				// ------------- compute the reading time
@@ -595,21 +595,15 @@ angular.module('studionet')
 
 		o.likeContribution = function(id){
 			return $http.post('/api/contributions/' + id + '/rate', {'rating': 5} ).success(function(data){
-				o.contributionsHash[id].status.push("liked");
 				profile.updateContribution(id, "liked");
+				profile.getPostStatus( o.contributionsHash[id]);
 			});
 		};
 
 		o.unlikeContribution = function(id){
 			return $http.delete('/api/contributions/' + id + '/rate').success(function(data){
-				
-				var index = o.contributionsHash[id].status.indexOf("liked");
-
-				if(index > -1){
-					o.contributionsHash[id].status.splice(index, 1);
-				}
-
 				profile.updateContribution(id, "liked", -1);
+				profile.getPostStatus( o.contributionsHash[id])
 			});
 		};
 

@@ -130,15 +130,16 @@
                 	Comments ({{post_details.comments.length}})
                 </h3>
 
-                <div style='max-height: 200px; overflow-y: scroll;'>
+                <div style='max-height: 250px; overflow-y: scroll;'>
 
-	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: dateCreated' ng-init='u = getUser(comment.createdBy)'>
+	                <div class='comment' ng-repeat='comment in post_details.comments | orderBy: "date"' ng-init='u = getUser(comment.createdBy)'>
 	                    
-	                    <b>{{u.nickname ? u.nickname : u.name}}</b> says:
-
+	                    <span style='font-size: 10px; color: #B1AFAF;'>{{comment.date | date : 'medium'}}</span><br>
+	                    <b>{{u.nickname ? u.nickname : u.name}}</b> said:
 	                    <div ng-bind-html="comment.body"></div>
 	                    
 	                    <div class='pointer' style='font-size: 10px; color: blue;' ng-if='comment.createdBy == user.id' ng-click='delete(comment.id, true)'>[ Delete ]</div>
+
 
 	                </div>
 
@@ -149,7 +150,8 @@
 			<!-- reactions -->
 			<div class='post-actions' layout="row" layout-align='center'  layout-wrap>
 				
-				<div class='action' ng-if='post_details.createdBy != user.id;' ng-click='post_details.status.indexOf("liked") > -1 ? unlike(post_details.id) : like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
+				<div class='action' ng-if='post_details.createdBy != user.id;' 
+					ng-click='post_details.status.indexOf("liked") > -1 ? unlike(post_details.id) : like(post_details.id)' ng-class='post_details.status.indexOf("liked") > -1 ? "selected" : "unselected" '>
 					<ng-md-icon icon="thumb_up" size='16' style="fill: #5A5A5A"></ng-md-icon>
 	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") > -1'> You've liked this post!</md-tooltip>
 	             	<md-tooltip md-direction="bottom" ng-if='post_details.status.indexOf("liked") == -1'> Like this post!</md-tooltip>

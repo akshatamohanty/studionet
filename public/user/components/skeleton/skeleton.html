@@ -6,17 +6,22 @@
     <div class="md-toolbar-tools" layout-align='top center'>
       
       <!-- Show / Hide Workbench control -->
-      <div flex="5">
+      <!-- <div flex="5">
         <ng-md-icon class='pointer' icon="dehaze" style="fill: white" size="25" ng-click="showBench=!showBench"></ng-md-icon> 
-      </div>
+      </div> -->
 
       <!-- Branding -->
       <div hide show-gt-xs flex-gt-sm="15" layout-align='top left'>
-        <a ui-sref='home.homepage'><span md-truncat>Studionet</span></a>
+          <span md-truncat style='color: white;'>
+            <img id='logo' src='../assets/images/studionet-logo.svg' style='width: 30px; vertical-align: bottom;' ng-click="showBench=!showBench">
+            <a ui-sref='home.homepage'>
+                Studionet
+            </a>
+          </span>
       </div>
 
       <!-- search bar (depends on state) -->
-      <div show-gt-sm flex="75">
+      <div show-gt-sm flex="80">
         <ng-include src="'./components/skeleton/searchbar.html'" ng-controller="searchbarCtrl as ctrl"></ng-include>
       </div>
 

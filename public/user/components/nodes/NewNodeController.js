@@ -163,6 +163,7 @@ angular.module('studionet')
 
         $scope.createContribution = function(){
 
+
             contributions.createContribution( $scope.contributionData ).then(function(res){
 
                 var msg = 'Yay! You just created a new post!';
@@ -185,10 +186,12 @@ angular.module('studionet')
                 );
 
                 // navigate to the newly created node
-                if($stateParams.ref == null)
+                /*if($stateParams.ref === null){
                   routerUtils.goToNode(res.data[0].id);
-                else
+                }
+                else{*/
                   history.back();
+                //}
 
             }, function(error){
 
