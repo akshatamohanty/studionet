@@ -52,6 +52,11 @@ angular.module('studionet')
             self.show = fork_id;
         }
 
+        self.nodeToFolder = function(node){
+          alert("node wihtout folder");
+          console.log(node);
+        }
+
         self.editProfile = function(){
                   
                   var confirm = {
@@ -187,14 +192,34 @@ angular.module('studionet')
 
         }
 
-        self.removeFromFork = function(spaceId, contributionId){
-          spaces.removeFromFork(spaceId, contributionId).then(function(data){
-                  var toast = $mdToast.simple()
-                          .textContent('Removed post from folder')
-                          .position("bottom left")
+        self.removeFromFork = function($event, spaceId, contributionId){
 
-                  $mdToast.show(toast);
-          });
+          $event.stopPropagation();
+
+          var confirm = $mdDialog.confirm()
+              .title('Remove post?')
+              .textContent('This action will remove this post from your folder!')
+              .ok('Remove')
+              .cancel('No');
+
+            $mdDialog.show(confirm).then(function(result) {
+
+                spaces.removeFromFork(spaceId, contributionId).then(function(data){
+                        var toast = $mdToast.simple()
+                                .textContent('Removed post from folder')
+                                .position("bottom left")
+
+                        $mdToast.show(toast);
+                });
+
+
+            }, function(error){
+
+                // display error
+            
+          }); 
+
+
         }
 
         self.addNodeToFork = function(item, space){

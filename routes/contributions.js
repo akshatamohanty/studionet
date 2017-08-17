@@ -397,6 +397,12 @@ router.route('/:contributionId')
       'WITH c, tags, attachments, comments, collect( { id: id(parent), title: parent.title, createdBy: parent.createdBy, date: parent.dateCreated } ) as parents',
       'OPTIONAL MATCH (child:contribution)-[:RELATED_TO]->(c) WHERE NOT child.contentType="comment"',
       'WITH c, tags, attachments, comments, parents, collect( { id: id(child), title: child.title, createdBy: child.createdBy, date: child.dateCreated } ) as children',
+      'OPTIONAL MATCH (vw:user)-[:VIEWED]->(c) WHERE NOT id(vw)=c.createdBy',
+      'WITH c, tags, attachments, comments, parents, children, collect({id: id(vw)}) as views',
+      'OPTIONAL MATCH (lk:user)-[:RATED]->(c) WHERE NOT id(lk)=c.createdBy',
+      'WITH c, tags, attachments, comments, parents, children, views, collect({id: id(lk)}) as likes',
+      'OPTIONAL MATCH (bk:user)-[:BOOKMARKED]->(c) WHERE NOT id(bk)=c.createdBy',
+      'WITH c, tags, attachments, comments, parents, children, views, likes, collect({id: id(bk)}) as bookmarks',
       'RETURN { \
                 ratingArray: [ SIZE((:user)-[:RATED{rating: 5}]->(c)), SIZE((:user)-[:RATED{rating: 4}]->(c)), \
                   SIZE((:user)-[:RATED{rating: 3}]->(c)), SIZE((:user)-[:RATED{rating: 2}]->(c)), \
@@ -409,8 +415,9 @@ router.route('/:contributionId')
                 date: c.lastUpdated, \
                 ref: c.ref, \
                 createdBy: c.createdBy, \
-                views: c.views, \
-                likes: c.rateCount,\
+                views: views, \
+                likes: likes,\
+                bookmarks: bookmarks,\
                 tags: tags, \
                 attachments: attachments,\
                 comments: comments,\

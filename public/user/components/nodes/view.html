@@ -106,8 +106,9 @@
 
 			<div layout='column'>
 				<span style='font-size: 10px;'>Created: {{post_details.date | date: 'mediumDate' }}</span>
-				<span style='font-size: 10px;'>Views: {{post_details.views }}</span>
-				<span style='font-size: 10px;'>Likes: {{post_details.likes}}</span>
+				<span style='font-size: 10px;'>Views: {{post_details.views[0].id !== null ? post_details.views.length : 0}}</span>
+				<span style='font-size: 10px;'>Likes: {{post_details.likes[0].id !== null ? post_details.likes.length : 0}}</span>
+				<span style='font-size: 10px;'>Bookmarks: {{post_details.bookmarks[0].id !== null ? post_details.bookmarks.length : 0}}</span>
 			</div>
 
 			<div class='tags'>
