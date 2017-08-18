@@ -3,8 +3,6 @@ angular.module('studionet')
 // for other people's profile
 .controller('ProfileController', ['$scope', '$rootScope', 'profile', 'tags', 'groups', 'users', 'GraphService', '$rootScope', '$stateParams', function($scope, $rootScope, profile, tags, groups, users, GraphService, $rootScope, $stateParams){
 
-	$scope.profile = "hello";
-
 	$scope.$emit('hideBench');
 	$scope.$emit('hideSearch');
 
@@ -17,6 +15,7 @@ angular.module('studionet')
 	 */
 	$scope.standalone = false;
 
+
 	$scope.tags = tags.tags;
 	$scope.groups = groups.groups;
 
@@ -25,10 +24,14 @@ angular.module('studionet')
 	// Observe the Graph Service for Changes and register observer
 	var updateProfile;
 
+	console.log($scope.user);
+	
+
 	var computeStats = function(){
 
 		$scope.views = 0;
 		$scope.rating = 0;
+
 		// compute the rating based on rating of the contributions the user has made
 		var rateCount = 0;
 		var totalRating = 0;

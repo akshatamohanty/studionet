@@ -23,10 +23,12 @@
 
                 <div flex='70'>
                     <div style='margin: 0 auto; line-height: 24px;'>
-                        Posts: {{user.contributions.length}}<br>
-                        Comments: {{ (user.contributions | filter: {type: "comment"}).length  }}<br>
-                        Upvotes: {{user.thumbs}}<br>
+                        Posts Created: {{ (user.contributions | filter: {type: "!comment"}).length  }}<br>
+                        Comments Created: {{ (user.contributions | filter: {type: "comment"}).length  }}<br>
                         Views: {{user.views}}<br>
+                        Upvotes: {{user.likes}}<br>
+                        Bookmarks: {{user.bookmarks}}<br>
+                        Mentions: {{user.mentions}}<br>
                     </div>
                 </div>
 
@@ -43,20 +45,32 @@
                 <md-divider md-inset></md-divider>
                 <br>
                 <div>
+                    <span style='float: left;'>{{ levels[curr_level].name }}
+                      <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
+                            {{ (user.nickname ? user.nickname : user.name) | titlecase }} has {{user.points}} points
+                      </md-tooltip>
+                    </span>
+
+                    <span style='float:right;'>{{ levels[curr_level + 1].name }}
+                      <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
+                        Need {{ levels[curr_level + 1].points - user.points }} more points to clear this level! 
+                      </md-tooltip>
+                    </span>
+                    
+                    <br>
+                    
                     <md-progress-linear md-mode="determinate" value="{{getLevelPercent()}}"></md-progress-linear>
-                    <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true">
-                          {{ (user.nickname ? user.nickname : user.name) | titlecase }} has {{user.points}} points
-                    </md-tooltip>
+                    
                 </div>
                 
                 <br>
                 <div layout="row">
-                    <span class='level pointer' ng-class={{getLevelStatus($index)}} ng-repeat='level in levels' flex>{{level.name}}
+                    <span class='level' ng-class={{getLevelStatus($index)}} ng-repeat='level in levels' flex>{{level.name}}
                     <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true" ng-if='user.points >= level.points'>
                       Reached this level at {{level.points}} points! 
                     </md-tooltip>
                     <md-tooltip md-visible="false" md-delay="400" md-direction="bottom" md-autohide="true" ng-if='user.points < level.points'>
-                      Needs {{ level.points - user.points }} more points to clear this level! 
+                      Need {{ level.points - user.points }} more points to clear this level! 
                     </md-tooltip>
                     </span>
                 </div>

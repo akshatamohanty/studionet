@@ -127,6 +127,10 @@ router.route('/:userId')
           'WITH forks, follows, u, contributions, count(v) as views',
           'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[r:RATED]-(u3:user) WHERE NOT ID(u)=ID(u3)',
           'WITH forks, follows, u, contributions, views, count(r) as thumbs',
+          'OPTIONAL MATCH (u)-[:CREATED]->(:contribution)<-[bk:BOOKMARKED]-(u4:user) WHERE NOT ID(u)=ID(u4)',
+          'WITH forks, follows, u, contributions, views, thumbs, count(bk) as bookmarks',
+          'OPTIONAL MATCH (mc:contribution) WHERE mc.createdBy <> id(u) AND id(u) in mc.mentions',
+          'WITH forks, follows, u, contributions, views, thumbs, bookmarks, count(mc) as mentions',
           'RETURN {\
                     nusOpenId: u.nusOpenId,\
                     isAdmin: u.isAdmin, \
@@ -136,7 +140,10 @@ router.route('/:userId')
                     lastLoggedIn: u.lastLoggedIn,\
                     id: id(u),\
                     views: views,\
-                    thumbs: thumbs,\
+                    likes: thumbs,\
+                    bookmarks: bookmarks, \
+                    mentions: mentions, \
+                    points: (views/20 + thumbs/10 + bookmarks/2 + mentions/4),\
                     contributions: contributions,\
                     forked: forks \
           }'

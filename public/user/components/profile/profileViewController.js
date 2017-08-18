@@ -9,10 +9,7 @@ angular.module('studionet')
       $scope.levels = [ { name: "Novice", id: 1, points: 10}, { name: "Coffee Boy", id: 2, points: 50},  { name: "Intern", id: 3, points: 150},  { name: "Junior Architect", id: 4, points: 500},
                         { name: "Architect", id: 5, points: 1000}, { name: "Lead Architect", id: 6, points: 5000}        ];
 
-      $scope.Badge = [
-                {"Name" : "Badge1"},
-          ];
-
+      
       // todo: compute most popular contribution of the user
       $scope.topcontribution = $scope.user.contributions[0];
       function getScore(contribution){
@@ -49,6 +46,19 @@ angular.module('studionet')
 
 
       // functions for levels
+
+      //
+      //
+      //  compute current and next level
+      //
+      $scope.curr_level = 0;
+      for(var i=0; i < $scope.levels.length - 1; i++){
+          if($scope.user.points > $scope.levels[i].points && $scope.user.points < $scope.levels[i+1].points){
+            $scope.curr_level = 1;
+            break;   
+          }
+      }
+
       var currentLevel = 0;
       $scope.getLevelStatus = function(level_idx){    
 
@@ -64,6 +74,9 @@ angular.module('studionet')
           return "'" + status + "'";
 
       }
+
+
+
 
       // function for progress bar
       $scope.getLevelPercent = function(){

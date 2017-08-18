@@ -127,10 +127,12 @@
                 About the author
             </h3>
 			<div layout="row">
-				<a ui-sref='home.profile-details({address: post_details.createdBy})' ng-init='auth = getUser(post_details.createdBy)'>
-					<img class='author-profile-picture main' src='{{auth.avatar}}'>
-					<div class='author-name main'> {{ auth.nickname ? auth.nickname : auth.name }}</div>
-				</a>
+				<img class='author-profile-picture main' src='{{auth.avatar}}'>
+				<div class='author-name main'>
+					<a ui-sref='home.profile-details({address: post_details.createdBy})' ng-init='auth = getUser(post_details.createdBy)'> 
+					{{ auth.nickname ? auth.nickname : auth.name }}
+					</a>
+				</div>
 			</div>
 
 			<div layout='column'>

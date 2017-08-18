@@ -573,7 +573,7 @@ mentio-menu {
       display: inline;
       height: 30px; }
       .post-view-section .side-details .author-name.main {
-        line-height: 30px;
+        line-height: 18px;
         font-size: 14px; }
       .post-view-section .side-details .author-name.linked {
         line-height: 15px;
