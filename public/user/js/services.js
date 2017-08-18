@@ -65,7 +65,7 @@ angular.module('studionet')
 
             if(attachment.thumb){
               path.image = true; 
-              path.style = {"background-image": "url(" + "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail" + ")" ,  "background-repeat": "no-repeat"};
+              path.style = {"background-image": "url(" + "/api/contributions/" + contributionId + /attachments/+ attachment.id + "/thumbnail" + ")" ,  "background-repeat": "no-repeat", "background-size" : "contain"};
             }
             else{
 

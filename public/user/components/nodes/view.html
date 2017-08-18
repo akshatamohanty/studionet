@@ -41,11 +41,11 @@
 		                <div ng-repeat="attachment in post_details.attachments">
 		                  <a href="/api/contributions/{{post_details.id}}/attachments/{{attachment.id}}" target=_blank>
 		                    <div layout='row'>
-		                      <div class='flex-30 attachment-thumb' ng-style='getThumb(post_details.id, attachment.attachment).style'></div>
-		                      <div class='flex-70'>
+		                      <div class='flex-10 attachment-thumb' ng-style='getThumb(post_details.id, attachment.attachment).style'></div>
+		                      <div class='flex-90'>
 		                          <div class='attachment-details' style='margin-left: 20px;'>
 		                            <h4>{{attachment.attachment.name}}</h4>
-		                            <div> Size: {{ (attachment.attachment.size/1000000).toFixed(2) }} MB </div>
+		                            <div style='font-size: 12px; color: #333;'>Size: {{ (attachment.attachment.size/1000000).toFixed(2) }} MB </div>
 		                          </div>
 		                      </div>
 		                    </div>
