@@ -7,21 +7,30 @@
 
 <md-content layout='column' style='max-width: 500px; max-height: 600px; text-align: justify; padding: 10px 10px;'>
   
-  <h3>Notifications</h3>
+  <h3>
+    <span ng-if='notifications.length > 0'> Notifications</span>
+    <span ng-if='notifications.length == 0'>You are all caught up!</span>
+  </h3>
+
   <md-divider></md-divider>
 
   <div style='overflow-y: scroll; height: 500px;'>
-    <md-list flex ng-if='notifications.length > 0'>
 
-      <md-list-item ng-repeat='note in notifications | orderBy: "-time" ' ng-init='user = getUser(note.user);'  style='min-height: 20px;margin-bottom: 10px;' ng-hide='getContribution(note.contribution) == null'>
-        <div class="md-list-item-text" style='font-size: 12px; margin: 0px; padding: 10px 0px 10px 0px'>
-          <img ng-src={{user.avatar}} style='width: 30px; height: 30px; border-radius: 50%; display: inline-block; vertical-align: middle;'/>
-          &nbsp; {{user.nickname ? user.nickname : user.name}} {{ note.message }} the post titled <span class='pointer' ng-click='goToNode(note.contribution);close();'><a><i><u>{{ getContribution(note.contribution).title }}</u></i></a></span> on {{note.time | date: 'mediumDate'}}
-        </div>
-        <md-divider></md-divider>
-      </md-list-item>
+      <!-- post-functions -->
+      <div class='comment' ng-repeat='note in notifications | orderBy: "-time"' ng-init='user = getUser(note.user);' ng-hide='getContribution(note.contribution) == null' layout='row' style='margin: 15px 10px;'>
+          
+          <div flex='10'>
+            <img ng-src={{user.avatar}} style='width: 30px; height: 30px; border-radius: 50%; display: inline-block; vertical-align: middle;margin-top: 20px;'/>
+          </div>
 
-    </md-list>
+          <div flex='90'>
+            <span style='font-size: 10px; color: #8C8A8A;'>{{note.time | date: 'mediumDate'}}</span><br>
+            <b>{{user.nickname ? user.nickname : user.name}}</b> 
+            {{ note.message }} the post titled <span class='pointer' style='font-size: 12px;' ng-click='goToNode(note.contribution);close();'><a><u>{{ getContribution(note.contribution).title }}</u></a>
+            </span>
+          </div>
+
+      </div>
   </div>
 
   <div layout="row" layout-align='center'>
@@ -29,6 +38,6 @@
     <md-button ng-click='clear()'>Clear All</md-button>
   </div>
 
-  <p style='text-align: center' ng-if='notifications.length == 0'> You are all caught up! </p>
-
 </md-content>
+
+

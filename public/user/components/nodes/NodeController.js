@@ -290,34 +290,51 @@ angular.module('studionet')
 
         // ------------------Function: - Delete
         $scope.delete = function(contributionId, comment){
+
+            var confirm = $mdDialog.confirm()
+              .title('Delete?')
+              .textContent('This action will delete your post and cannot be undone.')
+              .ok('Delete')
+              .cancel('Get me out of here!');
+
+            $mdDialog.show(confirm).then(function(result) {
+
+                contributions.deleteContribution(contributionId).then(function(data){
+                  var msg = 'Your contribution was deleted';
+                      // display success message
+                      // navigate after 3 seconds
+                      var toast = $mdToast.simple()
+                              .textContent(msg)
+                              .position("bottom right")
+
+                            $mdToast.show(toast);
+
+                    if(comment == true){
+                        // reload view if contribution was comment
+                        reload();
+                    }
+                    else{
+                        // navigate back to homepage
+                        history.back();
+                    }
+                }, function(){
+
+                      var toast = $mdToast.simple()
+                              .textContent('Oops.. something went wrong!')
+                              .position("bottom left")
+
+                      $mdToast.show(toast);
+
+                });
+
+
+            }, function(error){
+
+                // display error
             
-            contributions.deleteContribution(contributionId).then(function(data){
-              var msg = 'Your contribution was deleted';
-                  // display success message
-                  // navigate after 3 seconds
-                  var toast = $mdToast.simple()
-                          .textContent(msg)
-                          .position("bottom right")
+            }); 
+            
 
-                        $mdToast.show(toast);
-
-                if(comment == true){
-                    // reload view if contribution was comment
-                    reload();
-                }
-                else{
-                    // navigate back to homepage
-                    history.back();
-                }
-            }, function(){
-
-                  var toast = $mdToast.simple()
-                          .textContent('Oops.. something went wrong!')
-                          .position("bottom left")
-
-                  $mdToast.show(toast);
-
-            });
 
         };
 

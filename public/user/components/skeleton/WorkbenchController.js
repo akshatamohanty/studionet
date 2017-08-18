@@ -30,7 +30,7 @@ angular.module('studionet')
         self.show = undefined; // fork that is open
 
         self.toggleMyNodes = function(){
-          self.my_nodes = !self.my_nodes;
+          self.my_nodes = self.my_nodes == 1 ? 2 : 1;
         }
 
         self.isRecent = function(node){
@@ -274,7 +274,7 @@ angular.module('studionet')
             var time = fork.timed;
 
             if(time[0] == undefined)
-              return { msg: "This space doesnot have a deadline!", status: 'untimed'};
+              return { msg: "", status: 'untimed'};
 
             var now = new Date();
             var daysLeft = Math.round( (time[1] - now.getTime())/86400000, 0 ); 
