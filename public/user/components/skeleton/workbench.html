@@ -1,6 +1,5 @@
 <!-- header toolbar -->
 <!-- user details come from the skeleton : fix later -->
-<div ng-scrollable="{scrollX:'none',scrollY:'right'}" style="width: 100%; height: 600px;">
 <md-toolbar class='md-hue-2 profile-header' layout='column'>
 
     <div class='md-accent band pointer'>
@@ -14,7 +13,7 @@
 
           <div layout='row' layout-fill layout-margin>
             <div><img style='border-radius: 50%; width: 40px; height: 40px;' src='{{user.avatar}}'></div>
-            <div>     
+            <div>
                 <div class='header' style='margin-top: 0px; margin-left: 5px;'>{{user.nickname ? user.nickname : user.name}}</div>
                 <div class='subheader' style='margin-top: 0px; margin-left: 5px;'>{{user.points | level}}</div>
             </div>
@@ -45,7 +44,7 @@
     </div>
 
 </md-toolbar>
-
+<div ng-scrollable="{scrollX:'none',scrollY:'right'}" style="width: 100%; height: 600px;">
 <!-- content -->
 <md-content dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
 
@@ -135,8 +134,8 @@
             </div>
 
             <div class='folder-notes' ng-class='bench.my_nodes ? "open" : "close" '>
-                <md-card class='post-box move' ng-class='node.tags.length ? "published" : "unpublished" ' 
-                    ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"} as main_posts' 
+                <md-card class='post-box move' ng-class='node.tags.length ? "published" : "unpublished" '
+                    ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "!comment"} as main_posts'
                     ng-click='node.type=="comment" ? goToNode(node.ref) : goToNode(node.id)' dnd-draggable='node'  dnd-type="'post'" ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                     <div class='title'>
                       {{node.title}}
@@ -165,7 +164,7 @@
 
             <div class='folder-notes' ng-class='bench.comments ? "open" : "close" '>
               <md-card class='post-box'
-                  ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "comment"} as com_posts' 
+                  ng-repeat='node in user.contributions | orderBy: "created_on":true | filter: {type: "comment"} as com_posts'
                   ng-click='goToNode(node.ref)' ng-style=' bench.isRecent(node) ? {"background-color": "#92E17A"} : {}'>
                   <div class='title'>
                     {{node.title}}
