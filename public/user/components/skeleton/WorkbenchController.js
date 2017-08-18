@@ -64,7 +64,7 @@ angular.module('studionet')
                      template:
                            '<md-dialog aria-label="new tag dialog">' +
                            '  <md-dialog-content layout="row" layout-margin style="min-width: 300px;">\
-                                <div flex="50" class="profile-img-container" style="position: relative; background: url({{profilePic}}); background-size: contain;">\
+                                <div flex="50" class="profile-img-container" style="position: relative; background: url({{profilePic}}); background-size: contain; background-repeat: no-repeat;">\
                                     <a type="button" ngf-select="uplodateFiles($files)" ngf-multiple="false" style="width:100%; height: 100%;">\
                                     <div style="position: absolute; top: 10px; right: 10px;"><ng-md-icon icon="mode_edit" size="15" style="fill: #341BED"></ng-md-icon></div>\
                                     </a>\
