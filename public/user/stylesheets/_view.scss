@@ -188,9 +188,6 @@
 		}
 	}
 
-
-
-
 	.post-container{
 		
 		position: relative;
@@ -208,5 +205,17 @@
 		font-size: 12px;
 		color: #5D5D5D;
 	}
+
 }
 
+#commentDialog{
+
+	.textAngular .btn-toolbar{
+		display: none;
+	}
+
+	.ta-editor.ta-html, .ta-scroll-window.form-control{
+		min-height: 100px;
+		height: 100px;
+	}
+}

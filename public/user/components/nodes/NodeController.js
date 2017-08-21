@@ -195,16 +195,76 @@ angular.module('studionet')
             var post_title = post.title;
 
             // Appending dialog to document.body to cover sidenav in docs app
-            var confirm = $mdDialog.prompt()
+            /*var confirm = $mdDialog.prompt()
               .title('Chit Chat')
               .textContent('Comments are short! If you want to write more, please reply to this post.')
               .placeholder('Lorem ipsum ..')
               .ariaLabel('Comment')
               //.targetEvent(ev)
               .ok('Comment')
-              .cancel('Cancel');
+              .cancel('Cancel');*/
 
-            $mdDialog.show(confirm).then(function(result) {
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+                console.log("canceled")
+            };
+
+            $scope.answer = function(result) {
+                
+                $mdDialog.hide();
+                
+                if(result == undefined || result.length == 0){
+                    var toast = $mdToast.simple()
+                          .textContent('Oops.. Can\'t post a blank comment!')
+                          .position("bottom right")
+
+                    $mdToast.show(toast);
+                    return;
+                }
+                
+                var new_comment = { 
+                                users: [],
+                                attachments: [], 
+                                tags: [],
+                                refType: "COMMENT_FOR", 
+                                ref:  post_id,
+                                contentType: "comment",
+                                body: result,
+                                title: "Re: " + post_title
+                              };
+
+                contributions.createContribution( new_comment ).then(function(res){
+                      
+                      var toast = $mdToast.simple()
+                        .textContent('Hurrah! Keep the conversation going!')
+                        .position("bottom right")
+
+                      $mdToast.show(toast);
+                    
+                      reload();
+
+
+                }, function(error){
+                      var toast = $mdToast.simple()
+                        .textContent('Oops.. something went wrong')
+                        .position("bottom right")
+
+                      $mdToast.show(toast);
+                    
+                }); 
+
+            };
+
+            var createComment = {
+                contentElement: '#commentDialog',
+                parent: angular.element(document.body),
+                clickOutsideToClose: true
+            }
+
+
+            $mdDialog.show(createComment);
+
+            /*$mdDialog.show(confirm).then(function(result) {
 
                   if(result == undefined || result.length == 0){
                     var toast = $mdToast.simple()
@@ -245,7 +305,7 @@ angular.module('studionet')
 
             }, function() {
               $scope.status = 'You didn\'t name your dog.';
-            });
+            });*/
         }
 
         $scope.reply = function(post){

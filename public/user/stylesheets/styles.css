@@ -223,8 +223,6 @@ md-card md-content {
 
 #workbench-container {
   border: 2px solid #D9D9D9;
-  margin-top: 20px;
-  margin-bottom: 20px;
   width: 250px;
   min-width: 250px;
   position: relative; }
@@ -639,6 +637,12 @@ mentio-menu {
     margin-top: 5px;
     font-size: 12px;
     color: #5D5D5D; }
+
+#commentDialog .textAngular .btn-toolbar {
+  display: none; }
+#commentDialog .ta-editor.ta-html, #commentDialog .ta-scroll-window.form-control {
+  min-height: 100px;
+  height: 100px; }
 
 #searchbar {
   margin: 0px 60px 0px 30px;

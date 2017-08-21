@@ -17,17 +17,20 @@
   <div style='overflow-y: scroll; height: 500px;'>
 
       <!-- post-functions -->
-      <div class='comment' ng-repeat='note in notifications | orderBy: "-time"' ng-init='user = getUser(note.user);' ng-hide='getContribution(note.contribution) == null' layout='row' style='margin: 15px 10px;'>
+      <div class='comment' ng-repeat='note in notifications | orderBy: "-time"' ng-init='user = getUser(note.user);' ng-hide='note.contribution == null' layout='row' style='margin: 15px 10px;'>
           
           <div flex='10'>
             <img ng-src={{user.avatar}} style='width: 30px; height: 30px; border-radius: 50%; display: inline-block; vertical-align: middle;margin-top: 20px;'/>
           </div>
 
           <div flex='90'>
+            
             <span style='font-size: 10px; color: #8C8A8A;'>{{note.time | date: 'mediumDate'}}</span><br>
             <b>{{user.nickname ? user.nickname : user.name}}</b> 
-            {{ note.message }} the post titled <span class='pointer' style='font-size: 12px;' ng-click='goToNode(note.contribution);close();'><a><u>{{ getContribution(note.contribution).title }}</u></a>
+            {{ note.message }} the {{ note.contribution.type }} titled <span class='pointer' style='font-size: 12px;' 
+            ng-click='note.contribution.type == "comment" ? goToNode(note.contribution.ref): goToNode(note.contribution.id); close();'><a><u>{{ note.contribution.title }}</u></a>
             </span>
+
           </div>
 
       </div>

@@ -270,3 +270,23 @@
 	</div>
 
 </div>
+
+
+<!-- comments dialog box -->
+<div style="visibility: hidden">
+<div class="md-dialog-container comment-box" id="commentDialog">
+  <md-dialog layout-padding>
+    <h2>Chit-Chat!</h2>
+    <h4>Comments are short ... if you want to write more, create a reply!</h4>
+  	<!--body -->
+    <div class="textAngular" text="Enter your text here" style="border-width:5px;  border-style:grove; max-width: 100%; width: 600px; overflow-x: scroll">
+      <!-- <text-angular ng-model="contributionData.body" class="textAngular"> -->
+      <my-awns ng-model="result"></my-awns>
+    </div>
+    <md-dialog-actions layout="row" layout-align='center'> 
+    	<md-button md-autofocus ng-click='answer(result)'>Create</md-button>
+      	<md-button ng-click='cancel()'>Discard</md-button>
+    </md-dialog-actions>
+  </md-dialog>
+</div>
+</div>

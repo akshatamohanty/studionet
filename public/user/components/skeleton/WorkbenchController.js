@@ -319,13 +319,18 @@ angular.module('studionet')
 
             function NotificationsController($scope, $mdDialog, users, contributions, routerUtils, profile, $mdToast) {
 
+                $scope.getUser = users.getUserShort;
+                $scope.getContribution = contributions.getContributionShort;
+
+                $scope.goToNode = routerUtils.goToNode;
+
 
                 var getNotification = function(notif){
 
                   var notif_obj = {};
 
                   notif_obj.user = parseInt(notif.match(/u(\d*)/)[1]);
-                  notif_obj.contribution = parseInt(notif.match(/c(\d*)/)[1]);
+                  notif_obj.contribution = $scope.getContribution(parseInt(notif.match(/c(\d*)/)[1]));
                   notif_obj.time = parseInt(notif.match(/t(\d*)/)[1]);
                   notif_obj.type = parseInt(notif.match(/ty(\d*)/)[1]);
 
@@ -357,10 +362,6 @@ angular.module('studionet')
                     return getNotification(notif);
                 });
 
-                $scope.getUser = users.getUserShort;
-                $scope.getContribution = contributions.getContributionShort;
-
-                $scope.goToNode = routerUtils.goToNode;
 
                 $scope.close = function(){
                   $mdDialog.hide();

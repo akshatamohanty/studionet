@@ -26,7 +26,7 @@ module.exports.handleGetContributionsWithoutParams = function(req, res, next) {
 		'WITH c, collect(id(t)) as tags',
 		'OPTIONAL MATCH (c)-[:ATTACHMENT]->(a:attachment)',
 		'WITH c, tags, collect({id: id(a), thumb: a.thumb, name: a.name}) as attachments',
-		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), tags: tags, type: c.contentType, attachments: attachments })'
+		'RETURN ({title: c.title, createdBy: c.createdBy, dateCreated: c.dateCreated, id: id(c), tags: tags, type: c.contentType, attachments: attachments, ref: c.ref })'
 	].join('\n');
 
 	db.query(query, function(error, result) {
