@@ -136,7 +136,7 @@
 
       <div class='folder-notes'>
         <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.id !== null'>
-            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)'>
+            <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)' >
                   {{fork.name}}
                   <md-tooltip md-delay='150' class="tooltip" md-direction="bottom" style='height: auto'>
                       {{status.msg}}

@@ -62,6 +62,9 @@ router.route('/')
   .post(auth.ensureAuthenticated, contributionUtil.initTempFileDest, multer({storage: storage.attachmentStorage}).array('attachments'),  function(req, res, next){
 
     // Creating the contribution node, then link it to the creator (user)
+    // notifies creator of the parent node, if any
+    // notifies anyone who commented on the parent node
+    // notifies anyone who is mentioned in the current post
     var query = [
       'CREATE (c:contribution {createdBy: {createdByParam}, title: {contributionTitleParam},'
       + ' body: {contributionBodyParam}, ref: {contributionRefParam}, lastUpdated:{lastUpdatedParam},'
@@ -74,6 +77,11 @@ router.route('/')
       'CREATE (c)-[r1:' + (req.body.refType || "RELATED_TO") +']->(c1)',
       'WITH c, c1',
       'OPTIONAL MATCH (auth:user)-[:CREATED]->(c1) WHERE NOT ID(auth)={createdByParam} SET auth.notifications = coalesce(auth.notifications,[]) + {notifParam}',
+      'WITH c, c1',
+      'OPTIONAL MATCH (cmtr:user)-[:CREATED]->(:contribution)-[:COMMENT_FOR]->(c1)',
+      'WITH c, c1, collect( distinct id(cmtr) ) as commentators',
+      'OPTIONAL MATCH (commentator:user) WHERE ID(commentator) in commentators',
+      'SET commentator.notifications = coalesce(commentator.notifications,[]) + {notifParam}',
       'WITH c, c1',
       'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
       'SET mentioned.notifications = coalesce(mentioned.notifications,[]) + ({mentionedParam} + id(c))',
