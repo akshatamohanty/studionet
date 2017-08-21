@@ -80,7 +80,7 @@ router.route('/')
       'WITH c, c1',
       'OPTIONAL MATCH (cmtr:user)-[:CREATED]->(:contribution)-[:COMMENT_FOR]->(c1)',
       'WITH c, c1, collect( distinct id(cmtr) ) as commentators',
-      'OPTIONAL MATCH (commentator:user) WHERE ID(commentator) in commentators and WHERE NOT ID(commentator) = {createdByParam}',
+      'OPTIONAL MATCH (commentator:user) WHERE ID(commentator) in commentators and NOT ID(commentator) = {createdByParam}',
       'SET commentator.notifications = coalesce(commentator.notifications,[]) + {notifParam}',
       'WITH c, c1',
       'OPTIONAL MATCH (mentioned:user) WHERE ID(mentioned) in {mentionedUsersParam}',
