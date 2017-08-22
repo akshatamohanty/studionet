@@ -100,4 +100,29 @@ angular.module('studionet')
 
           $scope.createTag = tags.createTag;
 
+function $stateDecorator($delegate, $injector, $rootScope, appSettings) {
+        function decorated$State() {
+            var $state = $delegate;
+            $state.previous = undefined;
+            $rootScope.$on("$stateChangeSuccess", function (ev, to, toParams, from, fromParams) {
+                $state.previous = { route: from, routeParams: fromParams }
+            });
+
+            $rootScope.$on("$stateChangeStart", function (event, toState/*, toParams, fromState, fromParams*/) {
+                var authenticationFactory = $injector.get("authenticationFactory");
+                if ((toState.name === appSettings.states.login || toState.name === appSettings.states.register) && authenticationFactory.isUserLoggedIn()) {
+                    event.preventDefault();
+                    $state.go(appSettings.states.index);
+                }
+            });
+
+            return $state;
+        }
+
+        return decorated$State();
+    }
+
+    $stateDecorator.$inject = ["$delegate", "$injector", "$rootScope", "appSettings"];
+          
+
 }]);
