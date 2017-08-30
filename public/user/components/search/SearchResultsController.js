@@ -73,6 +73,54 @@ angular.module('studionet')
 	}	
 
 	$scope.posts = $scope.$resolve.search_results.data; 
+	console.log($scope.posts.length);
+	console.log($scope.posts);
+	var rating=0; 
+	var views=0;  
+	var likes=0;
+	var bookmarks=0;
+	for(var i =0 ;i < $scope.posts.length;i++){
+	
+    if(!$scope.posts[i].views)
+	{
+		views=0;
+	}
+	else{
+		views=$scope.posts[i].views;
+	
+	}
+
+	if(!$scope.posts[i].bookmarks)
+	{
+		bookmarks=0;
+	}
+	else{
+		bookmarks=$scope.posts[i].bookmarks;
+	
+	} 
+    if(!$scope.posts[i].likes)
+	{
+		likes=0;
+	}
+	else{
+		likes=$scope.posts[i].likes;
+	
+	}
+
+
+	console.log(views);
+	console.log(likes);
+	console.log(bookmarks);
+	rating = views/10 + likes/5 + bookmarks/2
+    console.log(rating);
+}
+
+
+	//var rating=0;
+    //rating = ($scope.posts[0].likes)/5 + ($scope.posts[0].views)/10 + ($scope.posts[0].bookmarks)/2;
+	//console.log($scope.posts[0].views)
+	//console.log($scope.posts[0].bookmarks)
+	//console.log($rating);
 
 	// compute the suggested tags
 	// 
