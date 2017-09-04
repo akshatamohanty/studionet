@@ -108,9 +108,9 @@ angular.module('studionet')
 	}
 
 
-	console.log(views);
-	console.log(likes);
-	console.log(bookmarks);
+	//console.log(views);
+	//console.log(likes);
+	//console.log(bookmarks);
 	rating = views/10 + likes/5 + bookmarks/2
     console.log(rating);
 }
