@@ -63,14 +63,16 @@
           </ng-md-icon>
         </div>
         <md-tooltip md-direction="bottom" md-autohide="true"> You {{post.status[0]}} this post </md-tooltip>
+        
 
-
+        
+          
         <md-content layout='column' layout-fill>
             <div class='poster' ng-style='getPostBackground(post)'>
               <div class='post-title' ng-if='post.attachments[0].id == null'>{{post.title}}</div>
             </div>
 
-            <md-divider></md-divider>
+           
 
             <div class='post-details'>
                 <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>

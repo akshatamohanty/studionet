@@ -78,6 +78,7 @@ angular.module('studionet')
 	var rating=0; 
 	var views=0;  
 	var likes=0;
+	$scope.rat = [];
 	var bookmarks=0;
 	for(var i =0 ;i < $scope.posts.length;i++){
 	
@@ -111,9 +112,27 @@ angular.module('studionet')
 	//console.log(views);
 	//console.log(likes);
 	//console.log(bookmarks);
-	rating = views/10 + likes/5 + bookmarks/2
-    console.log(rating);
+	$scope.posts[i].rating = views/10 + likes/5 + bookmarks/2
+   // console.log($scope.posts[i].rating);
+	//$scope.rat.push(rating);
+
+       
+
 }
+
+var ASC = 1;
+var DESC = -1;
+
+var sortOrder = DESC;
+ $scope.posts.sort(function(a,b){
+  return sortOrder * ( a.rating - b.rating );
+
+})
+ console.log($scope.posts);
+
+ $scope.test = $filter('orderBy')($scope.posts, 'rating');
+ console.log($scope.test);
+
 
 
 	//var rating=0;
