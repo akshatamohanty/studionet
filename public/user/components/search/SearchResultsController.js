@@ -19,14 +19,18 @@ angular.module('studionet')
 	// ui-actions - This state shows the workbench as well as the search bar
 	$scope.$emit('showBench');
 	$scope.$emit('showSearch');
-
-	
-	// --------------- general functions
-	$scope.getTagString = function(id){ return tags.tagsHash[id] };
-	$scope.getUserName = function(user_id){return users.usersHash[user_id].name };
+  ;
+	// --------------- general functionspush
+	$scope.tagr =[];
+	$scope.getTagString = function(id){ 
+	  $scope.tagr.push(tags.tagsHash[id].name);
+	  return tags.tagsHash[id]  
+	};
+	$scope.getUserName = function(user_id){return; users.usersHash[user_id].name };
 	$scope.getAvatar = function(user_id){ return users.usersHash[user_id].avatar };
 	$scope.getPostStatus = profile.getPostStatus;
-
+   	//console.log(tags.tagsHash[415].name)
+  	//console.log($scope.tagr);
 	// ----------------- location data mapping
 
 	//	$scope.$resolve.location - contains data about the current space
@@ -46,7 +50,7 @@ angular.module('studionet')
 	$scope.space_name = $scope.$resolve.location.name;
 	$scope.about_space = $scope.$resolve.location.about;
 	$scope.expired = false;
-
+	
 	var space = $scope.$resolve.location.details;
 	
 	// map these only if a space exists 
@@ -72,11 +76,24 @@ angular.module('studionet')
 
 	}	
 
+		// compute leaders based on the posts 
+	// 
+	// 
+
+
 	$scope.posts = $scope.$resolve.search_results.data; 
+	$scope.tagrs =$scope.$resolve.location.tags;
+    $scope.tagged ='';  
+    $scope.tagged = tags.tagsHash[$scope.tagrs].name;
+    console.log($scope.tagged);
 	console.log($scope.posts.length);
 	console.log($scope.posts);
+
+
+
 	var rating=0; 
 	var views=0;  
+	//var user_rating = [];
 	var likes=0;
 	$scope.rat = [];
 	var bookmarks=0;
@@ -109,16 +126,16 @@ angular.module('studionet')
 	}
 
 
-	//console.log(views);
-	//console.log(likes);
-	//console.log(bookmarks);
-	$scope.posts[i].rating = views/10 + likes/5 + bookmarks/2
-   // console.log($scope.posts[i].rating);
-	//$scope.rat.push(rating);
 
-       
+	$scope.posts[i].rating = views/10 + likes/5 + bookmarks/2
 
 }
+
+
+
+
+
+
 
 var ASC = 1;
 var DESC = -1;
@@ -128,21 +145,15 @@ var sortOrder = DESC;
   return sortOrder * ( a.rating - b.rating );
 
 })
- console.log($scope.posts);
-
- $scope.test = $filter('orderBy')($scope.posts, 'rating');
- console.log($scope.test);
 
 
-
-	//var rating=0;
-    //rating = ($scope.posts[0].likes)/5 + ($scope.posts[0].views)/10 + ($scope.posts[0].bookmarks)/2;
-	//console.log($scope.posts[0].views)
-	//console.log($scope.posts[0].bookmarks)
-	//console.log($rating);
-
-	// compute the suggested tags
-	// 
+ 
+$scope.users = [];
+//$scope.ids =[];
+ for(var i =0 ;i < 3;i++){
+	var id =$scope.posts[i].createdBy;
+	$scope.users.push({"name": users.usersHash[id].name , "ids":id});
+	}
 	// 
 	var suggested_tags = [];
 	for(var i=0; i < $scope.posts.length; i++){
@@ -164,9 +175,6 @@ var sortOrder = DESC;
 	}
 
 
-	// compute leaders based on the posts 
-	// 
-	// 
 
 
 	// background of the cards 

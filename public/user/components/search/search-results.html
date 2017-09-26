@@ -1,4 +1,4 @@
-<div class='scroll'>
+<div class='scroll post-view-section' layout="row" id='results-container'>
 
   <!-- Section : Displaying the search results -->
   <div class='results-container' flex layout="column" layout-align="start start" style='overflow: auto; min-width: 300px; min-height: 300px;' >
@@ -44,11 +44,15 @@
       </md-card>
 
       <!-- the results when results exist-->
-      <md-card class='pointer mini-post' ng-repeat='post in posts | orderBy:"-dateCreated" | filter: {contentType: "!comment"}'   
+      
+      <md-card class='pointer mini-post' ng-if='posts.length>1' ng-repeat='post in posts | orderBy:"-dateCreated" | filter: {contentType: "!comment"}'   
               dnd-type="'post'" 
               dnd-draggable='post' 
               ng-click='goToNode(post.id)'> 
-        
+
+
+ 
+
         <div class='dragBar'></div>
 
         
@@ -87,16 +91,42 @@
       </md-card>
 
       <!-- todo: message when results don't exist -->
-      <!-- <div></div> -->
+     
 
     </div>
 
   </div>
 
-  <!-- Section : About the Space -->
-  <!-- <div flex-gt-xs="20" layout-align="top">  
-    <ng-include src="'components/search/space_sidebar.html'"></ng-include>
-  </div> -->
+   <div class='results-container' flex='10' ng-if="users.length == 1" >
+   <h1> No Results found </h1>
+   </div>
 
+
+  <div class='side-details' flex='10' ng-if="users.length > 1" >
+
+    <div class='container' >
+
+      <!-- navigation -->
+      <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
+        <h3>Leaders in {{tagged}}  </h3> 
+      </div> 
+        <table>
+        <tr>
+        <div layout="row"  ng-repeat='user in users'>
+        
+        <div class='author-avatar'>{{getUserAvatar(post.createdBy)}} 
+         <a ui-sref='home.profile-details({address: user.ids})'>
+        <img class='author-profile-picture main' src='{{user.avatar}}'/>
+          <ul >{{user.name}} </ul>
+         
+          </a>
+          </tr>
+          </table>
+           
+</div>
 
 </div>
+</div>
+</div>
+</div>
+

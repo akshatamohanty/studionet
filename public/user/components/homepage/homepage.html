@@ -1,5 +1,10 @@
-<div class='scroll' ng-init='getRecent()'>
+<!--<div class='scroll' flex layout="column" layout-align="start start" style='overflow: auto; min-width: 300px; min-height: 300px;' ng-init='getRecent()'>
 
+<!-- Section : Displaying the search results -->
+
+<div class='scroll post-view-section' layout="row" id='results-container'>
+
+    <div class='results-container' flex layout="column" layout-align="start start" style='overflow: auto; min-width: 300px; min-height: 300px;' ng-init='getRecent()' >
 	<h1 class='header'>Showing {{recentPosts.length}} recent Posts</h1>
 
 	<md-divider></md-divider>
@@ -50,4 +55,31 @@
 
 	</div>
 
+</div>
+
+  <div class='side-details' flex='10' >
+
+    <div class='container' >
+
+      <!-- navigation -->
+      <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
+        <h3>Leader Board  </h3> 
+      </div> 
+        <table>
+        <tr>
+        <div layout="row"  ng-repeat='user in users'>
+        
+        <div class='author-avatar'>{{getUserAvatar(post.createdBy)}} 
+         <a ui-sref='home.profile-details({address: user.ids})'>
+        <img class='author-profile-picture main' src='{{user.avatar}}'/>
+          <ul >{{user.name}} </ul>
+         
+          </a>
+          </tr>
+          </table>
+           
+</div>
+
+</div>
+</div>
 </div>
