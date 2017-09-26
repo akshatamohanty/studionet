@@ -154,7 +154,20 @@ $scope.users = [];
 	var id =$scope.posts[i].createdBy;
 	$scope.users.push({"name": users.usersHash[id].name , "ids":id});
 	}
-	// 
+	//  removing duplicates 
+
+/*var result = users.reduce(function(hash){
+  return function(prev,curr){
+     !hash[curr.ID] && (hash[curr.ID]=prev.push(curr));
+     return prev;
+  };
+}(Object.create(null)),[]);
+
+console.log(result);
+
+	console.log(unique);*/
+
+	// leaderboard over 
 	var suggested_tags = [];
 	for(var i=0; i < $scope.posts.length; i++){
 		var post = $scope.posts[i];

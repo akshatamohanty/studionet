@@ -111,15 +111,13 @@
         <h3>Leaders in {{tagged}}  </h3> 
       </div> 
         <table>
-        <tr>
-        <div layout="row"  ng-repeat='user in users'>
+        <tr >
         
-        <div class='author-avatar'>{{getUserAvatar(post.createdBy)}} 
-         <a ui-sref='home.profile-details({address: user.ids})'>
-        <img class='author-profile-picture main' src='{{user.avatar}}'/>
-          <ul >{{user.name}} </ul>
-         
-          </a>
+        
+        <div layout="row" ng-repeat="user in users " > {{getUserAvatar(post.createdBy)}} 
+          <a ui-sref='home.profile-details({address: user.ids})'>
+        <img class='author-profile-picture main' src='{{user.avatar}}'/>{{user.name}}
+         </a>
           </tr>
           </table>
            
