@@ -149,23 +149,21 @@ var sortOrder = DESC;
 
  
 $scope.users = [];
+
 //$scope.ids =[];
  for(var i =0 ;i < 3;i++){
 	var id =$scope.posts[i].createdBy;
 	$scope.users.push({"name": users.usersHash[id].name , "ids":id});
 	}
-	//  removing duplicates 
+//removeDuplicates($scope.users);
 
-/*var result = users.reduce(function(hash){
-  return function(prev,curr){
-     !hash[curr.ID] && (hash[curr.ID]=prev.push(curr));
-     return prev;
-  };
-}(Object.create(null)),[]);
+var uniq = new Set($scope.users.map(e => JSON.stringify(e)));
 
-console.log(result);
+$scope.uniqueUsers = Array.from(uniq).map(e => JSON.parse(e));
 
-	console.log(unique);*/
+
+ console.log($scope.uniqueUsers);
+
 
 	// leaderboard over 
 	var suggested_tags = [];

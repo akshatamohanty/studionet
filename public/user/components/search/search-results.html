@@ -114,7 +114,7 @@
         <tr >
         
         
-        <div layout="row" ng-repeat="user in users " > {{getUserAvatar(post.createdBy)}} 
+        <div layout="row" ng-repeat="user in uniqueUsers " > {{getUserAvatar(post.createdBy)}} 
           <a ui-sref='home.profile-details({address: user.ids})'>
         <img class='author-profile-picture main' src='{{user.avatar}}'/>{{user.name}}
          </a>
