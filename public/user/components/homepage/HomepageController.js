@@ -70,7 +70,7 @@ if($scope.suggested_tags[i][0]!=undefined){
 
 $scope.TrendingTags = [];
 
-for(var i =0; $scope.TrendingTags.length<5;i++){
+for(var i =0; $scope.TrendingTags.length<3;i++){
   var index =$scope.finalTags[i][0];
   if($scope.TrendingTags.indexOf(index)==-1)
     $scope.TrendingTags.push(index);
