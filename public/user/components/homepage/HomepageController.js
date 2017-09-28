@@ -24,7 +24,7 @@ angular.module('studionet')
           contributions.registerObserverCallback(function(){ getRecent(); });
            
           $scope.ratingPosts= contributions.getRecent(20);
-          console.log($scope.ratingPosts[0].tags);
+          //console.log($scope.ratingPosts[0].tags);
  var tagsarr = [];
  for(var i =0 ;i < $scope.ratingPosts.length;i++){
   for( var j =0 ; j < i;j++)
@@ -40,65 +40,45 @@ $scope.suggested_tags = [];
 var counts =[];
 for (var i =0; i< tagsarr.length;i++){
   var num = tagsarr[i];
-  counts[num] =counts[num]?counts[num]+1:1;
-  
- 
-  $scope.suggested_tags.push(num,counts[num]);
+  counts[num] =counts[num]?counts[num]+1:1; 
+ // $scope.suggested_tags.push({"index" :num, "freq":counts[num]});
 
-
+$scope.suggested_tags.push([num,counts[num]]);
 }
 
-//$scope.suggested_tags.sort(function(a, b){return b.count-a.count});
+/*$scope.suggested_tags= $scope.suggested_tags.filter(function( obj ) {
+    return obj.index !== 'undefined';
+});
 
-console.log($scope.suggested_tags);
-console.log(counts[num])//for(var i =0; i<counts.length;i++)
-
-
- /*
-  var rating=0; 
-  var views=0;  
-  //var user_rating = [];
-  var likes=0;
-  $scope.rat = [];
-  var bookmarks=0;
-  for(var i =0 ;i < $scope.ratingPosts.length;i++){
-  
-    if(!$scope.ratingPosts[i].views)
-  {
-    views=0;
-
-  }
-  else{
-    views=$scope.ratingPosts[i].views;
-    console.log($scope.ratingPosts[i].views);
-  
-  }
-
-  if(!$scope.ratingPosts[i].bookmarks)
-  {
-    bookmarks=0;
-  }
-  else{
-    bookmarks=$scope.ratingPosts[i].bookmarks;
-  
-  } 
-    if(!$scope.ratingPosts[i].likes)
-  {
-    likes=0;
-  }
-  else{
-    likes=$scope.ratingPosts[i].likes;
-  
-  }
-
-
-
-  $scope.ratingPosts[i].rating = views/10 + likes/5 + bookmarks/2
-
-}
-
-console.log($scope.ratingPosts);
 
 */
+
+$scope.suggested_tags.sort(function(a, b) {
+    return b[1] - a[1];
+});
+
+
+//console.log($scope.suggested_tags);
+$scope.finalTags=[];
+for (var i =0; i<$scope.suggested_tags.length;i++){
+if($scope.suggested_tags[i][0]!=undefined){
+ $scope.finalTags.push([$scope.suggested_tags[i][0],$scope.suggested_tags[i][1]]); 
+
+
+}
+}
+
+$scope.TrendingTags = [];
+
+for(var i =0; $scope.TrendingTags.length<5;i++){
+  var index =$scope.finalTags[i][0];
+  if($scope.TrendingTags.indexOf(index)==-1)
+    $scope.TrendingTags.push(index);
+  //console.log(index);
+
+}
+//console.log($scope.TrendingTags);
+
+
 
 }]);

@@ -57,22 +57,19 @@
 
 </div>
 
-  <div class='side-details' flex='10' >
+  <div class='side-details'  >
 
     <div class='container' >
 
       <!-- navigation -->
       <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
-        <h3>Leader Board  </h3> 
+        <h3>Trending Tags  </h3> 
       </div> 
-        <table>
+        <table table-layout: auto>
         <tr>
-        <div layout="row"  ng-repeat='user in users'>
+        <div layout="row"  ng-repeat='Tag in TrendingTags'>
         
-        <div class='author-avatar'>{{getUserAvatar(post.createdBy)}} 
-         <a ui-sref='home.profile-details({address: user.ids})'>
-        <img class='author-profile-picture main' src='{{user.avatar}}'/>
-          <ul >{{user.name}} </ul>
+          <ol >#{{getTagString(Tag).name}} </ol>
          
           </a>
           </tr>
