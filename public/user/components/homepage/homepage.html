@@ -56,14 +56,21 @@
 	</div>
 
 </div>
-
-  <div class='side-details' style="height:auto; width:auto;"  >
+ <div  style="height:auto; width:auto; color: #062033;
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 17px;
+  border-radius: 6px;
+  text-transform: capitalize;"  >
 
     <div class='container' >
+	<md-whiteframe  class="md-whiteframe-10dp"  style=  " flex-sm="45" flex-gt-sm="35" flex-gt-md="25" layout-align="right">
+ 
 
       <!-- navigation -->
       <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
-        <h3>Trending Tags  </h3> 
+        <h2>Trending Tags  </h2> 
       </div> 
         <table table-layout: auto>
         <tr>
@@ -71,7 +78,7 @@
         
           <ol >#{{getTagString(Tag).name}} </ol>
          
-          </a>
+         
           </tr>
           </table>
            
@@ -79,4 +86,7 @@
 
 </div>
 </div>
+
 </div>
+</md-card>
+</md-content>
