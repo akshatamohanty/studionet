@@ -274,7 +274,7 @@ md-card md-content {
       overflow: hidden; }
       #workbench-container #workbench md-content .profile-posts {
         padding: 0px 20px;
-        overflow: scroll;
+        overflow: hidden;
         height: 100%; }
       #workbench-container #workbench md-content .folder {
         margin-top: 5px; }
