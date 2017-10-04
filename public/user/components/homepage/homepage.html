@@ -72,15 +72,16 @@
       <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
         <h2>Trending Tags  </h2> 
       </div> 
-        <table table-layout: auto>
-        <tr>
-        <div layout="row"  ng-repeat='Tag in TrendingTags'>
         
-          <ol >#{{getTagString(Tag).name}} </ol>
-         
-         
-          </tr>
-          </table>
+        
+        <div layout="row"  ng-repeat='Tag in TrendingTags'>   
+         <a ui-sref='home.search-results({tags:Tag})'>     
+          <ol >#{{getTagString(Tag).name}} 
+           
+
+               <!-- <a ui-sref='home.profile-details({address: user.ids})'> -->
+          </a>
+          </ol>
            
 </div>
 
