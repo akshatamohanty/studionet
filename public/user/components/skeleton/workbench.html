@@ -64,10 +64,10 @@
 
       <md-divider></md-divider>
 
-      <div class='folder-notes'>
+      <div class='folder-notes' style="overflow:scroll;">
 
         <!-- posts -->
-        <div class='folder'>
+        <div class='folder' >
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.toggleMyNodes(1)'>
                   My Posts
                   <a ui-sref='home.node({type:"note"})'>
@@ -165,29 +165,7 @@
 
         </div>
       </div>
-      <div class='stats md-hue-3' layout='row' layout-align='center'>
-            <div flex>
-              <ng-md-icon icon="book" size='14' style="fill: #AFAFAF"></ng-md-icon>{{user.contributions.length}}
-              <md-tooltip md-delay='150' md-direction="bottom">Posts & Comments</md-tooltip>
-            </div>
-            <div flex>
-              <ng-md-icon icon="visibility" size='14' style="fill: #AFAFAF"></ng-md-icon>{{ user.views }}
-              <md-tooltip md-delay='150' md-direction="bottom">Views</md-tooltip>
-            </div>
-            <div flex>
-              <ng-md-icon icon="thumb_up" size='14' style="fill: #AFAFAF"></ng-md-icon> {{ user.likes }}
-              <md-tooltip md-delay='150' md-direction="bottom">Likes</md-tooltip>
-            </div>
-            <div flex>
-              <ng-md-icon icon="bookmark" size='14' style="fill: #AFAFAF"></ng-md-icon> {{ user.bookmarks }}
-              <md-tooltip md-delay='150' md-direction="bottom">Bookmarks</md-tooltip>
-            </div>
-            <div flex ng-click='bench.showNotifications()' ng-class="user.notifications.length > 0 ? 'selected' : 'unselected'">
-              <ng-md-icon icon="notifications" size='14' style="fill: #AFAFAF" ng-if='user.notifications == null || user.notifications.length == 0'></ng-md-icon>
-              <ng-md-icon icon="notifications" size='20' style="fill: #AFAFAF" ng-if='user.notifications.length > 0'></ng-md-icon>
-              <md-tooltip md-delay='150' md-direction="bottom">Notifications</md-tooltip>
-            </div>
-        </div>
+     
     </div>
     </div>
 
