@@ -68,16 +68,33 @@ if($scope.suggested_tags[i][0]!=undefined){
 }
 }
 
+console.log($scope.finalTags);
 $scope.TrendingTags = [];
+$scope.CountTags =[];
 
-for(var i =0; $scope.TrendingTags.length<3;i++){
+//$scope.users.push({"name": users.usersHash[id].name , "ids":id});
+
+for(var i =0; $scope.TrendingTags.length<3;i++)
+{
   var index =$scope.finalTags[i][0];
-  if($scope.TrendingTags.indexOf(index)==-1)
-    $scope.TrendingTags.push(index);
-  //console.log(index);
+  var count= $scope.finalTags[i][1];
+  //  console.log(index,count);
 
-}
-//console.log($scope.TrendingTags);
+  if($scope.TrendingTags.indexOf(index)==-1){
+    $scope.TrendingTags.push(index);
+    $scope.CountTags.push(count);
+  }
+
+  
+  //if($scope.TrendingTags.valueOf("index") == -1 ){
+    //$scope.TrendingTags.push({"index":index,"count":count});
+  }
+
+ //
+
+
+console.log($scope.TrendingTags);
+console.log($scope.CountTags);
 
 
 

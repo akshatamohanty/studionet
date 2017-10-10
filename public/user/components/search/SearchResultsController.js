@@ -151,7 +151,7 @@ var sortOrder = DESC;
 $scope.users = [];
 
 //$scope.ids =[];
- for(var i =0 ;i < 3;i++){
+ for(var i =0 ;i <3;i++){
 	var id =$scope.posts[i].createdBy;
 	$scope.users.push({"name": users.usersHash[id].name , "ids":id});
 	}

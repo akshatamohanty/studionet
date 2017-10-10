@@ -69,19 +69,43 @@
  
 
       <!-- navigation -->
-      <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
-        <h2>Trending Tags  </h2> 
-      </div> 
-        
-        
-        <div layout="row"  ng-repeat='Tag in TrendingTags'>   
-         <a ui-sref='home.search-results({tags:Tag})'>     
-          <ol >#{{getTagString(Tag).name}} 
-           
+      <div class='post-actions' style="position: absolute;  right: 0;" layout="row" layout-align='right'  layout-wrap>
+      
+      
+    
+<table style= "border:4px solid #555555;background-color: #555555;text-align: center border-collapse: collapse;">
+<thead  style="background: #398AA4; border-bottom: 10px solid #398AA4;" > 
+<tr style="border: 1px solid #555555;padding: 2px 7px;  font-size: 12px;font-weight: bold;color: #FFFFFF;"><td>&nbsp;&nbsp;&nbsp;Trending Tags </td></tr>
+<tr> 
+<th style="border: 1px solid #555555;padding: 2px 7px; font-size: 12px;font-weight: bold;color: #FFFFFF;">
+Tag Name </th>
+<th style="border: 1px solid #555555;padding: 2px 7px; font-size: 12px;font-weight: bold;color: #FFFFFF;">Frequency </th>
+</tr>
+</thead>
+<tbody>
+  
+<tr  ng-repeat='Tag in TrendingTags'>
+    
+<td style="background: #398bb4; border-bottom: 10px solid #398AA4;" > 
+<a ui-sref='home.search-results({tags:Tag})'>  {{getTagString(Tag).name}}</td>
 
-               <!-- <a ui-sref='home.profile-details({address: user.ids})'> -->
+<td style="background: #398bb4;text-align: right; border-bottom: 10px solid #398bb4;">{{CountTags[$index]}}</td>
+</tr>
+<tr>
+</tr>
+</tbody>
+</table>
+</div>
+
+        
+      <!--  <div ng-repeat='Tag in TrendingTags'>   
+         <a ui-sref='home.search-results({tags:Tag})'>     
+         <table>
+         <tr> 
+         {{CountTags[$index] }}            #{{getTagString(Tag).name}} 
           </a>
-          </ol>
+          </tr>
+          </table>-->
            
 </div>
 
