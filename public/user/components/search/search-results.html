@@ -102,18 +102,13 @@
    </div>
 
 
-  <div class='side-details' flex='10' ng-if="users.length > 1" >
+  <div class='side-details' ng-if="users.length > 1" >
 
-    <div class='container' >
-
-      <!-- navigation -->
       <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
-        <h3>Leaders in {{tagged}}  </h3> 
+        <h3>Leaders in {{tagged[0]}} </h3> 
       </div> 
         <table>
-        <tr >
-        
-        
+        <tr>
         <div layout="row" ng-repeat="user in uniqueUsers " > {{getUserAvatar(post.createdBy)}} 
           <a ui-sref='home.profile-details({address: user.ids})'>
         <img class='author-profile-picture main' src='{{user.avatar}}'/>{{user.name}}

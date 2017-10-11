@@ -83,11 +83,13 @@ angular.module('studionet')
 
 	$scope.posts = $scope.$resolve.search_results.data; 
 	$scope.tagrs =$scope.$resolve.location.tags;
-    $scope.tagged ='';  
-    //$scope.tagged = tags.tagsHash[$scope.tagrs].name;
-    console.log($scope.tagged);
-	console.log($scope.posts.length);
-	console.log($scope.posts);
+    $scope.tagged =[];  
+    console.log('tagrs', $scope.tagrs);
+    var temp = tags.tagsHash[$scope.tagrs[0]].name;
+    $scope.tagged = $scope.tagged.concat(temp);
+   // console.log($scope.tagged);
+	//console.log($scope.posts.length);
+	//console.log($scope.posts);
 
 
 
