@@ -78,7 +78,7 @@
 
            
 
-            <div class='post-details'>
+            <div class='post-details' style="width: 70%">
                 <div class='post-title' ng-if='post.attachments[0].id != null'>{{post.title}}</div>
                 <div class='author-avatar'>{{getUserAvatar(post.createdBy)}}</div>
                 <div class='author-name'>{{getUserName(post.createdBy)}}</div> 
@@ -102,16 +102,17 @@
    </div>
 
 
-  <div class='side-details' ng-if="users.length > 1" >
+  <div class='side-details' style="float: right;" ng-if="users.length > 1" >
 
       <div class='post-actions' layout="row" layout-align='right'  layout-wrap>
         <h3>Leaders in {{tagged[0]}} </h3> 
       </div> 
         <table>
-        <tr>
-        <div layout="row" ng-repeat="user in uniqueUsers " > {{getUserAvatar(post.createdBy)}} 
+        <tr style="border: 1px solid #555555;padding: 2px 7px;  font-size: 10px;font-weight: bold;color: #FFFFFF;" >
+        <div  layout="row" ng-repeat="user in uniqueUsers " > {{getUserAvatar(post.createdBy)}} 
           <a ui-sref='home.profile-details({address: user.ids})'>
-        <img class='author-profile-picture main' src='{{user.avatar}}'/>{{user.name}}
+
+        <img class='author-profile-picture main' src='{{user.avatar}}'/>&nbsp;&nbsp;{{user.name}}
          </a>
           </tr>
           </table>
