@@ -522,8 +522,8 @@ mentio-menu {
         border: 1px solid black; }
 
 .post-view-section {
-  max-width: 950px;
-  margin: 0 auto; }
+  max-width: 70%;
+  margin: auto; }
   .post-view-section .linked-post-container {
     height: 80px; }
     .post-view-section .linked-post-container .dndPlaceholder {
