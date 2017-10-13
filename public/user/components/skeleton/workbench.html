@@ -100,7 +100,8 @@
         </div>
 
         <!-- comments -->
-        <div class='folder'>
+        <div class='folder'  style='text-align: center;  margin-top: 20px;' >
+
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.toggleMyNodes(2)'>
                   My Comments
                   <a style='float: right' >
@@ -128,13 +129,13 @@
 
     <!-- Timed Spaces -->
     <div>
-      <div class='header'>
+      <div class='header'  >
           Spaces
       </div>
 
       <md-divider></md-divider>
 
-      <div class='folder-notes'>
+      <div class='folder-notes' >
         <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.id !== null'>
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)' >
                   {{fork.name}}
@@ -147,10 +148,10 @@
                   </a>
             </div>
 
-            <div class='folder-notes' ng-class='bench.show == fork.id ? "open" : "close" '
+            <div class='folder-notes'  ng-class='bench.show == fork.id ? "open" : "close" '
                 dnd-list dnd-drop='bench.addNodeToFork(item, fork)'  dnd-allowed-types="['post']">
 
-                <div style='display: block; border-bottom: 1px solid #ddd; text-align:right;'>
+                <div style='display: block; border-bottom: 1px solid #ddd;min-height: 30px text-align:right;'>
                   <a class='pointer' style='float: left; font-size: 10px;text-decoration: underline;' ng-click='goToSpace(fork.id)'>[Go to space]</a>
                   <!-- <ng-md-icon icon="open_in_new" size='14' style="fill: #444"  ></ng-md-icon> -->
                   <ng-md-icon icon="delete" size='14' style="fill: #444" ng-click='bench.deleteFork(fork.id)'></ng-md-icon>

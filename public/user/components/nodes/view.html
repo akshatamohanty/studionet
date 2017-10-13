@@ -122,7 +122,7 @@
 				</div>
 
 			</div>
-            <div style="float: right; height: 70% width:30%;  margin-right: 0px">
+      		<div style="float: right; height: 100% width:40%;  margin-right: 0px">
 			<h3 style='line-height: 18px; font-size: 14px;'>
                 About the author
             </h3>
@@ -185,13 +185,17 @@
 
 
 			</div>
+			</div>
+			</div>
+			</div>
+			</div>
 
 			<md-divider></md-divider>
 
 			<h3 style='line-height: 16px; font-size: 12px;'>
                	Predecessors
             </h3>
-
+          </div>
 			<!-- parent -->
 			<div class='linked-post-container parent' layout='row' layout-wrap dnd-list dnd-drop='linkNewParent(item, post_details.id)'>
 				
@@ -206,20 +210,23 @@
 					<div class='post-title linked'>{{parent+1}} | {{post_details.parents.length }} {{post_details.parents[parent].title}} </div>
 					<div layout="row">
 						<img class='author-profile-picture linked' src='{{getUser(post_details.parents[parent].createdBy).avatar}}'>
-						<div class='author-name linked'>{{getUser(post_details.parents[parent].createdBy).name}}</div>
+						<div class='author-name linked'>{{getUser(post_details.parents[parent].createdBy).name}}
+
+						</div>
 					</div>
 				</md-card>
 
 
 				<md-card class='post-details pointer' layout='column' flex ng-if='post_details.parents[parent].id==null'>
-					<div class='post-subtitle linked'>This post has no preceeding posts. Drop a post here to link a parent.</div>
-				</md-card>
+				<div class='post-subtitle linked'>This post has no preceeding posts. Drop a post here to link 	a parent.
+				</div>
+					</md-card>
 
 				<a class='nav-btn' ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null' ng-class='post_details.parents[parent].id!=null && parent<post_details.parents.length-1 ? "" : "clear"'>
 					<!-- <ng-md-icon icon="keyboard_arrow_right" size='12' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon> -->
 				</a>
 
-				
+				</div>
 				<!-- <md-button class="md-mini" aria-label="switch-parent" md-no-ink="false" md-ripple-size="auto" ng-click='parent + 1 < post_details.parents.length ? parent=parent+1: null'>
 					<ng-md-icon icon="keyboard_arrow_right" size='24' style="fill: #222" ng-if='post_details.parents[parent].id!=null && parent<post_details.parents.length-1'></ng-md-icon>
 				</md-button> -->
@@ -265,8 +272,10 @@
 
 			</div>
 
-		</div>
+		
+		
 
+	</div>
 	</div>
 
 </div>
@@ -288,5 +297,6 @@
       	<md-button ng-click='cancel()'>Discard</md-button>
     </md-dialog-actions>
   </md-dialog>
+
 </div>
 </div>

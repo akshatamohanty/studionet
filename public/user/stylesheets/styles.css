@@ -224,7 +224,7 @@ md-card md-content {
 #workbench-container {
   border: 2px solid #D9D9D9;
   width: 250px;
-  min-width: 250px;
+  min-width: 50px;
   position: relative; }
 @keyframes slideIn {
   from {
@@ -296,11 +296,12 @@ md-card md-content {
             background-color: #70FA83; }
         #workbench-container #workbench md-content .folder .folder-notes {
           height: auto;
+          
           max-height: 200px;
           overflow: auto;
           width: 100%; }
           #workbench-container #workbench md-content .folder .folder-notes.open {
-            height: 200px;
+            height: 25%;
             transition: height 0.35s ease;
             position: relative;
             border: 1px solid #DCD9D9; }
