@@ -48,7 +48,7 @@
     </div>
 
 </md-toolbar>
-<div ng-scrollable="{scrollX:'none',scrollY:'right'}" style="width: 100%; height: 600px;">
+<div ng-scrollable="{scrollX:'right',scrollY:'auto'}" style="width: 100%; height: 600px;">
 <!-- content -->
 <md-content dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
 
@@ -64,7 +64,7 @@
 
       <md-divider></md-divider>
 
-      <div class='folder-notes' style="overflow:scroll;">
+      <div class='folder-notes' >
 
         <!-- posts -->
         <div class='folder' >
@@ -146,6 +146,7 @@
                       <ng-md-icon icon="keyboard_arrow_down" size='14' style="fill: black" ng-if='show!=fork.id'></ng-md-icon>
                       <ng-md-icon icon="keyboard_arrow_up" size='14' style="fill: black" ng-if='show==fork.id'></ng-md-icon>
                   </a>
+
             </div>
 
             <div class='folder-notes'  ng-class='bench.show == fork.id ? "open" : "close" '
@@ -161,8 +162,12 @@
                     <div class='title'>{{ posts[node_id].title }}</div>
                     <span ng-click='bench.removeFromFork($event, fork.id, node_id)' style='position: absolute; bottom: 0px; right: 5px; color: black; font-weight: 600; z-index: 3;'>x</span>
                 </md-card>
-
+            <div style='text-align: center;  margin-top: 20px;' ng-if='fork.posts.length == 0'> Oops.. no posts in this space yet! 
             </div>
+            </div>
+            
+
+
 
         </div>
       </div>
