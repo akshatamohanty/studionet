@@ -62,7 +62,8 @@
 
 				<!-- comments -->
 				<h3 style='line-height: 18px; font-size: 14px; margin-bottom: 15px;'>
-	            	<span ng-if='post_details.comments[0].id != null'>Comments ({{ post_details.comments.length }}) <md-divider></md-divider></span>
+	            	<span ng-if='post_details.comments[0].id != null'>Comments ({{ post_details.comments.length }}) 
+	            	<md-divider></md-divider></span>
 	            	<span ng-if='post_details.comments[0].id == null'>This post has no comments yet.</span>
 	            </h3>
 
@@ -70,16 +71,15 @@
 	            <!-- post-functions -->
 	            <div class='comment' style='margin-bottom: 20px;' ng-repeat='comment in post_details.comments | orderBy: "date"' ng-init='u = getUser(comment.createdBy)' ng-if='post_details.comments[0].id != null' layout='row'>
 	                
-	                <div flex='10'>
-	                	<img src='{{u.avatar}}' style='height: 45px; width: 45px; border-radius: 50%; vertical-align: middle;'>
+	              <div flex='10'>
+	                	<img src='{{u.avatar}}' style='height: 45px; width: 45px; border-radius: 50%; vertical-align: middle;'> <md-divider></md-divider>
 	                </div>
-
+                     
 	                <div flex='90'>
-		                <span style='font-size: 10px; color: #8C8A8A;'>{{comment.date | date : 'medium'}}</span><br>
-		                <b>{{u.nickname ? u.nickname : u.name}}</b> said:
-		                <div ng-bind-html="comment.body"></div>
-		                
-		                <div class='pointer' style='font-size: 10px; color: blue;' ng-if='comment.createdBy == user.id' ng-click='delete(comment.id, true)'>[ Delete ]</div>
+		                <span style='font-size: 10px;  color: #8C8A8A;margin-left: 30px;'> {{comment.date | date : 'medium'}}</span><br>
+		                	<span style="margin-left: 35px"> <b>{{u.nickname ? u.nickname : u.name}} </b> said:</span>
+		                	 <div style="margin-left: 35px" ng-bind-html="comment.body"></div>
+		                <div class='pointer' style='font-size: 10px;margin-left: 55px; color: blue;' ng-if='comment.createdBy == user.id' ng-click='delete(comment.id, true)'>[ Delete ]</div>
 	                </div>
 
 	            </div>
