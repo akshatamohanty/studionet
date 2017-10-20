@@ -23,6 +23,7 @@ angular.module('studionet')
 	// --------------- general functionspush
 	$scope.tagr =[];
 	$scope.getTagString = function(id){ 
+		//console.log("id=="+id);
 	  $scope.tagr.push(tags.tagsHash[id].name);
 	  return tags.tagsHash[id]  
 	};
@@ -84,12 +85,12 @@ angular.module('studionet')
 	$scope.posts = $scope.$resolve.search_results.data; 
 	$scope.tagrs =$scope.$resolve.location.tags;
     $scope.tagged =[];  
-    console.log('tagrs', $scope.tagrs);
+    //console.log('tagrs', $scope.tagrs);
     var temp = tags.tagsHash[$scope.tagrs[0]].name;
     $scope.tagged = $scope.tagged.concat(temp);
    // console.log($scope.tagged);
 	//console.log($scope.posts.length);
-	//console.log($scope.posts);
+	console.log($scope.posts);
 
 
 
@@ -151,10 +152,18 @@ var sortOrder = DESC;
 
  
 $scope.users = [];
-
+var id ='';
 //$scope.ids =[];
- for(var i =0 ;i <3;i++){
-	var id =$scope.posts[i].createdBy;
+var length=3;
+ 	if($scope.posts.length<length){
+        length=$scope.posts.length; 	
+        console.log($scope.posts.length);
+        console.log(length);	
+ 	}
+
+ for(var i =0 ;i <length;i++){
+	id =$scope.posts[i].createdBy;
+	//console.log("id++",id);
 	$scope.users.push({"name": users.usersHash[id].name , "ids":id});
 	}
 //removeDuplicates($scope.users);
