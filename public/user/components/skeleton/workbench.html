@@ -48,7 +48,7 @@
     </div>
 
 </md-toolbar>
-<div ng-scrollable="{scrollX:'none',scrollY:'auto'}" style="width: 100%; height: 600px;">
+<div  style="width: 100%; height: 600px;">
 <!-- content -->
 <md-content dnd-list dnd-drop='callback()' dnd-allowed-types="['space']">
 
@@ -67,7 +67,7 @@
       <div class='folder-notes' >
 
         <!-- posts -->
-        <div class='folder' >
+        <div class='folder'  >
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.toggleMyNodes(1)'>
                   My Posts
                   <a ui-sref='home.node({type:"note"})'>
@@ -135,7 +135,7 @@
 
       <md-divider></md-divider>
 
-      <div class='folder-notes' >
+      <div class='folder-notes' ng-click='bench.toggleMyNodes(3)'>
         <div class='folder' ng-init='status = bench.getTimeTillExpiry(fork)' ng-repeat='fork in user.forked | orderBy: ["priority", "daysLeft"]' ng-if='fork.id !== null'>
             <div class='folder-title pointer' ng-class='status.status' ng-click='bench.openFork(fork.id)' >
                   {{fork.name}}
@@ -152,7 +152,8 @@
             <div class='folder-notes'  ng-class='bench.show == fork.id ? "open" : "close" '
                 dnd-list dnd-drop='bench.addNodeToFork(item, fork)'  dnd-allowed-types="['post']">
 
-                <div style='display: block; border-bottom: 1px solid #ddd;min-height: 30px text-align:right;'>
+                <div ng-click='bench.toggleMyNodes(4)' style='display: block; border-bottom: 1px solid #ddd;min-height: 30px text-align:right; 
+               >
                   <a class='pointer' style='float: left; font-size: 10px;text-decoration: underline;' ng-click='goToSpace(fork.id)'>[Go to space]</a>
                   <!-- <ng-md-icon icon="open_in_new" size='14' style="fill: #444"  ></ng-md-icon> -->
                   <ng-md-icon icon="delete" size='14' style="fill: #444" ng-click='bench.deleteFork(fork.id)'></ng-md-icon>
