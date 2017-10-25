@@ -30,7 +30,8 @@ angular.module('studionet')
         self.show = undefined; // fork that is open
 
         self.toggleMyNodes = function(){
-          self.my_nodes = self.my_nodes == 1 ? 2 : 1;
+          self.my_nodes = self.my_nodes == 1 ? 2 : 1 ;
+         
         }
 
         self.isRecent = function(node){
