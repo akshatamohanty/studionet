@@ -237,13 +237,13 @@ md-card md-content {
   to {
     margin-left: -250px; } }
   #workbench-container.expand {
-    animation: 0.5s slideIn;
+    animation: 0.6s slideIn;
     margin-left: 0; }
   #workbench-container.compress {
-    animation: 0.5s slideOut;
+    animation: 0.6s slideOut;
     margin-left: -250px; }
   #workbench-container #workbench {
-    overflow: hidden; }
+    overflow: scroll; }
     #workbench-container #workbench .header, #workbench-container #workbench .post-view-section .post-details .post-title, .post-view-section .post-details #workbench-container #workbench .post-title {
       margin-top: 20px; }
     #workbench-container #workbench md-toolbar {
