@@ -302,26 +302,27 @@ md-card md-content {
           width: 100%; }
           #workbench-container #workbench md-content .folder .folder-notes.open {
             height: 25%;
-            transition: height 0.35s ease;
+            overflow: scroll;
+            transition: height 0.40s ease;
             position: relative;
             border: 1px solid #DCD9D9; }
           #workbench-container #workbench md-content .folder .folder-notes.close {
             height: 0;
-            transition: height 0.35s ease;
-            overflow: hidden;
+            transition: height 0.40s ease;
+            overflow: auto;
             position: relative; }
           #workbench-container #workbench md-content .folder .folder-notes .open.ng-hide-add {
             animation-name: hide;
             -webkit-animation-name: hide;
-            animation-duration: .5s;
-            -webkit-animation-duration: .5s;
+            animation-duration: .4s;
+            -webkit-animation-duration: .4s;
             animation-timing-function: ease-in;
             -webkit-animation-timing-function: ease-in; }
           #workbench-container #workbench md-content .folder .folder-notes .close.ng-hide-remove {
             animation-name: show;
             -webkit-animation-name: show;
-            animation-duration: .5s;
-            -webkit-animation-duration: .5s;
+            animation-duration: .4s;
+            -webkit-animation-duration: .4s;
             animation-timing-function: ease-out;
             -webkit-animation-timing-function: ease-out; }
           #workbench-container #workbench md-content .folder .folder-notes .post-box {
