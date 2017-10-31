@@ -243,7 +243,8 @@ md-card md-content {
     animation: 0.6s slideOut;
     margin-left: -250px; }
   #workbench-container #workbench {
-    overflow: scroll; }
+    overflow: scroll;
+    height: 100% }
     #workbench-container #workbench .header, #workbench-container #workbench .post-view-section .post-details .post-title, .post-view-section .post-details #workbench-container #workbench .post-title {
       margin-top: 20px; }
     #workbench-container #workbench md-toolbar {
@@ -301,7 +302,7 @@ md-card md-content {
           overflow: auto;
           width: 100%; }
           #workbench-container #workbench md-content .folder .folder-notes.open {
-            height: 25%;
+            height:35%;
             overflow: scroll;
             transition: height 0.40s ease;
             position: relative;
